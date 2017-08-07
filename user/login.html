@@ -45,7 +45,17 @@ License: You must have a valid license purchased only from themeforest(the above
         <link href="../assets/pages/css/login-5.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL STYLES -->
         <!-- BEGIN THEME LAYOUT STYLES -->
-        <!-- ENel="shortcut icon" href="favicon.ico" /> </head>
+        <link rel="shortcut icon" href="favicon.ico" /> </head>
+
+        <script src="/__/firebase/4.2.0/firebase-app.js"></script>
+        <script src="/__/firebase/4.2.0/firebase-auth.js"></script>
+        <script src="/__/firebase/4.2.0/firebase-database.js"></script>
+        <script src="/__/firebase/4.2.0/firebase-messaging.js"></script>
+
+        <!-- Leave out Storage -->
+        <!-- <script src="/__/firebase/4.2.0/firebase-storage.  js"></script> -->
+
+        <script src="/__/firebase/init.js"></script>
     <!-- END HEAD -->
 
     <body class=" login">
@@ -108,21 +118,29 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                         </form>
 
-                        <form class="signup-form" action="javascript:;" method="post">
+                        <div class="signup-form">
                             <div class="alert alert-danger display-hide">
                                 <button class="close" data-close="alert"></button>
-                                <span>Signup Error</span>
+                                <span>Signu </span>
                             </div>
                             <div class="form-group">
-                                <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="Email" name="email" />
-                                <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="New Password" name="NewPW" />
-                                <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="Confirm Password" name="ConfirmPW" />
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="First Name" id="signup-fname" />
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="Last Name" id="signup-lname" />
+                                    </div>
+                                </div>
+                                <input class="form-control placeholder-no-fix form-group" type="text" autocomplete="off" placeholder="Email" id="signup-email" />
+                                <input class="form-control placeholder-no-fix form-group" type="password" autocomplete="off" placeholder="New Password" id="signup-NewPW" />
+                                <input class="form-control placeholder-no-fix form-group" type="password" autocomplete="off" placeholder="Confirm Password" id="signup-ConfirmPW" />
                             </div>
                             <div class="form-actions">
                                 <button type="button" id="signup-back-btn" class="btn green btn-outline">Back</button>
-                                <button type="submit" class="btn btn-success uppercase pull-right">Sign Up</button>
+                                <button type="button" id="signup-btn" class="btn btn-success uppercase pull-right">Sign Up</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div class="login-footer">
                         <div class="row bs-reset">

@@ -95,7 +95,57 @@ var Login = function() {
             $('.create-form').hide();
             $('.signup-form').show();
         });
+
+        $('#signup-btn').click(function() {
+            handleSignUp();
+        })
     }
+
+    var handleSignUp = function() {
+      var email = $('#signup-email').val();
+      var newPW = $('#signup-NewPW').val();
+      var confirmPW = $('#signup-ConfirmPW').val();
+
+      if (email == '') {
+        alert('Please enter an email address.');
+        return;
+      }
+
+      if(newPW != confirmPW) {
+          alert('Confirm password again.');
+          return;
+      }
+
+      if (newPW.length == 0) {
+        alert('Please enter a password.');
+        return;
+      }
+      // Sign in with email and pass.
+      // [START createwithemail]
+      firebase.auth().createUserWithEmailAndPassword(email, confirmPW).then(function(result) {
+          console.log(result);
+          firebase.database().ref('users/' + result.uid).set({
+            firstname: $('#signup-fname').val(),
+            lastname: $('#signup-lname').val(),
+            email: email
+          });
+          alert("Sign up success");
+      }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // [START_EXCLUDE]
+        if(errorCode == 'auth/invalid-email') {
+          alert(email + ' is not a valid email address.')
+        } else if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        }
+        console.log(error);
+        // [END_EXCLUDE]
+      });
+      // [END createwithemail]
+    }
+
 
 
 
