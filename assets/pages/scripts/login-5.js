@@ -99,6 +99,10 @@ var Login = function() {
         $('#signup-btn').click(function() {
             handleSignUp();
         })
+
+        $('#signin-btn').click(function() {
+            toggleSignIn();
+        })
     }
 
     var handleSignUp = function() {
@@ -144,6 +148,49 @@ var Login = function() {
         // [END_EXCLUDE]
       });
       // [END createwithemail]
+    }
+
+    var toggleSignIn = function() {
+      if (firebase.auth().currentUser) {
+        // [START signout]
+        firebase.auth().signOut();
+        // [END signout]
+      } else {
+        var email = $('#email').val();
+        var password = $('#password').val();
+
+        if (email == '') {
+          alert('Please enter an email address.');
+          return;
+        }
+
+        if (password.length == 0) {
+          alert('Please enter a password.');
+          return;
+        }
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+            alert("Log In Success");
+        }).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode == 'auth/invalid-email') {
+            alert(email + ' is not a valid email address.')
+          } else if (errorCode == 'auth/user-not-found') {
+            alert('Email not found');
+          } else if (errorCode == 'auth/wrong-password') {
+            alert('Wrong Password');
+          }
+          console.log(error);
+          //document.getElementById('quickstart-sign-in').disabled = false;
+          // [END_EXCLUDE]
+        });
+        // [END authwithemail]
+      }
+      //document.getElementById('quickstart-sign-in').disabled = true;
     }
 
 
