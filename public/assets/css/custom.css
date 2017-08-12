@@ -1,0 +1,37 @@
+.ctooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.ctooltip .ctooltiptext {
+    visibility: hidden;
+    width: 360px;
+    background-color: #555;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -180px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.ctooltip .ctooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.ctooltip:hover .ctooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
