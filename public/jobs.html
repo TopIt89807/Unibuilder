@@ -1,7 +1,7 @@
 <div class="row">
     <div class="tabbable-line boxless tabbable-reversed">
         <div class="tab-pane" id="tab_1">
-            <div class="col-xs-6">
+            <div class="col-md-6">
               <div class="portlet box purple">
                   <div class="portlet-title">
                       <div class="caption">
@@ -20,7 +20,7 @@
                                           <label class="control-label">Job Name</label>
                                           <div class="input-icon right">
                                               <i class="fa fa-balance-scale font-red"></i>
-                                              <input type="text" id="firstName" class="form-control" placeholder="Input Job Name">
+                                              <input type="text" id="firstName" class="form-control" placeholder="Input Job Name" ng-model="c_jobname">
                                           </div>
                                       </div>
                                   </div>
@@ -32,9 +32,8 @@
                                             <i class="fa fa-info-circle"></i>
                                             <span class="ctooltiptext">The <b>Job Status</b> allows you To mark a jobsite As <i>Closed</i>, which places it in an archived status. This will remove the jobsite from your everyday list, but will keep it archived for your records.<br><br><a>Click Here</a> for the online jobsite tutorial</span>
                                           </div>
-                                          <select class="form-control">
-                                              <option value="">Open</option>
-                                              <option value="">Closed</option>
+                                          <select class="form-control" ng-model="c_jobstatus">
+                                            <option ng-repeat="xx in jobstatus" value="{{xx.value}}">{{xx.model}}</option>
                                           </select>
                                       </div>
                                   </div>
@@ -204,7 +203,7 @@
                   </div>
               </div>
             </div>
-            <div class="col-xs-6">
+            <div class="col-md-6">
               <div class="portlet box green">
                   <div class="portlet-title">
                       <div class="caption">
@@ -352,6 +351,9 @@
                       </form>
                       <!-- END FORM-->
                   </div>
+              </div>
+              <div class="col-xs-offset-5 col-xs-7">
+                  <button type="button" class="btn red" ng-click="onCreateJob()">Create Job</button>
               </div>
             </div>
 

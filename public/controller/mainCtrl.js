@@ -32,6 +32,11 @@ app.directive('onFinishRender', function($timeout) {
 app.controller("jobs", function($scope) {
   $scope.records = ["Aaa", "bbb", "Ccc", "Ddd"];
   $scope.jobgroups = [];
+  $scope.jobstatus = [
+          {model : "Open", value : "Open"},
+          {model : "Closed", value : "Closed"}
+      ];
+  $scope.c_jobstatus= $scope.jobstatus[0].value;
   $scope.colors = [
     { name: 'Maroon', value: '#442121'},
     { name: 'Merlot', value: '#572A2A'},
@@ -74,6 +79,8 @@ app.controller("jobs", function($scope) {
     { name: 'Alarm Lime', value: '#9FC62A'},
     { name: 'Alarm Gold', value: '#DDC817'}
     ];
+
+
   $scope.onJobGroupAdd = function() {
     bootbox.prompt("Adding a job group. Enter title.", function(result) {
         if (result === null) {
@@ -90,9 +97,26 @@ app.controller("jobs", function($scope) {
     $("#jobcolorselect").css("background-color", $scope.form);
   }
 
+  $scope.onCreateJob = function() {
+
+    var jobname = $scope.c_jobname;
+    var jobstatus = $scope.c_jobstatus;
+    var userId = firebase.auth().currentUser.uid;
+    /*return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+      var firstname = snapshot.val().firstname;
+      var lastname = snapshot.val().lastname;
+      var email = snapshot.val().email;
+      // [START_EXCLUDE]
+      return writeNewJob(firebase.auth().currentUser.uid,
+          firstname, lastname, email,
+          $scope.c_jobname);
+      // [END_EXCLUDE]
+    });*/
+  }
+
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-  ComponentsBootstrapMultiselect.init();
-  ComponentsBootstrapMultiselect.fff();
-  ComponentsDateTimePickers.init();
+    ComponentsBootstrapMultiselect.init();
+    ComponentsBootstrapMultiselect.fff();
+    ComponentsDateTimePickers.init();
   });
 });
