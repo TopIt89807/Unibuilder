@@ -1,11 +1,36 @@
-function writeNewJob(uid, firstname, lastname, email, jobname) {
+function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pmg, notify, grplist, jgrp, jpre,
+   address, lot, city, state, zip, permit, price,
+   pstart, astart, pcom, acom, wdays, jcolor,
+  internal, sub) {
   // A post entry.
   var postData = {
     uid: uid,
     fname: firstname,
     lname: lastname,
     email: email,
-    jobname: jobname
+    jobname: jobname,
+    status: status,
+    jobtype: jtype,
+    projmgr: pmg,
+    notify: notify,
+    jobgrouplist: grplist,
+    jobgroup: jgrp,
+    jobprefix: jpre,
+    address: address,
+    lotinfo: lot,
+    city: city,
+    state: state,
+    zip: zip,
+    permit: permit,
+    price: price,
+    pstart: pstart,
+    astart: astart,
+    pcom: pcom,
+    acom: acom,
+    workdays:wdays,
+    jobcolor: jcolor,
+    internal:internal,
+    sub:sub
   };
 
   // Get a key for a new Post.

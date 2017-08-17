@@ -48,11 +48,8 @@
                                             <i class="fa fa-info-circle"></i>
                                             <span class="ctooltiptext">Job Type can be updated in the Setup tab within Account Info in the Types of Projects dropdown. This will also be an available field and filter in the Jobsites List.</span>
                                           </div>
-                                          <select class="form-control">
-                                              <option value="">-- Please Select --</option>
-                                              <option value="">New Home</option>
-                                              <option value="">Remodel</option>
-                                              <option value="">Specialty(Other)</option>
+                                          <select class="form-control" ng-model="c_jobtype">
+                                            <option ng-repeat="xx in jobtype" value="{{xx.value}}">{{xx.model}}</option>
                                           </select>
                                       </div>
                                   </div>
@@ -60,18 +57,12 @@
                                   <div class="col-md-6">
                                       <div class="form-group">
                                           <label class="control-label" >Project Managers</label>
-                                          <select class="mt-multiselect btn btn-default" id="pjmg" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                          <select ng-model="c_projmgr" class="mt-multiselect btn btn-default" id="pjmg" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
                                             <option ng-repeat="x in records" on-finish-render="ngRepeatFinished">{{x}}</option>
-                                            <option value="1">Option 1</option>
-                                            <option value="2" selected="selected">Option 2</option>
-                                            <option value="3" selected="selected">Option 3</option>
-                                            <option value="4">Option 4</option>
-                                            <option value="5">Option 5</option>
-                                            <option value="6">Option 6</option>-->
-                                          </select>
+                                           </select>
                                       </div>
                                       <div>
-                                        <input type="checkbox" value="check"/><label class="control-label">Notify new project managers on save?</label>
+                                        <input type="checkbox" value="check" ng-model="c_notify" ng-true-value="true" ng-false-value="false"/><label class="control-label">Notify new project managers on save?</label>
                                       </div>
                                   </div>
                                   <!--/span-->
@@ -83,7 +74,7 @@
                                           <label class="control-label">Job Group</label>
                                           <div class="row">
                                             <div class="col-md-9">
-                                              <select class="mt-multiselect btn btn-default" id="jbgr" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                              <select ng-model="c_jobgroup" class="mt-multiselect btn btn-default" id="jbgr" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
                                                 <option ng-repeat="jobs in jobgroups" on-finish-render="ngRepeatFinished">{{jobs}}</option>
                                               </select>
                                             </div>
@@ -102,7 +93,7 @@
                                           </div>
                                           <div class="input-icon right">
                                               <i class="fa fa-microphone font-blue"></i>
-                                              <input type="text" id="prefix" class="form-control" placeholder="Input Jobsite Prefix">
+                                              <input ng-model="c_jprefix" type="text" id="prefix" class="form-control" placeholder="Input Jobsite Prefix">
                                           </div>
                                       </div>
                                   </div>
@@ -115,7 +106,7 @@
                                           <label class="control-label">Street Address</label>
                                           <div class="input-icon right">
                                               <i class="fa fa-street-view font-purple"></i>
-                                              <input type="text" class="form-control" placeholder="Input Street Address">
+                                              <input ng-model="c_address" type="text" class="form-control" placeholder="Input Street Address">
                                           </div>
                                       </div>
                                   </div>
@@ -124,7 +115,7 @@
                                           <label class="control-label">Lot Info</label>
                                           <div class="input-icon right">
                                               <i class="fa fa-info font-green"></i>
-                                              <input type="text" class="form-control" placeholder="Input Lot Info">
+                                              <input ng-model="c_lotinfo" type="text" class="form-control" placeholder="Input Lot Info">
                                           </div>
                                       </div>
                                   </div>
@@ -133,15 +124,15 @@
                                   <div class="col-md-6 form-group">
                                       <div class="col-md-6" style="padding:0;">
                                               <label class="control-label">City</label>
-                                              <input type="text" class="form-control" placeholder="City">
+                                              <input ng-model="c_city" type="text" class="form-control" placeholder="City">
                                       </div>
                                       <div class="col-md-3" style="padding-left:2px;padding-right:2px;">
                                               <label class="control-label">State</label>
-                                              <input type="text" class="form-control" placeholder="State">
+                                              <input ng-model="c_state" type="text" class="form-control" placeholder="State">
                                       </div>
                                       <div class="col-md-3" style="padding:0;">
                                               <label class="control-label">Zip</label>
-                                              <input type="text" class="form-control" placeholder="Zip">
+                                              <input ng-model="c_zip" type="text" class="form-control" placeholder="Zip">
                                       </div>
                                   </div>
                                   <!--/span-->
@@ -150,7 +141,7 @@
                                           <label class="control-label">Permit #</label>
                                           <div class="input-icon right">
                                               <i class="fa fa-info font-green"></i>
-                                              <input type="text" class="form-control" placeholder="Input permit">
+                                              <input ng-model="c_permit" type="text" class="form-control" placeholder="Input permit">
                                           </div>
                                       </div>
                                   </div>
@@ -168,7 +159,7 @@
                                       <label class="control-label">Contract Price</label>
                                       <div class="input-group">
                                         <div class="input-group-addon"><i class="fa fa-dollar font-yellow"></i></div>
-                                        <input type="text" class="form-control" placeholder="Input Contact Price">
+                                        <input ng-model="c_price" type="text" class="form-control" placeholder="Input Contact Price">
                                       </div>
 
                                   </div>
@@ -221,7 +212,7 @@
                                       <div class="form-group">
                                           <label class="control-label">Projected Start</label>
                                           <div class="input-group date date-picker">
-                                              <input type="text" class="form-control" placeholder="Select Projected Start Date">
+                                              <input ng-model="c_projstart" type="text" class="form-control" placeholder="Select Projected Start Date">
                                               <span class="input-group-btn">
                                                   <button class="btn btn-info" type="button">
                                                       <i class="fa fa-calendar"></i>
@@ -235,7 +226,7 @@
                                       <div class="form-group">
                                           <label class="control-label">Actual Start</label>
                                           <div class="input-group date date-picker">
-                                              <input type="text" class="form-control" placeholder="Select Actual Start Date">
+                                              <input ng-model="c_actstart" type="text" class="form-control" placeholder="Select Actual Start Date">
                                               <span class="input-group-btn">
                                                   <button class="btn purple" type="button">
                                                       <i class="fa fa-calendar"></i>
@@ -250,23 +241,9 @@
                               <div class="row">
                                   <div class="col-md-6">
                                       <div class="form-group">
-                                          <label class="control-label">Actual Completion</label>
-                                          <div class="input-group date date-picker">
-                                              <input type="text" class="form-control" placeholder="Select Actual Completion Date">
-                                              <span class="input-group-btn">
-                                                  <button class="btn green" type="button">
-                                                      <i class="fa fa-calendar"></i>
-                                                  </button>
-                                              </span>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <!--/span-->
-                                  <div class="col-md-6">
-                                      <div class="form-group">
                                           <label class="control-label">Projected Completion</label>
                                           <div class="input-group date date-picker">
-                                              <input type="text" class="form-control" placeholder="Select Projected Completion Date">
+                                              <input ng-model="c_projcompletion" type="text" class="form-control" placeholder="Select Projected Completion Date">
                                               <span class="input-group-btn">
                                                   <button class="btn btn-warning" type="button">
                                                       <i class="fa fa-calendar"></i>
@@ -275,8 +252,20 @@
                                           </div>
                                       </div>
                                   </div>
-                                  <!--/span-->
 
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label class="control-label">Actual Completion</label>
+                                          <div class="input-group date date-picker">
+                                              <input ng-model="c_actcompletion" type="text" class="form-control" placeholder="Select Actual Completion Date">
+                                              <span class="input-group-btn">
+                                                  <button class="btn green" type="button">
+                                                      <i class="fa fa-calendar"></i>
+                                                  </button>
+                                              </span>
+                                          </div>
+                                      </div>
+                                  </div>
 
                               </div>
                               <div class="row">
@@ -288,13 +277,10 @@
                                         <span class="ctooltiptext">The <b>Workdays</b> allow you to set the working days of the week for your project schedule.<br/></span>
                                       </div>
                                       <div>
-                                        <input type="checkbox" value="sun"/<label>&nbspSun&nbsp</label>
-                                        <input type="checkbox" value="mon"/<label>&nbspMon&nbsp</label>
-                                        <input type="checkbox" value="tue"/<label>&nbspTue&nbsp</label>
-                                        <input type="checkbox" value="tue"/<label>&nbspWed&nbsp</label>
-                                        <input type="checkbox" value="tue"/<label>&nbspThu&nbsp</label>
-                                        <input type="checkbox" value="tue"/<label>&nbspFri&nbsp</label>
-                                        <input type="checkbox" value="tue"/<label>&nbspSat&nbsp</label>
+                                        <span  ng-repeat="x in workdays track by $index">
+                                          <input ng-model="c_workdays[$index]" ng-true-value="true" ng-false-value="false" type="checkbox" value="{{x}}"/>
+                                          <label>&nbsp{{x}}&nbsp</label>
+                                        </span>
                                       </div>
                                   </div>
                                 </div>
@@ -306,7 +292,9 @@
                                         <i class="fa fa-info-circle"></i>
                                         <span class="ctooltiptext">Selecting a default color for a particular jobsite can be very helpful for viewing the calendar in the ALL JOBSITES view. All schedule items associated with a particular jobsite will appear in the selected color.<br/>Selecting a default color for a particular jobsite will also automatically default the background color for all newly added schedule items on the calendar.</span>
                                       </div>
-                                      <select class="form-control" id="jobcolorselect" ng-model='form' required ng-options='color.value as color.name for color in colors' ng-change="changeColor()"></select>
+                                      <select ng-model="c_jobcolor" ng-change="changeColor()" class="form-control" id="jobcolorselect">
+                                        <option ng-repeat="color in colors" value="{{color.value}}">{{color.name}}</option>
+                                      </select>
                                   </div>
                                 </div>
 
@@ -339,10 +327,10 @@
                                   </ul>
                                   <div class="tab-content">
                                       <div class="tab-pane fade active in" id="tab_1_1">
-                                        <textarea class="col-xs-12" style="min-height:150px;"></textarea>
+                                        <textarea ng-model="c_internal" class="col-xs-12" style="min-height:150px;"></textarea>
                                       </div>
                                       <div class="tab-pane fade" id="tab_1_2">
-                                        <textarea class="col-xs-12" style="min-height:100px;"></textarea>
+                                        <textarea ng-model="c_sub" class="col-xs-12" style="min-height:100px;"></textarea>
                                       </div>
                                   </div>
                                   <div class="clearfix margin-bottom-20"> </div>
