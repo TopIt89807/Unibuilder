@@ -102,6 +102,7 @@
 
   <div class="portlet-body form">
       <!-- BEGIN FORM-->
+
         <form action="#" class="horizontal-form">
           <div class="form-body">
               <div class="portlet-body">
@@ -115,7 +116,10 @@
                   </ul>
                   <div class="tab-content">
                       <div class="tab-pane fade active in" id="tab_1_1">
-                        <table class="table table-striped table-bordered table-hover" id="sample_2">
+                        <input type="button" ng-click="refreshtable()" value="refresh"/>
+                        <div kendo-grid k-options="gridOptions" k-data-source="ds">
+                        </div>
+                        <!--<table class="table table-striped table-bordered table-hover" id="sample_2">
                             <thead>
                                 <tr>
                                     <th> # </th>
@@ -134,10 +138,11 @@
                                     <th> ACH Limit </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                              <tr>
-                                  <td></td>
-                                  <td ng-model="list_name"> 2 </td>
+
+                            <tbody id="bb">
+                              <tr ng-repeat="x in jlists track by $index">
+                                  <td>{{x}}</td>
+                                  <td ng-model="list_name"> {{x}} </td>
                                   <td ng-model="list_addr"> Internet Explorer 4.0 </td>
                                   <td ng-model="list_city"> Win 95+ </td>
                                   <td ng-model="list_state"> 4 </td>
@@ -152,7 +157,7 @@
                                   <td ng-model="list_achlimit"> Internet Explorer 4.0 </td>
                               </tr>
                             </tbody>
-                        </table>
+                        </table>-->
                       </div>
 
                       <div class="tab-pane fade" id="tab_1_2">

@@ -1,4 +1,4 @@
-app.controller("joblist", function($scope) {
+app.controller("joblist", function($scope, $timeout) {
   $scope.jobgroups = ["group1", "group2", "group3"];
   $scope.records = ["27 shadow cantyyon, investor",
      "Al Qarrous, Mohammed",
@@ -22,16 +22,83 @@ app.controller("joblist", function($scope) {
    ];
   $scope.l_jobstatus = $scope.jobstatus[0].value;
   $scope.l_mappedstatus = $scope.mappedstatus[0].value;
+  $scope.jlists = [];
 
-  alert('a');
+  $scope.gridData = [
+    { FirstName: "form_modal2", LastName: "abc", Country:"AAA", City:"AE" },
+    { FirstName: "Foo3", LastName: "abc", Country:"AAA", City:"AE" },
+    { FirstName: "form_modal1", LastName: "abc", Country:"AAA", City:"AE" },
+    { FirstName: "Foo4", LastName: "abc", Country:"AAA", City:"AasE" },
+  ];
+
+  $scope.ds = new kendo.data.DataSource({
+    data:$scope.gridData,
+    pageSize:5
+  });
+
+  $scope.gridOptions = {
+/*    dataSource: {
+      data:$scope.gridData,
+      pageSize:3
+    },*/
+    columns: [
+
+        {field:"FirstName", title:"First Name", width:"100px"},
+        {field:"LastName", title:"Last Name"},
+        {field:"Country"},
+        {field:"City", title:"City"}
+    ],
+    toolbar: ["excel"],
+    excel: {
+        fileName: "Products.xlsx"
+    },
+    pageable: {
+        pageSizes: [2, 3, 4, "all"],
+        refresh: true,
+        buttonCount: 5
+    },
+    selectable: true,
+    sortable: true,
+    resizable: true
+  }
+
+  var jobsRef = firebase.database().ref('/jobs/');
+  jobsRef.on('child_added', function(data) {
+    $scope.gridData.pop();
+    var obj = [
+      {id: data.key, first: data.fname}
+    ];
+  });
+
+  var jobsRef = firebase.database().ref('/jobs/');
+  var keys = [];
+  jobsRef.on('value', function(data) {
+    for(var k in data.val()) {
+      keys.push(k);
+    }
+    alert(keys);
+  });
 
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     ComponentsBootstrapMultiselect.init();
     ComponentsBootstrapMultiselect.fff();
     ComponentsDateTimePickers.init();
-    TableDatatablesRowreorder.init();
 //    MapsGoogle.init();
+//    TableDatatablesRowreorder.init();
   });
+
+
+
+/*  $scope.refreshtable = function() {
+    $scope.gridData = [{ FirstName: "form_modal2", LastName: "abc", Country:"AAA", City:"AE" }];
+    $scope.ds.data = $scope.gridData;
+    $scope.ds = new kendo.data.DataSource({
+      data:$scope.gridData,
+      pageSize:1
+    });
+  }*/
+
+
   $scope.reload = function() {
     $("#gmap_marker").css("width", "100%");
     $("#gmap_marker").css("height", "500px");
