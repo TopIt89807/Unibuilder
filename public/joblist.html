@@ -1,2 +1,193 @@
 <div class="row">
+  <div>
+    <button type="button" class="btn btn-circle green-meadow">New Job</button>
+  </div>
+  <div class="portlet box grey">
+      <div class="portlet-title">
+          <div class="caption">
+              <i class="fa fa-filter"></i>FILTER YOUR RESULTS</div>
+          <div class="tools">
+              <a href="" class="expand"> </a>
+          </div>
+      </div>
+      <div class="portlet-body form" style="display:none;">
+          <!-- BEGIN FORM-->
+          <form action="#" class="horizontal-form ">
+              <div class="form-body">
+                  <div class="row">
+                      <div class="col-md-3">
+                          <select ng-model="l_jobgroup" class="mt-multiselect btn btn-default" id="jbgr" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                            <option ng-repeat="jobs in jobgroups" on-finish-render="ngRepeatFinished">{{jobs}}</option>
+                          </select>
+                      </div>
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <select ng-model="l_projmgr" class="mt-multiselect btn btn-default" id="pjmg" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                <option ng-repeat="x in records" on-finish-render="ngRepeatFinished">{{x}}</option>
+                               </select>
+                          </div>
+                      </div>
+
+                      <div class="col-xs-3">
+                          <div class="form-group">
+                              <select class="form-control" ng-model="l_jobstatus">
+                                <option ng-repeat="xx in jobstatus" value="{{xx.value}}">{{xx.model}}</option>
+                              </select>
+                          </div>
+                      </div>
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <select ng-model="l_jobtype" class="mt-multiselect btn btn-default" id="jbtp" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                <option ng-repeat="x in jobtype" on-finish-render="ngRepeatFinished">{{x.model}}</option>
+                               </select>
+                          </div>
+                      </div>
+
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-3 form-group">
+                          Keyword:
+                          <input ng-model="c_address" type="text" placeholder="Input Street Address">
+                          <div class="ctooltip">
+                            <i class="fa fa-info-circle"></i>
+                            <span class="ctooltiptext">The <b>Keyword Search</b> allows you to search the jobs by <b>Job Name, Address, City, Zip and Owner Name.</b></span>
+                          </div>
+                      </div>
+
+                      <div class="col-md-3 form-group">
+                          Mapped Status:
+                          <select ng-model="l_mappedstatus">
+                            <option ng-repeat="xx in mappedstatus" value="{{xx.value}}">{{xx.model}}</option>
+                          </select>
+                      </div>
+
+                      <div class="col-xs-3 form-group">
+                          Actual Start:
+                          <div class="input-group date date-picker">
+                            <input ng-model="l_astart" type="text" class="form-control" placeholder="Actual Start">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                          </div>
+                      </div>
+
+                      <div class="col-xs-3 form-group">
+                          To:
+                          <div class="input-group date date-picker">
+                            <input ng-model="l_to" type="text" class="form-control" placeholder="To">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                          </div>
+                      </div>
+                  </div>
+
+                  <p style="border-top : 1px solid #e7ecf1" ></p>
+
+                  <button type="button" class="btn btn-circle blue-madison">Update Result</button>
+                  <button type="button" class="btn btn-circle btn-default">Reset</button>
+                  <button type="button" class="btn btn-circle btn-default">Save Filter</button>
+              </div>
+          </form>
+          <!-- END FORM-->
+      </div>
+  </div>
+
+  <div class="portlet-body form">
+      <!-- BEGIN FORM-->
+        <form action="#" class="horizontal-form">
+          <div class="form-body">
+              <div class="portlet-body">
+                  <ul class="nav nav-tabs">
+                      <li class="active">
+                          <a href="joblist#tab_1_1" data-toggle="tab"> List </a>
+                      </li>
+                      <li>
+                          <a href="joblist#tab_1_2" data-toggle="tab"> Map </a>
+                      </li>
+                  </ul>
+                  <div class="tab-content">
+                      <div class="tab-pane fade active in" id="tab_1_1">
+                        <table class="table table-striped table-bordered table-hover" id="sample_2">
+                            <thead>
+                                <tr>
+                                    <th> # </th>
+                                    <th> Job Name </th>
+                                    <th> Street Address </th>
+                                    <th> City </th>
+                                    <th> State </th>
+                                    <th> Zip </th>
+                                    <th> Proj. Manager </th>
+                                    <th> Owner </th>
+                                    <th> Phone </th>
+                                    <th> Call </th>
+                                    <th> Cal. Status </th>
+                                    <th> Map </th>
+                                    <th> CC Limit </th>
+                                    <th> ACH Limit </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                  <td></td>
+                                  <td ng-model="list_name"> 2 </td>
+                                  <td ng-model="list_addr"> Internet Explorer 4.0 </td>
+                                  <td ng-model="list_city"> Win 95+ </td>
+                                  <td ng-model="list_state"> 4 </td>
+                                  <td ng-model="list_zip"> X </td>
+                                  <td ng-model="list_pjmg"> X </td>
+                                  <td ng-model="list_owner"> X </td>
+                                  <td ng-model="list_phone"> X </td>
+                                  <td ng-model="list_call"> X </td>
+                                  <td ng-model="list_status"> X </td>
+                                  <td ng-model="list_map"> Internet Explorer 4.0 </td>
+                                  <td ng-model="list_cclimit"> Internet Explorer 4.0 </td>
+                                  <td ng-model="list_achlimit"> Internet Explorer 4.0 </td>
+                              </tr>
+                            </tbody>
+                        </table>
+                      </div>
+
+                      <div class="tab-pane fade" id="tab_1_2">
+                          <div class="col-sm-6 col-md-4">
+                            <table class="table table-striped table-hover" id="sample_3">
+                                <thead hidden>
+                                    <tr>
+                                      <th> </th>
+                                      <th> </th>
+                                      <th> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td width="1%;"><img src="assets/images/marker.png"/></td>
+                                    <td width="98%;">2</td>
+                                    <td width="1%;"><img src="assets/images/zoom.png"/></td>
+                                  </tr>
+
+                                </tbody>
+                            </table>
+                          </div>
+                          <div class="col-sm-6 col-md-8">
+                              <input type="button" value="refresh" ng-click="reload()"/>
+                              <div class="portlet-body">
+                                  <div id="gmap_marker" style="width:300px; height:500px;"> </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+                  <div class="clearfix margin-bottom-20"> </div>
+              </div>
+          </div>
+      </form>
+      <!-- END FORM-->
+  </div>
 </div>

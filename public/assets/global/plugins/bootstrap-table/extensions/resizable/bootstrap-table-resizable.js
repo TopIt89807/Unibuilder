@@ -55,6 +55,7 @@
 
     BootstrapTable.prototype.resetView = function () {
         var that = this;
+        alert('a');
 
         _resetView.apply(this, Array.prototype.slice.apply(arguments));
 
