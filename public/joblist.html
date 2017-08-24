@@ -116,7 +116,6 @@
                   </ul>
                   <div class="tab-content">
                       <div class="tab-pane fade active in" id="tab_1_1">
-                        <input type="button" ng-click="refreshtable()" value="refresh"/>
                         <div kendo-grid k-options="gridOptions" k-data-source="ds">
                         </div>
                         <!--<table class="table table-striped table-bordered table-hover" id="sample_2">
@@ -162,7 +161,7 @@
 
                       <div class="tab-pane fade" id="tab_1_2">
                           <div class="col-sm-6 col-md-4">
-                            <table class="table table-striped table-hover" id="sample_3">
+                            <!--<table class="table table-striped table-hover" id="sample_3">
                                 <thead hidden>
                                     <tr>
                                       <th> </th>
@@ -178,7 +177,17 @@
                                   </tr>
 
                                 </tbody>
-                            </table>
+                            </table>-->
+                            <style>
+                                #k2 .k-grid-header{
+                                    height: 0;
+                                    border-bottom-width: 0;
+                                    display: none;
+                                    overflow: hidden;
+                                }
+                            </style>
+                              <div kendo-grid k-options="gridmapOptions" k-data-source="dsmap" id="k2">
+                              </div>
                           </div>
                           <div class="col-sm-6 col-md-8">
                               <input type="button" value="refresh" ng-click="reload()"/>
@@ -194,5 +203,404 @@
           </div>
       </form>
       <!-- END FORM-->
+  </div>
+  <div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="width:1400px;">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                  <h4 class="modal-title">Start Dragging Here</h4>
+              </div>
+              <div class="modal-body">
+
+                  <div class="row">
+                      <div class="tabbable-line boxless tabbable-reversed">
+                          <div class="tab-pane" id="tab_1">
+                              <div class="col-md-6">
+                                <div class="portlet box purple">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-balance-scale"></i> Jobsite Information</div>
+                                        <div class="tools">
+                                            <a href="" class="collapse"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body form">
+                                        <!-- BEGIN FORM-->
+                                        <form action="#" class="horizontal-form ">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Job Name</label>
+                                                            <div class="input-icon right">
+                                                                <i class="fa fa-balance-scale font-red"></i>
+                                                                <input type="text" class="form-control" placeholder="Input Job Name" ng-model="detail_jobname">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Status</label>
+                                                            <div class="ctooltip">
+                                                              <i class="fa fa-info-circle"></i>
+                                                              <span class="ctooltiptext">The <b>Job Status</b> allows you To mark a jobsite As <i>Closed</i>, which places it in an archived status. This will remove the jobsite from your everyday list, but will keep it archived for your records.<br><br><a>Click Here</a> for the online jobsite tutorial</span>
+                                                            </div>
+                                                            <select class="form-control" ng-model="detail_jobstatus">
+                                                              <option ng-repeat="xx in original_jobstatus" value="{{xx.value}}">{{xx.model}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Job Type</label>
+                                                            <div class="ctooltip">
+                                                              <i class="fa fa-info-circle"></i>
+                                                              <span class="ctooltiptext">Job Type can be updated in the Setup tab within Account Info in the Types of Projects dropdown. This will also be an available field and filter in the Jobsites List.</span>
+                                                            </div>
+                                                            <select class="form-control" ng-model="detail_jobtype">
+                                                              <option ng-repeat="xx in original_jobtype" value="{{xx.value}}">{{xx.model}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label" >Project Managers</label>
+                                                            <select ng-model="detail_projmgr" class="mt-multiselect btn btn-default" id="pjmg" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                                              <option ng-repeat="x in original_records" on-finish-render="ngRepeatFinished">{{x}}</option>
+                                                             </select>
+                                                        </div>
+                                                        <div>
+                                                          <input type="checkbox" value="check" ng-model="detail_notify" ng-true-value="true" ng-false-value="false"/><label class="control-label">Notify new project managers on save?</label>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Job Group</label>
+                                                            <div class="row">
+                                                              <div class="col-md-9">
+                                                                <select ng-model="detail_jobgroup" class="mt-multiselect btn btn-default" id="jbgr" multiple="multiple" data-label="left" data-select-all="true" data-width="100%" data-filter="true" data-action-onchange="true">
+                                                                  <option ng-repeat="jobs in original_jobgroups" on-finish-render="ngRepeatFinished">{{jobs}}</option>
+                                                                </select>
+                                                              </div>
+                                                                <a href="javascript:;" class="btn btn-sm btn-primary" ng-click="onJobGroupAdd()"><i class="fa fa-plus"></i></a>
+                                                                <a href="javascript:;" class="btn btn-sm btn-danger"><i class="fa fa-minus"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Jobsite Prefix</label>
+                                                            <div class="ctooltip">
+                                                              <i class="fa fa-info-circle"></i>
+                                                              <span class="ctooltiptext"><b>Jobsite prefix</b> (Max Length 11 characters) for Purchase Orders and Change Orders.<br/>Items will have the prefixes prepended to their ID number.<br/><b>Example: PSS-JS11-2234</b> ([CO or PO Prefix]-[Jobsite Prefix]-[ItemID])</span>
+                                                            </div>
+                                                            <div class="input-icon right">
+                                                                <i class="fa fa-microphone font-blue"></i>
+                                                                <input ng-model="detail_jprefix" type="text" id="prefix" class="form-control" placeholder="Input Jobsite Prefix">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <p style="border-top : 1px solid #e7ecf1" ></p>
+                                                <div class="row">
+                                                    <div class="col-md-6 ">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Street Address</label>
+                                                            <div class="row">
+                                                              <div class="col-md-10 col-xs-9">
+                                                                <div class="input-icon right">
+                                                                    <i class="fa fa-street-view font-purple"></i>
+                                                                    <input ng-model="detail_address" type="text" class="form-control" placeholder="Input Street Address">
+                                                                </div>
+                                                              </div>
+                                                              <a data-toggle="modal" href="joblist#mapping" class="btn" ng-click="onMapping()"><img src='assets/images/{{detail_mapimg}}'/></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Lot Info</label>
+                                                            <div class="input-icon right">
+                                                                <i class="fa fa-info font-green"></i>
+                                                                <input ng-model="detail_lotinfo" type="text" class="form-control" placeholder="Input Lot Info">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 form-group">
+                                                        <div class="col-md-6" style="padding:0;">
+                                                                <label class="control-label">City</label>
+                                                                <input ng-model="detail_city" type="text" class="form-control" placeholder="City">
+                                                        </div>
+                                                        <div class="col-md-3" style="padding-left:2px;padding-right:2px;">
+                                                                <label class="control-label">State</label>
+                                                                <input ng-model="detail_state" type="text" class="form-control" placeholder="State">
+                                                        </div>
+                                                        <div class="col-md-3" style="padding:0;">
+                                                                <label class="control-label">Zip</label>
+                                                                <input ng-model="detail_zip" type="text" class="form-control" placeholder="Zip">
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Permit #</label>
+                                                            <div class="input-icon right">
+                                                                <i class="fa fa-info font-green"></i>
+                                                                <input ng-model="detail_permit" type="text" class="form-control" placeholder="Input permit">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                                <!--/row-->
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-md-6">
+                                                        <label class="control-label">Contract Price</label>
+                                                        <div class="input-group">
+                                                          <div class="input-group-addon"><i class="fa fa-dollar font-yellow"></i></div>
+                                                          <input ng-model="detail_price" type="text" class="form-control" placeholder="Input Contact Price">
+                                                        </div>
+
+                                                    </div>
+                                                    <!--/span-->
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                                <div class="portlet box blue ">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-opencart"></i> Custom Fields
+                                            <div class="ctooltip">
+                                              <i class="fa fa-info-circle"></i>
+                                              <span class="ctooltiptext">If the custom fields were copied over from the leads, changes made to the custom fields below will not be reflected back to the lead.</span>
+                                            </div>
+                                        </div>
+                                        <div class="tools">
+                                            <a href="" class="collapse"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body form">
+                                        <!-- BEGIN FORM-->
+                                        <form action="#" class="horizontal-form">
+                                            <div class="form-body has-warning">
+                                                <label class="control-label">Admin users can add custom fields for Jobs in Setup.</label>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="portlet box green">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-calendar"></i>Job Schedule Information</div>
+                                        <div class="tools">
+                                            <a href="" class="collapse"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body form">
+                                        <!-- BEGIN FORM-->
+                                        <form action="#" class="horizontal-form">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Projected Start</label>
+                                                            <div class="input-group date date-picker">
+                                                                <input ng-model="detail_projstart" type="text" class="form-control" placeholder="Select Projected Start Date">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-info" type="button">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Actual Start</label>
+                                                            <div class="input-group date date-picker">
+                                                                <input ng-model="detail_actstart" type="text" class="form-control" placeholder="Select Actual Start Date">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn purple" type="button">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--/span-->
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Projected Completion</label>
+                                                            <div class="input-group date date-picker">
+                                                                <input ng-model="detail_projcompletion" type="text" class="form-control" placeholder="Select Projected Completion Date">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-warning" type="button">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Actual Completion</label>
+                                                            <div class="input-group date date-picker">
+                                                                <input ng-model="detail_actcompletion" type="text" class="form-control" placeholder="Select Actual Completion Date">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn green" type="button">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                  <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Work Days</label>
+                                                        <div class="ctooltip">
+                                                          <i class="fa fa-info-circle"></i>
+                                                          <span class="ctooltiptext">The <b>Workdays</b> allow you to set the working days of the week for your project schedule.<br/></span>
+                                                        </div>
+                                                        <div>
+                                                          <span  ng-repeat="x in original_workdays track by $index">
+                                                            <input ng-model="detail_workdays[$index]" ng-true-value="true" ng-false-value="false" type="checkbox" value="{{x}}"/>
+                                                            <label>&nbsp{{x}}&nbsp</label>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                  </div>
+
+                                                  <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Job Color</label>
+                                                        <div class="ctooltip">
+                                                          <i class="fa fa-info-circle"></i>
+                                                          <span class="ctooltiptext">Selecting a default color for a particular jobsite can be very helpful for viewing the calendar in the ALL JOBSITES view. All schedule items associated with a particular jobsite will appear in the selected color.<br/>Selecting a default color for a particular jobsite will also automatically default the background color for all newly added schedule items on the calendar.</span>
+                                                        </div>
+                                                        <select ng-model="detail_jobcolor" ng-change="changeColor()" class="form-control" id="jobcolorselect">
+                                                          <option ng-repeat="color in original_colors" value="{{color.value}}">{{color.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                  </div>
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                                <div class="portlet box yellow ">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-sticky-note-o"></i>Job Notes</div>
+                                        <div class="tools">
+                                            <a href="" class="collapse"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body form">
+                                        <!-- BEGIN FORM-->
+                                        <form action="#" class="horizontal-form">
+                                            <div class="form-body">
+                                                <div class="portlet-body">
+                                                    <ul class="nav nav-tabs nav-pills">
+                                                        <li class="active">
+                                                            <a href="joblist#tabdetail_1_1" data-toggle="tab"> Internal Notes </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="joblist#tabdetail_1_2" data-toggle="tab"> Sub Notes </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane fade active in" id="tabdetail_1_1">
+                                                          <textarea ng-model="detail_internal" class="col-xs-12" style="min-height:150px;"></textarea>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="tabdetail_1_2">
+                                                          <textarea ng-model="detail_sub" class="col-xs-12" style="min-height:100px;"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix margin-bottom-20"> </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                                <input type="text" hidden ng-model="detail_jobkey"/>
+                                <input type="text" hidden ng-model="detail_userkey"/>
+                                <input type="text" hidden ng-model="detail_fname"/>
+                                <input type="text" hidden ng-model="detail_lname"/>
+                                <input type="text" hidden ng-model="detail_email"/>
+                              </div>
+
+                          </div>
+                      </div>
+                  </div>
+
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn green"  data-dismiss="modal" ng-click="onSaveJobs();">Save Jobs</button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+  <div class="modal fade" id="mapping" tabindex="-2" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" style="width:800px;">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+              </div>
+              <div class="modal-body">
+                <div class="portlet-body">
+                  <div id="gmap_marker2"> </div>
+                  <input type="text" ng-model="lat" hidden/>
+                  <input type="text" ng-model="lng" hidden/>
+                  <input type="text" ng-model="detail_mapstatus" hidden/>
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn green"  data-dismiss="modal" ng-click="onSaveMapping();">Save Mapping</button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
   </div>
 </div>
