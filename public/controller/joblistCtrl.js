@@ -138,7 +138,7 @@ app.controller("joblist", function($scope, $timeout) {
               Phone: "<a href='tel:22222222'>22222222</a>",
               Cell: "<a href='tel:22222222'>22222222</a>",
               Status: "<img src='assets/images/online.png'/>Online",
-              Map: "<img src='assets/images/marker.png'/>",
+              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
               CCLimit: "Not Accepted",
               ACHLimit: "Not Accepted"
           }
@@ -150,7 +150,7 @@ app.controller("joblist", function($scope, $timeout) {
           });
 
           var colmap = {
-              Map: "<img src='assets/images/marker.png'/>",
+              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
               JobName: "<a href='#!/jobs'>"+snapshot.val().jobname+"</a>",
               More: "<img src='assets/images/zoom.png'/>"
           }
@@ -163,7 +163,15 @@ app.controller("joblist", function($scope, $timeout) {
       });
     }
 
+    $scope.reload();
+
   });
+
+  $scope.maptab = function() {
+    $timeout(function() {
+      $scope.reload();
+    }, 500);
+  }
 
 /**
 ******Data when click job name on job list

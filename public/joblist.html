@@ -111,7 +111,7 @@
                           <a href="joblist#tab_1_1" data-toggle="tab"> List </a>
                       </li>
                       <li>
-                          <a href="joblist#tab_1_2" data-toggle="tab"> Map </a>
+                          <a href="joblist#tab_1_2" data-toggle="tab" ng-click="maptab()"> Map </a>
                       </li>
                   </ul>
                   <div class="tab-content">
@@ -190,7 +190,6 @@
                               </div>
                           </div>
                           <div class="col-sm-6 col-md-8">
-                              <input type="button" value="refresh" ng-click="reload()"/>
                               <div class="portlet-body">
                                   <div id="gmap_marker" style="width:300px; height:500px;"> </div>
                               </div>
