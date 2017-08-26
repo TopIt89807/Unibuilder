@@ -116,8 +116,27 @@ app.controller("joblist", function($scope, $timeout) {
       {id: data.key, first: data.fname}
     ];
   });*/
+  $scope.reload = function() {
+    $("#gmap_marker").css("width", "100%");
+    $("#gmap_marker").css("height", "500px");
+    wholemap = new GMaps({
+        div: '#gmap_marker',
+        lat: 36.18665862660455,
+        lng: -115.13397216796875,
+    });
+    for(var i=0; i<markerList.length; i++ ) {
+      wholemap.addMarker({
+          lat: markerList[i]["lat"],
+          lng: markerList[i]["lng"],
+          title: 'Lima'
+      });
+    }
+
+    wholemap.setZoom(11);
+  }
 
   var jobsRef = firebase.database().ref('/jobs/');
+  var markerList = [];
   jobsRef.on('value', function(data) {
     var keys = [];
     for(var k in data.val()) {
@@ -125,9 +144,10 @@ app.controller("joblist", function($scope, $timeout) {
     }
     $scope.gridData = [];
     $scope.gridmapData = [];
+    $scope.reload();
+    markerList = [];
     for(var i=0; i<keys.length; i++) {
       var ref =  firebase.database().ref('/jobs/' + keys[i]);
-      $scope.reload();
       ref.once('value').then(function(snapshot) {
         var projmgr = "";
         var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
@@ -158,6 +178,11 @@ app.controller("joblist", function($scope, $timeout) {
               title: 'Lima'
           });
         }
+        var node = {
+          lat: snapshot.val().lat,
+          lng: snapshot.val().lng
+        }
+        markerList.push(node);
 
         $scope.gridData.push(col);
         $scope.ds = new kendo.data.DataSource({
@@ -169,7 +194,7 @@ app.controller("joblist", function($scope, $timeout) {
               JobKey: keys[i],
               Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
               JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
-              More: "<a ng-click='viewMapDetail(\"" + snapshot.key + "\");'><img src='assets/images/zoom.png'/></a>"
+              More: "<a ng-click='viewMapDetail(" + snapshot.val().lat + "," + snapshot.val().lng + ");'><img src='assets/images/zoom.png'/></a>"
           }
           $scope.gridmapData.push(colmap);
           $scope.dsmap = new kendo.data.DataSource({
@@ -182,13 +207,6 @@ app.controller("joblist", function($scope, $timeout) {
 
 
   });
-
-  $scope.maptab = function() {
-    $timeout(function() {
-      $scope.reload();
-    }, 500);
-  }
-
 /**
 ******Data when click job name on job list
 */
@@ -229,8 +247,9 @@ app.controller("joblist", function($scope, $timeout) {
       $scope.$apply();
     });
   }
-  $scope.viewMapDetail = function() {
-
+  $scope.viewMapDetail = function(lat, lng) {
+    wholemap.setCenter(lat, lng);
+    wholemap.setZoom(15);
   }
 
   $scope.onSaveJobs = function() {
@@ -364,27 +383,6 @@ app.controller("joblist", function($scope, $timeout) {
           $scope.lat = e.latLng.lat();
           $scope.lng = e.latLng.lng();
         });
-        /*map.addMarker({
-           lat: -51.38739,
-                lng: -6.187181,
-            title: 'Lima',
-            details: {
-                database_id: 42,
-                author: 'HPNeo'
-            },
-            click: function (e) {
-                if (console.log) console.log(e);
-                alert('You clicked in this marker');
-            }
-        });
-        map.addMarker({
-            lat: -12.042,
-            lng: -77.028333,
-            title: 'Marker with InfoWindow',
-            infoWindow: {
-                content: '<span style="color:#000">HTML Content!</span>'
-            }
-        });*/
         map.setZoom(11);
       }, 500);
   }
@@ -408,17 +406,40 @@ app.controller("joblist", function($scope, $timeout) {
   });
 
   var wholemap;
+  $scope.maptab = function() {
+    $timeout(function() {
+      $scope.reload();
+    }, 500);
+  }
 
-  $scope.reload = function() {
-//    if(wholemap != undefined) return;
-    $("#gmap_marker").css("width", "100%");
-    $("#gmap_marker").css("height", "500px");
-        wholemap = new GMaps({
-            div: '#gmap_marker',
-            lat: 36.18665862660455,
-            lng: -115.13397216796875,
-        });
 
-        wholemap.setZoom(5);
+/**
+*Filter Option Handling Variables & Functions
+*/
+  $scope.onUpdateResult = function() {
+    var filterData = [];
+    for(var i=0; i<$scope.gridData.length; i++) {
+      var key = $scope.gridData[i]["JobKey"];
+      var ref =  firebase.database().ref('/jobs/' + key);
+      var filter_group = $scope.l_jobgroup;
+      var filter_pjmg = $scope.l_projmgr;
+      var filter_status = $scope.l_jobstatus;
+      var filter_type = $scope.l_jobtype;
+      var filter_keyword = $scope.l_keyword;
+      var filter_mapstatus = $scope.l_mappedstatus;
+      var filter_astart = $scope.l_astart;
+      var filter_to = $scope.l_to;
+
+      var ref =  firebase.database().ref('/jobs/' + key);
+      ref.once('value').then(function(snapshot) {
+        
+        var col = $scope.gridData[i];
+      }
+
     }
+    $scope.ds = new kendo.data.DataSource({
+      data:filterData,
+      pageSize:50
+    });
+  }
 });

@@ -1,8 +1,9 @@
 <div class="row">
   <div>
-    <button type="button" class="btn btn-circle green-meadow">New Job</button>
+    <a type="button" class="btn btn-circle green-meadow" ng-click="myFunc(4)" href="#!jobs">New Job</a>
   </div>
-  <div class="portlet box grey">
+  <p/>
+  <div class="portlet box blue-hoki">
       <div class="portlet-title">
           <div class="caption">
               <i class="fa fa-filter"></i>FILTER YOUR RESULTS</div>
@@ -50,7 +51,7 @@
                   <div class="row">
                       <div class="col-md-3 form-group">
                           Keyword:
-                          <input ng-model="c_address" type="text" placeholder="Input Street Address">
+                          <input ng-model="l_keyword" type="text">
                           <div class="ctooltip">
                             <i class="fa fa-info-circle"></i>
                             <span class="ctooltiptext">The <b>Keyword Search</b> allows you to search the jobs by <b>Job Name, Address, City, Zip and Owner Name.</b></span>
@@ -91,7 +92,7 @@
 
                   <p style="border-top : 1px solid #e7ecf1" ></p>
 
-                  <button type="button" class="btn btn-circle blue-madison">Update Result</button>
+                  <button type="button" class="btn btn-circle blue-madison" ng-click="onUpdateResult()">Update Result</button>
                   <button type="button" class="btn btn-circle btn-default">Reset</button>
                   <button type="button" class="btn btn-circle btn-default">Save Filter</button>
               </div>
@@ -100,9 +101,15 @@
       </div>
   </div>
 
-  <div class="portlet-body form">
+  <div class="portlet form">
       <!-- BEGIN FORM-->
-
+      <div class="portlet-title">
+          <div class="caption font-red-sunglo">
+              <i class="icon-list font-red-sunglo"></i>
+              <span class="caption-subject bold uppercase"> Job Lists</span>
+          </div>
+      </div>
+      <div class="portlet-body form">
         <form action="#" class="horizontal-form">
           <div class="form-body">
               <div class="portlet-body">
@@ -200,8 +207,9 @@
                   <div class="clearfix margin-bottom-20"> </div>
               </div>
           </div>
-      </form>
+        </form>
       <!-- END FORM-->
+      </div>
   </div>
   <div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg" style="width:1400px;">
@@ -543,10 +551,10 @@
                                                     </ul>
                                                     <div class="tab-content">
                                                         <div class="tab-pane fade active in" id="tabdetail_1_1">
-                                                          <textarea ng-model="detail_internal" class="col-xs-12" style="min-height:150px;"></textarea>
+                                                          <textarea ng-model="detail_internal" class="col-xs-12" style="min-height:200px;"></textarea>
                                                         </div>
                                                         <div class="tab-pane fade" id="tabdetail_1_2">
-                                                          <textarea ng-model="detail_sub" class="col-xs-12" style="min-height:100px;"></textarea>
+                                                          <textarea ng-model="detail_sub" class="col-xs-12" style="min-height:150px;"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="clearfix margin-bottom-20"> </div>
