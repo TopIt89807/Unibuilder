@@ -57,6 +57,13 @@ app.controller("joblist", function($scope, $timeout) {
           cell.css("background-color", units);
           cell.css("color", units);
         }
+
+        $("table.k-focusable tbody tr").hover(
+          function() {
+           $(this).toggleClass("k-state-hover");
+          }
+
+        );
     },
     columns: [
         {field:"JobKey", hidden:true},
@@ -84,12 +91,13 @@ app.controller("joblist", function($scope, $timeout) {
         refresh: true,
         buttonCount: 5
     },
-    selectable: true,
     sortable: true,
     resizable: true
   }
+
   $scope.gridmapOptions = {
     columns: [
+        {field:"JobKey", hidden:true},
         {field:"Map", title:"Map", width:"50px", encoded: false},
         {field:"JobName", title:"Job Name", encoded: false},
         {field:"More", title:"More", width:"50px", encoded: false}
@@ -119,40 +127,49 @@ app.controller("joblist", function($scope, $timeout) {
     $scope.gridmapData = [];
     for(var i=0; i<keys.length; i++) {
       var ref =  firebase.database().ref('/jobs/' + keys[i]);
+      $scope.reload();
       ref.once('value').then(function(snapshot) {
         var projmgr = "";
         var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
         for(var j=0; j<cnt; j++) {
           projmgr += snapshot.val().projmgr[j] + "<br/>";
         }
-          var col = {
-              JobKey: keys[i],
-              JobColor: snapshot.val().jobcolor,
-              JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
-              Addr: snapshot.val().address,
-              City: snapshot.val().city,
-              State: snapshot.val().state,
-              Zip: snapshot.val().zip,
-              Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
-              Owner: "owner",
-              Phone: "<a href='tel:22222222'>22222222</a>",
-              Cell: "<a href='tel:22222222'>22222222</a>",
-              Status: "<img src='assets/images/online.png'/>Online",
-              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-              CCLimit: "Not Accepted",
-              ACHLimit: "Not Accepted"
-          }
-
-          $scope.gridData.push(col);
-          $scope.ds = new kendo.data.DataSource({
-            data:$scope.gridData,
-            pageSize:50
+        var col = {
+            JobKey: keys[i],
+            JobColor: snapshot.val().jobcolor,
+            JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
+            Addr: snapshot.val().address,
+            City: snapshot.val().city,
+            State: snapshot.val().state,
+            Zip: snapshot.val().zip,
+            Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
+            Owner: "owner",
+            Phone: "<a href='tel:22222222'>22222222</a>",
+            Cell: "<a href='tel:22222222'>22222222</a>",
+            Status: "<img src='assets/images/online.png'/>Online",
+            Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
+            CCLimit: "Not Accepted",
+            ACHLimit: "Not Accepted"
+        }
+        if(snapshot.val().mapped == "mapped") {
+          wholemap.addMarker({
+              lat: snapshot.val().lat,
+              lng: snapshot.val().lng,
+              title: 'Lima'
           });
+        }
+
+        $scope.gridData.push(col);
+        $scope.ds = new kendo.data.DataSource({
+          data:$scope.gridData,
+          pageSize:50
+        });
 
           var colmap = {
+              JobKey: keys[i],
               Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-              JobName: "<a href='#!/jobs'>"+snapshot.val().jobname+"</a>",
-              More: "<img src='assets/images/zoom.png'/>"
+              JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
+              More: "<a ng-click='viewMapDetail(\"" + snapshot.key + "\");'><img src='assets/images/zoom.png'/></a>"
           }
           $scope.gridmapData.push(colmap);
           $scope.dsmap = new kendo.data.DataSource({
@@ -163,7 +180,6 @@ app.controller("joblist", function($scope, $timeout) {
       });
     }
 
-    $scope.reload();
 
   });
 
@@ -212,6 +228,9 @@ app.controller("joblist", function($scope, $timeout) {
       $scope.lng = snapshot.val().lng != undefined? snapshot.val().lng : null;
       $scope.$apply();
     });
+  }
+  $scope.viewMapDetail = function() {
+
   }
 
   $scope.onSaveJobs = function() {
@@ -388,9 +407,18 @@ app.controller("joblist", function($scope, $timeout) {
 //    TableDatatablesRowreorder.init();
   });
 
+  var wholemap;
+
   $scope.reload = function() {
+//    if(wholemap != undefined) return;
     $("#gmap_marker").css("width", "100%");
     $("#gmap_marker").css("height", "500px");
-    MapsGoogle.init();
-  }
+        wholemap = new GMaps({
+            div: '#gmap_marker',
+            lat: 36.18665862660455,
+            lng: -115.13397216796875,
+        });
+
+        wholemap.setZoom(5);
+    }
 });
