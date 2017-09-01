@@ -37,11 +37,20 @@ app.controller("joblist", function($scope, $timeout) {
     data:$scope.gridmapData,
     pageSize:50
   });
+  var onChange1 = function(args) {
+    var model = this.dataItem(this.select());
+    var key = model.JobKey;
+    $("#aass").click();
+    $scope.viewDetailMode(key);
+  }
+  $(".k-content").dblclick(function() { alert('dblclick'); });
   $scope.gridOptions = {
 /*    dataSource: {
       data:$scope.gridData,
       pageSize:3
     },*/
+    selectable: true,
+    change: onChange1,
     dataBound: function(e) {
         // get the index of the UnitsInStock cell
         var columns = e.sender.columns;
@@ -95,7 +104,16 @@ app.controller("joblist", function($scope, $timeout) {
     resizable: true
   }
 
+  var onChange2 = function(args) {
+    var model = this.dataItem(this.select());
+    var key = model.JobKey;
+    $("#aaasss").click();
+    $scope.viewDetailMode(key);
+  }
   $scope.gridmapOptions = {
+
+    selectable: true,
+    change: onChange2,
     columns: [
         {field:"JobKey", hidden:true},
         {field:"Map", title:"Map", width:"50px", encoded: false},
@@ -155,9 +173,9 @@ app.controller("joblist", function($scope, $timeout) {
           projmgr += snapshot.val().projmgr[j] + "<br/>";
         }
         var col = {
-            JobKey: keys[i],
+            JobKey: snapshot.key,
             JobColor: snapshot.val().jobcolor,
-            JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
+            JobName: "<a id='aass' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
             Addr: snapshot.val().address,
             City: snapshot.val().city,
             State: snapshot.val().state,
@@ -191,9 +209,9 @@ app.controller("joblist", function($scope, $timeout) {
         });
 
           var colmap = {
-              JobKey: keys[i],
+              JobKey: snapshot.key,
               Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-              JobName: "<a data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
+              JobName: "<a id='aaasss' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
               More: "<a ng-click='viewMapDetail(" + snapshot.val().lat + "," + snapshot.val().lng + ");'><img src='assets/images/zoom.png'/></a>"
           }
           $scope.gridmapData.push(colmap);
@@ -398,7 +416,7 @@ app.controller("joblist", function($scope, $timeout) {
     $("#jobcolorselect").css("background-color", $scope.detail_jobcolor);
   }
 
-  $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     ComponentsBootstrapMultiselect.init();
     ComponentsBootstrapMultiselect.fff();
     ComponentsDateTimePickers.init();
@@ -420,7 +438,6 @@ app.controller("joblist", function($scope, $timeout) {
     var filterData = [];
     for(var i=0; i<$scope.gridData.length; i++) {
       var key = $scope.gridData[i]["JobKey"];
-      var ref =  firebase.database().ref('/jobs/' + key);
       var filter_group = $scope.l_jobgroup;
       var filter_pjmg = $scope.l_projmgr;
       var filter_status = $scope.l_jobstatus;
@@ -432,9 +449,9 @@ app.controller("joblist", function($scope, $timeout) {
 
       var ref =  firebase.database().ref('/jobs/' + key);
       ref.once('value').then(function(snapshot) {
-        
         var col = $scope.gridData[i];
-      }
+        filterData.push(col);
+      });
 
     }
     $scope.ds = new kendo.data.DataSource({
