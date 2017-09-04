@@ -1,7 +1,7 @@
 function updateJob(uid, jobkey, firstname, lastname, email, jobname, status, jtype, pmg, notify, grplist, jgrp, jpre,
    address, lot, city, state, zip, permit, price,
    pstart, astart, pcom, acom, wdays, jcolor,
-  internal, sub, mapped, lat, lng) {
+  internal, sub, mapped, lat, lng, access) {
   // A post entry.
   var postData = {
     uid: uid,
@@ -33,11 +33,12 @@ function updateJob(uid, jobkey, firstname, lastname, email, jobname, status, jty
     sub:sub,
     mapped: mapped,
     lat: lat,
-    lng: lng
+    lng: lng,
+    access: access
   };
 
   var updates = {};
-  updates['/jobs/' + jobkey] = postData;
+  updates['/jobs/' + jobkey + '/' + uid] = postData;
   updates['/user-jobs/' + uid + '/' + jobkey] = postData;
 
   return firebase.database().ref().update(updates);

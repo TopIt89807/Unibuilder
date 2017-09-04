@@ -37,13 +37,15 @@ app.controller("joblist", function($scope, $timeout) {
     data:$scope.gridmapData,
     pageSize:50
   });
+  $scope.getCurrentUID = function() {
+    return firebase.auth().currentUser.uid;
+  }
   var onChange1 = function(args) {
     var model = this.dataItem(this.select());
     var key = model.JobKey;
     $("#aass").click();
     $scope.viewDetailMode(key);
   }
-  $(".k-content").dblclick(function() { alert('dblclick'); });
   $scope.gridOptions = {
 /*    dataSource: {
       data:$scope.gridData,
@@ -165,61 +167,72 @@ app.controller("joblist", function($scope, $timeout) {
     $scope.reload();
     markerList = [];
     for(var i=0; i<keys.length; i++) {
-      var ref =  firebase.database().ref('/jobs/' + keys[i]);
+      var ref =  firebase.database().ref('/jobs/' + keys[i] + "/" + $scope.getCurrentUID());
       ref.once('value').then(function(snapshot) {
-        var projmgr = "";
-        var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
-        for(var j=0; j<cnt; j++) {
-          projmgr += snapshot.val().projmgr[j] + "<br/>";
-        }
-        var col = {
-            JobKey: snapshot.key,
-            JobColor: snapshot.val().jobcolor,
-            JobName: "<a id='aass' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
-            Addr: snapshot.val().address,
-            City: snapshot.val().city,
-            State: snapshot.val().state,
-            Zip: snapshot.val().zip,
-            Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
-            Owner: "owner",
-            Phone: "<a href='tel:22222222'>22222222</a>",
-            Cell: "<a href='tel:22222222'>22222222</a>",
-            Status: "<img src='assets/images/online.png'/>Online",
-            Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-            CCLimit: "Not Accepted",
-            ACHLimit: "Not Accepted"
-        }
-        if(snapshot.val().mapped == "mapped") {
-          wholemap.addMarker({
-              lat: snapshot.val().lat,
-              lng: snapshot.val().lng,
-              title: 'Lima'
-          });
-        }
-        var node = {
-          lat: snapshot.val().lat,
-          lng: snapshot.val().lng
-        }
-        markerList.push(node);
+        var access = snapshot.val().access;
+        if(access.charAt(2) == 'v') {
 
-        $scope.gridData.push(col);
-        $scope.ds = new kendo.data.DataSource({
-          data:$scope.gridData,
-          pageSize:50
-        });
-
-          var colmap = {
-              JobKey: snapshot.key,
-              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-              JobName: "<a id='aaasss' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.key + "\");'>"+snapshot.val().jobname+"</a>",
-              More: "<a ng-click='viewMapDetail(" + snapshot.val().lat + "," + snapshot.val().lng + ");'><img src='assets/images/zoom.png'/></a>"
+          var projmgr = "";
+          var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
+          for(var j=0; j<cnt; j++) {
+            projmgr += snapshot.val().projmgr[j] + "<br/>";
           }
-          $scope.gridmapData.push(colmap);
-          $scope.dsmap = new kendo.data.DataSource({
-            data:$scope.gridmapData,
+          editable = access.charAt(1) != 'e'? 0 : 1;
+          if(access.charAt(1) != 'e') {
+            $("#large").find('*').attr("disabled", true);
+          }else {
+            $("#large").find('*').attr("disabled", false);
+          }
+          var col = {
+              JobKey: snapshot.ref.parent.key,
+              JobColor: snapshot.val().jobcolor,
+              JobName: "<a id='aass' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.ref.parent.key + "\");'>"+snapshot.val().jobname+"</a>",
+              Addr: snapshot.val().address,
+              City: snapshot.val().city,
+              State: snapshot.val().state,
+              Zip: snapshot.val().zip,
+              Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
+              Owner: "owner",
+              Phone: "<a href='tel:22222222'>22222222</a>",
+              Cell: "<a href='tel:22222222'>22222222</a>",
+              Status: "<img src='assets/images/online.png'/>Online",
+              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
+              CCLimit: "Not Accepted",
+              ACHLimit: "Not Accepted"
+          }
+          if(snapshot.val().mapped == "mapped") {
+            wholemap.addMarker({
+                lat: snapshot.val().lat,
+                lng: snapshot.val().lng,
+                title: 'Lima'
+            });
+            var node = {
+              lat: snapshot.val().lat,
+              lng: snapshot.val().lng
+            }
+            markerList.push(node);
+            $scope.reload();
+          }
+
+          $scope.gridData.push(col);
+          $scope.ds = new kendo.data.DataSource({
+            data:$scope.gridData,
             pageSize:50
           });
-          $scope.$apply();
+
+            var colmap = {
+                JobKey: snapshot.ref.parent.key,
+                Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
+                JobName: "<a id='aaasss' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.ref.parent.key + "\");'>"+snapshot.val().jobname+"</a>",
+                More: "<a ng-click='viewMapDetail(" + snapshot.val().lat + "," + snapshot.val().lng + ");'><img src='assets/images/zoom.png'/></a>"
+            }
+            $scope.gridmapData.push(colmap);
+            $scope.dsmap = new kendo.data.DataSource({
+              data:$scope.gridmapData,
+              pageSize:50
+            });
+            $scope.$apply();
+          }
       });
     }
 
@@ -229,7 +242,7 @@ app.controller("joblist", function($scope, $timeout) {
 ******Data when click job name on job list
 */
   $scope.viewDetailMode = function(val) {
-    var ref =  firebase.database().ref('/jobs/' + val);
+    var ref =  firebase.database().ref('/jobs/' + val + '/' + $scope.getCurrentUID());
     ref.once('value').then(function(snapshot) {
       $scope.detail_jobname = snapshot.val().jobname != undefined? snapshot.val().jobname : null;
       $scope.detail_jobstatus = snapshot.val().status;
@@ -262,8 +275,20 @@ app.controller("joblist", function($scope, $timeout) {
       $scope.detail_mapstatus = snapshot.val().mapped != undefined? snapshot.val().mapped : null;
       $scope.lat = snapshot.val().lat != undefined? snapshot.val().lat : null;
       $scope.lng = snapshot.val().lng != undefined? snapshot.val().lng : null;
+      $scope.access = snapshot.val().access;
       $scope.$apply();
     });
+
+    var ref =  firebase.database().ref('/jobs/' + val + "/" + $scope.getCurrentUID());
+    ref.once('value').then(function(snapshot) {
+      var access = snapshot.val().access;
+      if(access.charAt(1) != 'e')
+        $("#large").find('*').attr("disabled", true);
+      else
+        $("#large").find('*').attr("disabled", false);
+    });
+
+
   }
   $scope.viewMapDetail = function(lat, lng) {
     wholemap.setCenter(lat, lng);
@@ -278,7 +303,7 @@ app.controller("joblist", function($scope, $timeout) {
          $scope.detail_notify, $scope.original_jobgroups, $scope.detail_jobgroup, $scope.detail_jprefix,
         $scope.detail_address, $scope.detail_lotinfo, $scope.detail_city, $scope.detail_state, $scope.detail_zip, $scope.detail_permit, $scope.detail_price,
         $scope.detail_projstart, $scope.detail_actstart, $scope.detail_projcompletion, $scope.detail_actcompletion, $scope.detail_workdays, $scope.detail_jobcolor,
-        $scope.detail_internal, $scope.detail_sub, $scope.detail_mapstatus, $scope.lat, $scope.lng);
+        $scope.detail_internal, $scope.detail_sub, $scope.detail_mapstatus, $scope.lat, $scope.lng, $scope.access);
   }
 
   $scope.original_jobstatus = [
@@ -368,6 +393,8 @@ app.controller("joblist", function($scope, $timeout) {
         $("#gmap_marker2").css("height", "800px");
         var latitude = $scope.detail_mapimg == "marker.png" ? $scope.lat : 36.18665862660455;
         var longitude = $scope.detail_mapimg == "marker.png" ? $scope.lng : -115.13397216796875;
+        $scope.lat = latitude;
+        $scope.lng = longitude;
         map = new GMaps({
             div: '#gmap_marker2',
             lat: latitude,
@@ -447,7 +474,7 @@ app.controller("joblist", function($scope, $timeout) {
       var filter_astart = $scope.l_astart;
       var filter_to = $scope.l_to;
 
-      var ref =  firebase.database().ref('/jobs/' + key);
+      var ref =  firebase.database().ref('/jobs/' + key + '/' + $scope.getCurrentUID());
       ref.once('value').then(function(snapshot) {
         var col = $scope.gridData[i];
         filterData.push(col);
@@ -459,4 +486,5 @@ app.controller("joblist", function($scope, $timeout) {
       pageSize:50
     });
   }
+
 });

@@ -1,7 +1,7 @@
 function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pmg, notify, grplist, jgrp, jpre,
    address, lot, city, state, zip, permit, price,
    pstart, astart, pcom, acom, wdays, jcolor,
-  internal, sub) {
+  internal, sub, access) {
   // A post entry.
   var postData = {
     uid: uid,
@@ -30,7 +30,8 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
     workdays:wdays,
     jobcolor: jcolor,
     internal:internal,
-    sub:sub
+    sub:sub,
+    access:access
   };
 
   // Get a key for a new Post.
@@ -38,7 +39,7 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
 
   // Write the new post's data simultaneously in the posts list and the user's post list.
   var updates = {};
-  updates['/jobs/' + newPostKey] = postData;
+  updates['/jobs/' + newPostKey + '/' + uid] = postData;
   updates['/user-jobs/' + uid + '/' + newPostKey] = postData;
 
   return firebase.database().ref().update(updates);

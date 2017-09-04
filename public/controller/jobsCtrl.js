@@ -114,13 +114,20 @@ app.controller("jobs", function($scope) {
       var firstname = snapshot.val().firstname;
       var lastname = snapshot.val().lastname;
       var email = snapshot.val().email;
+      var type = snapshot.val().type;
+      var access;
+      if(type == "admin") {
+        access = "cevd"
+      }else if(type == "internal") {
+        access = "c---"
+      }
       // [START_EXCLUDE]
       return writeNewJob(firebase.auth().currentUser.uid,
           firstname, lastname, email,
           jobname, jobstatus, jobtype, projectmgr, notify, $scope.jobgroups, jobgroup, jprefix,
           address, lotinfo, city, state, zip, permit, price,
           projstart, actstart, projcompletion, actcompletion, workdays, jobcolor,
-          internal, sub);
+          internal, sub, access);
       // [END_EXCLUDE]
     });
   }
