@@ -104,7 +104,7 @@ app.controller("jobs", function($scope) {
     var projcompletion = $scope.c_projcompletion != undefined? $scope.c_projcompletion : null;
     var actcompletion = $scope.c_actcompletion != undefined? $scope.c_actcompletion : null;
     var workdays = $scope.c_workdays;
-    var jobcolor = $scope.c_jobcolor!= undefined? $scope.c_jobcolor : null;;
+    var jobcolor = $scope.c_jobcolor!= undefined? $scope.c_jobcolor : null;
 
     var internal = $scope.c_internal != undefined? $scope.c_internal : null;
     var sub = $scope.c_sub != undefined? $scope.c_sub : null;
@@ -117,9 +117,9 @@ app.controller("jobs", function($scope) {
       var type = snapshot.val().type;
       var access;
       if(type == "admin") {
-        access = "cevd"
+        access = "cevd";
       }else if(type == "internal") {
-        access = "c---"
+        access = "c---";
       }
       // [START_EXCLUDE]
       return writeNewJob(firebase.auth().currentUser.uid,
@@ -136,5 +136,6 @@ app.controller("jobs", function($scope) {
     ComponentsBootstrapMultiselect.init();
     ComponentsBootstrapMultiselect.fff();
     ComponentsDateTimePickers.init();
+    FormWizard.init();
   });
 });
