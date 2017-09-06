@@ -1,4 +1,8 @@
 app.controller("jobs", function($scope) {
+
+/**
+* Job Info Tab Information
+*/
   $scope.jobstatus = [
           {model : "Open", value : "Open"},
           {model : "Closed", value : "Closed"}
@@ -132,10 +136,39 @@ app.controller("jobs", function($scope) {
     });
   }
 
+/**
+* Owner Tab Information
+*/
+  $scope.ownertype = [
+          {model : "None", value : "none"},
+          {model : "Create New Contact", value : "new"},
+          {model : "Search Existing Contacts", value : "search"}
+      ];
+  $scope.c_ownertype= $scope.ownertype[1].value;
+  $scope.owneraccess = [
+          {model : "-- None --", value : "none"},
+          {model : "Email Invite", value : "invite"},
+          {model : "Configure Manually", value : "manual"}
+      ];
+  $scope.c_owneraccess= $scope.owneraccess[0].value;
+  $scope.owneraccessmethod = [
+          {model : "No Items", value : "none"},
+          {model : "Past Days Only", value : "past"},
+          {model : "1 Week Ahead", value : "oneweek"},
+          {model : "2 Weeks Ahead", value : "twoweeks"},
+          {model : "1 Month Ahead", value : "onemonth"},
+          {model : "2 Months Ahead", value : "twomonths"},
+          {model : "3 Months Ahead", value : "threemonths"},
+          {model : "Full Calendar", value : "full"}
+      ];
+  $scope.c_owneraccessmethod = $scope.owneraccessmethod[7].value;
+
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     ComponentsBootstrapMultiselect.init();
     ComponentsBootstrapMultiselect.fff();
     ComponentsDateTimePickers.init();
     FormWizard.init();
+    Profile.init();
+    ComponentsBootstrapSwitch.init();
   });
 });
