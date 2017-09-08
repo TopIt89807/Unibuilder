@@ -1,4 +1,4 @@
-app.controller("jobs", function($scope) {
+app.controller("jobs", function($scope, $timeout) {
 
 /**
 * Job Info Tab Information
@@ -120,6 +120,7 @@ app.controller("jobs", function($scope) {
       var email = snapshot.val().email;
       var type = snapshot.val().type;
       var access;
+      // Default Group Access
       if(type == "admin") {
         access = "cevd";
       }else if(type == "internal") {
@@ -162,6 +163,70 @@ app.controller("jobs", function($scope) {
           {model : "Full Calendar", value : "full"}
       ];
   $scope.c_owneraccessmethod = $scope.owneraccessmethod[7].value;
+
+/**
+*Internal Users Tab Information
+*/
+  $scope.internalusers = [
+  ];
+
+  var usersRef = firebase.database().ref('/users/');
+  var aaa = [];
+  usersRef.on('value', function(data) {
+    var userkeys = [];
+    for(var k in data.val()) {
+      userkeys.push(k);
+    }
+    for(var i=0; i<userkeys.length; i++) {
+      var ref =  firebase.database().ref('/users/' + userkeys[i]);
+      ref.once('value').then(function(snapshot) {
+        var email = snapshot.val().email;
+        var firstname = snapshot.val().firstname;
+        var lastname = snapshot.val().lastname;
+        var access = snapshot.val().type;
+        if(access == "internal") {
+          var node = {
+            name : firstname + " " + lastname,
+            viewing: false,
+            notification: false
+          };
+          $scope.internalusers.push(node);
+        }
+      });
+    }
+  });
+
+  $scope.selChangedView = function($index) {
+    $scope.internalusers[$index].notification = $scope.internalusers[$index].viewing;
+  }
+
+  $scope.selectAllInternalView = function() {
+    for(var i=0; i<$scope.internalusers.length; i++) {
+      $scope.internalusers[i].viewing = $scope.internal_checkView;
+      $scope.selChangedView(i);
+    }
+  }
+  $scope.selectAllInternalNotif = function() {
+    for(var i=0; i<$scope.internalusers.length; i++) {
+      if($scope.internalusers[i].viewing)
+        $scope.internalusers[i].notification = $scope.internal_checkNotif;
+    }
+  }
+  /**
+  *Subs/Vendors Tab Information
+  */
+  $scope.subs = [
+    {name : "Sub1", viewing: false},
+    {name : "Sub2", viewing: false},
+    {name : "Sub3", viewing: false}
+  ];
+
+
+  $scope.selectAllSubsView = function() {
+    for(var i=0; i<$scope.subs.length; i++) {
+      $scope.subs[i].viewing = $scope.subs_checkView;
+    }
+  }
 
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     ComponentsBootstrapMultiselect.init();

@@ -706,23 +706,13 @@
                                     <tbody>
                                         <tr>
                                             <td> </td>
-                                            <td> <input type="checkbox"/> </td>
-                                            <td> <input type="checkbox"/> </td>
+                                            <td> <input type="checkbox" ng-change="selectAllInternalView()" ng-model="internal_checkView"/> </td>
+                                            <td> <input type="checkbox" ng-change="selectAllInternalNotif()"/ ng-model="internal_checkNotif"> </td>
                                         </tr>
-                                        <tr>
-                                            <td> Jacob </td>
-                                            <td> <input type="checkbox"/> </td>
-                                            <td> <input type="checkbox"/> </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Larry </td>
-                                            <td> <input type="checkbox"/> </td>
-                                            <td> <input type="checkbox"/> </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Sandy </td>
-                                            <td> <input type="checkbox"/> </td>
-                                            <td> <input type="checkbox"/> </td>
+                                        <tr ng-repeat="xx in internalusers track by $index" >
+                                            <td> {{xx.name}} </td>
+                                            <td> <input type="checkbox" ng-change="selChangedView($index)" ng-model="internalusers[$index].viewing"/> </td>
+                                            <td> <input type="checkbox" ng-model="internalusers[$index].notification" ng-disabled="xx.viewing == false"/> </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -737,27 +727,17 @@
                                     <thead>
                                         <tr>
                                             <th class="col-md-9" style="text-align:center;"> Name </th>
-                                            <th class="col-md-3" style="text-align:center;">
-                                               Viewing Access
-                                            </th>
+                                            <th class="col-md-3" style="text-align:center;"> Viewing Access </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td> </td>
-                                            <td> <input type="checkbox"/> </td>
+                                            <td> <input type="checkbox" ng-change="selectAllSubsView()" ng-model="subs_checkView"/> </td>
                                         </tr>
-                                        <tr>
-                                            <td> Jacob </td>
-                                            <td> <input type="checkbox"/> </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Larry </td>
-                                            <td> <input type="checkbox"/> </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Sandy </td>
-                                            <td> <input type="checkbox"/> </td>
+                                        <tr ng-repeat="xx in subs track by $index">
+                                            <td> {{xx.name}} </td>
+                                            <td> <input type="checkbox" ng-model="subs[$index].viewing"/> </td>
                                         </tr>
                                     </tbody>
                                 </table>
