@@ -86,6 +86,7 @@ app.controller("jobs", function($scope, $timeout) {
   $scope.changeColor = function() {
     $("#jobcolorselect").css("background-color", $scope.c_jobcolor);
   }
+
   $scope.onCreateJob = function() {
 
     var jobname = $scope.c_jobname != undefined? $scope.c_jobname : null;
@@ -132,7 +133,9 @@ app.controller("jobs", function($scope, $timeout) {
           jobname, jobstatus, jobtype, projectmgr, notify, $scope.jobgroups, jobgroup, jprefix,
           address, lotinfo, city, state, zip, permit, price,
           projstart, actstart, projcompletion, actcompletion, workdays, jobcolor,
-          internal, sub, access);
+          internal, sub, access,
+          $scope.internalusers,
+          $scope.subs);
       // [END_EXCLUDE]
     });
   }
@@ -167,12 +170,11 @@ app.controller("jobs", function($scope, $timeout) {
 /**
 *Internal Users Tab Information
 */
-  $scope.internalusers = [
-  ];
+  $scope.internalusers = [];
 
   var usersRef = firebase.database().ref('/users/');
-  var aaa = [];
   usersRef.on('value', function(data) {
+    $scope.internalusers = [];
     var userkeys = [];
     for(var k in data.val()) {
       userkeys.push(k);
@@ -183,15 +185,17 @@ app.controller("jobs", function($scope, $timeout) {
         var email = snapshot.val().email;
         var firstname = snapshot.val().firstname;
         var lastname = snapshot.val().lastname;
-        var access = snapshot.val().type;
-        if(access == "internal") {
+        var type = snapshot.val().type;
+        if(type == "internal") {
           var node = {
+            key: snapshot.ref.key,
             name : firstname + " " + lastname,
             viewing: false,
             notification: false
           };
           $scope.internalusers.push(node);
         }
+        $scope.$apply();
       });
     }
   });
@@ -216,11 +220,34 @@ app.controller("jobs", function($scope, $timeout) {
   *Subs/Vendors Tab Information
   */
   $scope.subs = [
-    {name : "Sub1", viewing: false},
-    {name : "Sub2", viewing: false},
-    {name : "Sub3", viewing: false}
   ];
 
+  var usersRef = firebase.database().ref('/users/');
+  usersRef.on('value', function(data) {
+    $scope.subs = [];
+    var userkeys = [];
+    for(var k in data.val()) {
+      userkeys.push(k);
+    }
+    for(var i=0; i<userkeys.length; i++) {
+      var ref =  firebase.database().ref('/users/' + userkeys[i]);
+      ref.once('value').then(function(snapshot) {
+        var email = snapshot.val().email;
+        var firstname = snapshot.val().firstname;
+        var lastname = snapshot.val().lastname;
+        var type = snapshot.val().type;
+        if(type == "subs") {
+          var node = {
+            key: snapshot.ref.key,
+            name : firstname + " " + lastname,
+            viewing: false,
+          };
+          $scope.subs.push(node);
+        }
+        $scope.$apply();
+      });
+    }
+  });
 
   $scope.selectAllSubsView = function() {
     for(var i=0; i<$scope.subs.length; i++) {

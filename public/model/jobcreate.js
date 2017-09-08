@@ -2,7 +2,8 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
    address, lot, city, state, zip, permit, price,
    pstart, astart, pcom, acom, wdays, jcolor,
    internal, sub, access,
-   hasOnwer, ownerEmail, ownerPw) {
+//   hasOnwer, ownerEmail, ownerPw,
+   internalusers, subs) {
   // A post entry.
   var postData = {
     uid: uid,
@@ -43,13 +44,34 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
   updates['/jobs/' + newPostKey + '/' + uid] = postData;
   updates['/user-jobs/' + uid + '/' + newPostKey] = postData;
 
-  if(hasOwner) {
+/*  if(hasOwner) {
     var ownerData = {
       access:""
     }
     var ownerid = createUser("owner", ownerEmail, ownerPw);
     updates['/jobs/' + newPostKey + '/' + ownerid] = ownerData;
     updates['/user-jobs/' + ownerid + '/' + newPostKey] = ownerData;
+  }*/
+
+  for(var i=0; i<internalusers.length; i++) {
+    var internalData = {
+      access:"",
+      viewing:internalusers[i].viewing,
+      notification:internalusers[i].notification
+    }
+
+    updates['/jobs/' + newPostKey + '/' + internalusers[i].key] = internalData;
+    updates['/user-jobs/' + internalusers[i].key + '/' + newPostKey] = internalData;
+  }
+
+  for(var i=0; i<subs.length; i++) {
+    var subData = {
+      access:"",
+      viewing:subs[i].viewing
+    }
+
+    updates['/jobs/' + newPostKey + '/' + subs[i].key] = subData;
+    updates['/user-jobs/' + subs[i].key + '/' + newPostKey] = subData;
   }
 
   return firebase.database().ref().update(updates);
