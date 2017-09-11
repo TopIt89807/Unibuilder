@@ -432,7 +432,7 @@
                                                         <div class="form-group">
                                                             <div class="input-icon right">
                                                                 <i class="fa fa-user font-blue"></i>
-                                                                <input ng-model="c_jprefix" type="text" id="prefix" class="form-control" placeholder="Owner Name">
+                                                                <input ng-model="c_ownername" type="text" id="prefix" class="form-control" placeholder="Owner Name">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -447,7 +447,7 @@
                                                     <div class="form-group">
                                                         <div class="input-icon right">
                                                             <i class="fa fa-street-view font-purple"></i>
-                                                            <input ng-model="c_address" type="text" class="form-control" placeholder="Street Address">
+                                                            <input ng-model="c_owneraddress" type="text" class="form-control" placeholder="Street Address">
                                                         </div>
                                                     </div>
                                                   </div>
@@ -456,13 +456,13 @@
                                                 <div class="row">
                                                   <div class="form-group">
                                                       <div class="col-md-6">
-                                                              <input ng-model="c_city" type="text" class="form-control" placeholder="City">
+                                                              <input ng-model="c_ownercity" type="text" class="form-control" placeholder="City">
                                                       </div>
                                                       <div class="col-md-3" >
-                                                              <input ng-model="c_state" type="text" class="form-control" placeholder="State">
+                                                              <input ng-model="c_ownerstate" type="text" class="form-control" placeholder="State">
                                                       </div>
                                                       <div class="col-md-3">
-                                                              <input ng-model="c_zip" type="text" class="form-control" placeholder="Zip">
+                                                              <input ng-model="c_ownerzip" type="text" class="form-control" placeholder="Zip">
                                                       </div>
                                                   </div>
                                                 </div>
@@ -472,7 +472,7 @@
                                                       <label class="control-label">Phone</label>
                                                       <div class="input-icon right">
                                                           <i class="fa fa-phone font-blue"></i>
-                                                          <input ng-model="c_permit" type="text" class="form-control" placeholder="Input Phone">
+                                                          <input ng-model="c_ownerphone" type="text" class="form-control" placeholder="Input Phone">
                                                       </div>
                                                     </div>
                                                     <!--/span-->
@@ -481,7 +481,7 @@
                                                             <label class="control-label">Cell Phone</label>
                                                             <div class="input-icon right">
                                                                 <i class="fa fa-phone font-green"></i>
-                                                                <input ng-model="c_permit" type="text" class="form-control" placeholder="Input Cell Phone">
+                                                                <input ng-model="c_ownercellphone" type="text" class="form-control" placeholder="Input Cell Phone">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -495,7 +495,7 @@
                                                             </div>
                                                             <div class="input-icon right">
                                                                 <i class="fa fa-envelope font-green"></i>
-                                                                <input ng-model="c_permit" type="text" class="form-control" placeholder="Input Cell Email">
+                                                                <input ng-model="c_ownercellemail" type="text" class="form-control" placeholder="Input Cell Email">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -506,7 +506,7 @@
                                                         <label class="control-label">Email</label>
                                                         <div class="input-icon right">
                                                           <i class="fa fa-envelope font-red"></i>
-                                                          <input ng-model="c_price" type="text" class="form-control" placeholder="Input Email">
+                                                          <input ng-model="c_ownermail" type="text" class="form-control" placeholder="Input Email">
                                                         </div>
 
                                                     </div>
@@ -605,7 +605,7 @@
 
                                                   <div class="form-group">
                                                       Show Calendar:
-                                                      <input type="checkbox" class="make-switch" data-on-text="&nbsp;External&nbsp;" data-off-text="&nbsp;Internal&nbsp;">
+                                                      <input ng-model="c_ownercalopt" type="checkbox" class="make-switch" data-on-text="&nbsp;External&nbsp;" data-off-text="&nbsp;Internal&nbsp;">
                                                       <div class="ctooltip">
                                                         <i class="fa fa-info-circle"></i>
                                                         <span class="ctooltiptext">With Phases Only selected, Owners will not be able to see any schedule item information including attached files, comments, or notes. Only phases with at least one schedule item viewable to Owner will show to the Owner.</span>
@@ -614,7 +614,7 @@
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt1" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Show Job Price Summary to Owner
                                                         <div class="ctooltip">
                                                           <i class="fa fa-info-circle"></i>
@@ -625,7 +625,7 @@
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt2" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Show Budget and Purchase Orders to Owner
                                                         <div class="ctooltip">
                                                           <i class="fa fa-info-circle"></i>
@@ -636,14 +636,14 @@
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt3" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Allow Owner to submit Change Order Requests
                                                     </label>
                                                   </div>
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt4" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Allow Owner to "Peek" at Locked Selections
                                                         <div class="ctooltip">
                                                           <i class="fa fa-info-circle"></i>
@@ -654,21 +654,21 @@
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt5" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Allow Owner to Add Warranty Claims
                                                     </label>
                                                   </div>
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt6" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Allow Owner to See Payments Tab
                                                     </label>
                                                   </div>
 
                                                   <div class="form-group">
                                                     <label>
-                                                        <input type="checkbox" name="payment[]" value="1" data-title="Show Job Price Summary to Owner" />
+                                                        <input type="checkbox" ng-model="c_owneropt7" value="1" data-title="Show Job Price Summary to Owner" />
                                                         Show Job Price Summary to Owner
                                                         <div class="ctooltip">
                                                           <i class="fa fa-info-circle"></i>
@@ -676,7 +676,6 @@
                                                         </div>
                                                     </label>
                                                   </div>
-
 
                                                 </div>
                                               </div>

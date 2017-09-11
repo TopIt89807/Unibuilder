@@ -1,8 +1,18 @@
+var config = {
+  apiKey: "AIzaSyDHCYxT4Ad9L5Yj8EBvlnGWMDoyTnu1p4k",
+  authDomain: "unibuilder-239ff.firebaseapp.com",
+  databaseURL: "https://unibuilder-239ff.firebaseio.com",
+  projectId: "unibuilder-239ff",
+  storageBucket: "unibuilder-239ff.appspot.com",
+  messagingSenderId: "820435656999"
+};
+var secondaryApp = firebase.initializeApp(config, "Secondary");
+
 function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pmg, notify, grplist, jgrp, jpre,
    address, lot, city, state, zip, permit, price,
    pstart, astart, pcom, acom, wdays, jcolor,
    internal, sub, access,
-//   hasOnwer, ownerEmail, ownerPw,
+   ownerName, ownerEmail, ownerPw,owneraddress, ownercity, ownerstate, ownerzip, ownerphone, ownercellphone,
    internalusers, subs) {
   // A post entry.
   var postData = {
@@ -44,14 +54,43 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
   updates['/jobs/' + newPostKey + '/' + uid] = postData;
   updates['/user-jobs/' + uid + '/' + newPostKey] = postData;
 
-/*  if(hasOwner) {
+  //if(hasOwner) {
     var ownerData = {
-      access:""
+      access:"",
+      email: ownerEmail,
+      name: ownerName,
+      address: owneraddress,
+      city: ownercity,
+      state: ownerstate,
+      zip: ownerzip,
+      phone: ownerphone,
+      cellphone: ownercellphone
     }
-    var ownerid = createUser("owner", ownerEmail, ownerPw);
-    updates['/jobs/' + newPostKey + '/' + ownerid] = ownerData;
-    updates['/user-jobs/' + ownerid + '/' + newPostKey] = ownerData;
-  }*/
+
+    secondaryApp.auth().createUserWithEmailAndPassword(ownerEmail, ownerPw).then(function(result) {
+        firebase.database().ref('users/' + result.uid).set({
+          email: ownerEmail,
+          type: "owner"
+        });
+        var ownerid = result.uid;
+        firebase.database().ref('/jobs/' + newPostKey + '/' + ownerid).set(ownerData);
+        firebase.database().ref('/user-jobs/' + ownerid + '/' + newPostKey).set(ownerData);
+
+//        updates['/jobs/' + newPostKey + '/' + ownerid] = ownerData;
+//        updates['/user-jobs/' + ownerid + '/' + newPostKey] = ownerData;
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // [START_EXCLUDE]
+      if(errorCode == 'auth/invalid-email') {
+        alert(email + ' is not a valid email address.')
+      } else if (errorCode == 'auth/weak-password') {
+        alert('The password is too weak.');
+      }
+      console.log(error);
+    });
+  //}
 
   for(var i=0; i<internalusers.length; i++) {
     var internalData = {
@@ -75,28 +114,4 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
   }
 
   return firebase.database().ref().update(updates);
-}
-
-
-function createUser(type, email, pw) {
-  firebase.auth().createUserWithEmailAndPassword(email, pw).then(function(result) {
-      firebase.database().ref('users/' + result.uid).set({
-        email: email,
-        type: type
-      });
-      return result.uid;
-  }).catch(function(error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // [START_EXCLUDE]
-    if(errorCode == 'auth/invalid-email') {
-      alert(email + ' is not a valid email address.')
-    } else if (errorCode == 'auth/weak-password') {
-      alert('The password is too weak.');
-    }
-    console.log(error);
-    // [END_EXCLUDE]
-  });
-  return null;
 }

@@ -114,7 +114,28 @@ app.controller("jobs", function($scope, $timeout) {
     var internal = $scope.c_internal != undefined? $scope.c_internal : null;
     var sub = $scope.c_sub != undefined? $scope.c_sub : null;
 
+    var ownername = $scope.c_ownername != undefined? $scope.c_ownername : null;
+    var owneraddress = $scope.c_owneraddress != undefined? $scope.c_owneraddress : null;
+    var ownercity = $scope.c_ownercity != undefined? $scope.c_ownercity : null;
+    var ownerstate = $scope.c_ownerstate != undefined? $scope.c_ownerstate : null;
+    var ownerzip = $scope.c_ownerzip != undefined? $scope.c_ownerzip : null;
+    var ownerphone = $scope.c_ownerphone != undefined? $scope.c_ownerphone : null;
+    var ownercellphone = $scope.c_ownercellphone != undefined? $scope.c_ownercellphone : null;
+    var ownercellemail = $scope.c_ownercellemail != undefined? $scope.c_ownercellemail : null;
+    var ownermail = $scope.c_ownermail != undefined? $scope.c_ownermail : null;
+    var owneraccessmethod = $scope.c_owneraccess != undefined? $scope.c_owneraccess : null;
+    var ownercalendar = $scope.c_owneraccessmethod != undefined? $scope.c_owneraccessmethod : null;
+    var ownershowcalendar = $scope.c_ownercalopt != undefined? $scope.c_ownercalopt : null;
+    var owneropt1 = $scope.c_owneropt1 != undefined? $scope.c_owneropt1 : null;
+    var owneropt2 = $scope.c_owneropt2 != undefined? $scope.c_owneropt2 : null;
+    var owneropt3 = $scope.c_owneropt3 != undefined? $scope.c_owneropt3 : null;
+    var owneropt4 = $scope.c_owneropt4 != undefined? $scope.c_owneropt4 : null;
+    var owneropt5 = $scope.c_owneropt5 != undefined? $scope.c_owneropt5 : null;
+    var owneropt6 = $scope.c_owneropt6 != undefined? $scope.c_owneropt6 : null;
+    var owneropt7 = $scope.c_owneropt7 != undefined? $scope.c_owneropt7 : null;
+
     var userId = firebase.auth().currentUser.uid;
+
     return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
       var firstname = snapshot.val().firstname;
       var lastname = snapshot.val().lastname;
@@ -123,7 +144,7 @@ app.controller("jobs", function($scope, $timeout) {
       var access;
       // Default Group Access
       if(type == "admin") {
-        access = "cevd";
+          access = "cevd";
       }else if(type == "internal") {
         access = "c---";
       }
@@ -134,6 +155,7 @@ app.controller("jobs", function($scope, $timeout) {
           address, lotinfo, city, state, zip, permit, price,
           projstart, actstart, projcompletion, actcompletion, workdays, jobcolor,
           internal, sub, access,
+          ownername, ownermail, "ownerpassword", owneraddress, ownercity, ownerstate, ownerzip, ownerphone, ownercellphone,
           $scope.internalusers,
           $scope.subs);
       // [END_EXCLUDE]
