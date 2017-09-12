@@ -17,6 +17,10 @@ app.config(function($routeProvider) {
     .when("/joblist", {
       templateUrl : "joblist.html",
       controller : "joblist"
+    })
+    .when("/users", {
+      templateUrl : "users.html",
+      controller : "users"
     });
 });
 

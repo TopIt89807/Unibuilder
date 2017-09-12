@@ -1,0 +1,166 @@
+<div class="row">
+  <div class="portlet form">
+      <!-- BEGIN FORM-->
+      <div class="portlet-title">
+          <div class="caption font-red-sunglo">
+              <i class="icon-user font-red-sunglo"></i>
+              <span class="caption-subject bold uppercase"> User List</span>
+          </div>
+      </div>
+      <div class="portlet-body form">
+        <form action="#" class="horizontal-form">
+          <div class="form-body">
+              <div class="portlet-body">
+                <a type="button" data-toggle='modal' class="btn btn-circle blue" href="users#createuser">Create a new User</a>
+                <p/>
+                <div kendo-grid k-options="gridOptions" k-data-source="ds">
+                </div>
+              </div>
+          </div>
+        </form>
+      <!-- END FORM-->
+      </div>
+  </div>
+  <div class="modal fade bs-modal-md" id="medium" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                    <div class="portlet light ">
+                        <div class="portlet-body form">
+                            <div class="form-body">
+                                <input type="text" ng-model="user_key" hidden>
+
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-envelope"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Email Address" ng-model="user_email" readonly> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="First Name" ng-model="user_fname"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Last Name" ng-model="user_lname"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label>User Type</label>
+                                  <select class="bs-select form-control" ng-model="user_type">
+                                      <option value="admin">Admin</option>
+                                      <option value="owner">Owner</option>
+                                      <option value="internal">Internal User</option>
+                                      <option value="subs">Subs/Vendors</option>
+                                  </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn green"  data-dismiss="modal" ng-click="onSave();">Save</button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+  <div class="modal fade bs-modal-md" id="createuser" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                    <div class="portlet light ">
+                        <div class="portlet-body form">
+                            <div class="form-body">
+                                <input type="text" ng-model="user_key" hidden>
+
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-envelope"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Email Address" ng-model="userc_email"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="First Name" ng-model="userc_fname"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Last Name" ng-model="userc_lname"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-key"></i>
+                                        </span>
+                                        <input type="password" class="form-control" placeholder="Password" ng-model="userc_password"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-key"></i>
+                                        </span>
+                                        <input type="password" class="form-control" placeholder="Confirm Password" ng-model="userc_confpw"> </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label>User Type</label>
+                                  <select class="bs-select form-control" ng-model="userc_type">
+                                      <option value="admin">Admin</option>
+                                      <option value="owner">Owner</option>
+                                      <option value="internal">Internal User</option>
+                                      <option value="subs">Subs/Vendors</option>
+                                  </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn red-sunglo" ng-click="onCreate();">Create</button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+
+</div>
