@@ -163,4 +163,28 @@
       <!-- /.modal-dialog -->
   </div>
 
+  <div class="modal fade bs-modal-lg" id="useraccess" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                    <div class="portlet light ">
+                        <div class="portlet-body form">
+                            <div class="form-body">
+                              <div kendo-grid k-options="gridAccessOptions" k-data-source="dsAccess">
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn red-sunglo" ng-click="onCreate();">Create</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
 </div>

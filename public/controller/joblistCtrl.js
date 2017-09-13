@@ -155,7 +155,7 @@ app.controller("joblist", function($scope, $timeout) {
     wholemap.setZoom(11);
   }
 
-  var jobsRef = firebase.database().ref('/jobs/');
+  var jobsRef = firebase.database().ref('/joblist/');
   var markerList = [];
   jobsRef.on('value', function(data) {
     var keys = [];
@@ -167,58 +167,64 @@ app.controller("joblist", function($scope, $timeout) {
     $scope.reload();
     markerList = [];
     for(var i=0; i<keys.length; i++) {
-      var ref =  firebase.database().ref('/jobs/' + keys[i] + "/" + $scope.getCurrentUID());
+      var ref =  firebase.database().ref('/joblist/' + keys[i]);
       ref.once('value').then(function(snapshot) {
-        var access = snapshot.val().access;
-        if(access.charAt(2) == 'v') {
+//        + "/" + $scope.getCurrentUID());
+//      ref.once('value').then(function(snapshot) {
+        var jobID = snapshot.key;
+        var creatorID = snapshot.val().creatorID;
+        firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
 
-          var projmgr = "";
-          var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
-          for(var j=0; j<cnt; j++) {
-            projmgr += snapshot.val().projmgr[j] + "<br/>";
-          }
-          editable = access.charAt(1) != 'e'? 0 : 1;
-          if(access.charAt(1) != 'e') {
-            $("#large").find('*').attr("disabled", true);
-          }else {
-            $("#large").find('*').attr("disabled", false);
-          }
-          var col = {
-              JobKey: snapshot.ref.parent.key,
-              JobColor: snapshot.val().jobcolor,
-              JobName: "<a id='aass' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.ref.parent.key + "\");'>"+snapshot.val().jobname+"</a>",
-              Addr: snapshot.val().address,
-              City: snapshot.val().city,
-              State: snapshot.val().state,
-              Zip: snapshot.val().zip,
-              Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
-              Owner: "owner",
-              Phone: "<a href='tel:22222222'>22222222</a>",
-              Cell: "<a href='tel:22222222'>22222222</a>",
-              Status: "<img src='assets/images/online.png'/>Online",
-              Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
-              CCLimit: "Not Accepted",
-              ACHLimit: "Not Accepted"
-          }
-          if(snapshot.val().mapped == "mapped") {
-            wholemap.addMarker({
-                lat: snapshot.val().lat,
-                lng: snapshot.val().lng,
-                title: 'Lima'
-            });
-            var node = {
-              lat: snapshot.val().lat,
-              lng: snapshot.val().lng
+          var access = snapshot.val().access;
+          if(access.charAt(2) == 'v') {
+
+            var projmgr = "";
+            var cnt = snapshot.val().projmgr != undefined? Object.keys(snapshot.val().projmgr).length : 0;
+            for(var j=0; j<cnt; j++) {
+              projmgr += snapshot.val().projmgr[j] + "<br/>";
             }
-            markerList.push(node);
-            $scope.reload();
-          }
+            editable = access.charAt(1) != 'e'? 0 : 1;
+            if(access.charAt(1) != 'e') {
+              $("#large").find('*').attr("disabled", true);
+            }else {
+              $("#large").find('*').attr("disabled", false);
+            }
+            var col = {
+                JobKey: snapshot.ref.parent.key,
+                JobColor: snapshot.val().jobcolor,
+                JobName: "<a id='aass' data-toggle='modal' href='joblist#large' ng-click='viewDetailMode(\"" + snapshot.ref.parent.key + "\");'>"+snapshot.val().jobname+"</a>",
+                Addr: snapshot.val().address,
+                City: snapshot.val().city,
+                State: snapshot.val().state,
+                Zip: snapshot.val().zip,
+                Pjmgr: projmgr/* + "   <a><img src='assets/images/more.png'/></a>"*/,
+                Owner: "owner",
+                Phone: "<a href='tel:22222222'>22222222</a>",
+                Cell: "<a href='tel:22222222'>22222222</a>",
+                Status: "<img src='assets/images/online.png'/>Online",
+                Map: "<img src='assets/images/" + (snapshot.val().mapped == "mapped"? "marker.png" : "marker_gray.png") + "'/>",
+                CCLimit: "Not Accepted",
+                ACHLimit: "Not Accepted"
+            }
+            if(snapshot.val().mapped == "mapped") {
+              wholemap.addMarker({
+                  lat: snapshot.val().lat,
+                  lng: snapshot.val().lng,
+                  title: 'Lima'
+              });
+              var node = {
+                lat: snapshot.val().lat,
+                lng: snapshot.val().lng
+              }
+              markerList.push(node);
+              $scope.reload();
+            }
 
-          $scope.gridData.push(col);
-          $scope.ds = new kendo.data.DataSource({
-            data:$scope.gridData,
-            pageSize:50
-          });
+            $scope.gridData.push(col);
+            $scope.ds = new kendo.data.DataSource({
+              data:$scope.gridData,
+              pageSize:50
+            });
 
             var colmap = {
                 JobKey: snapshot.ref.parent.key,
@@ -233,6 +239,7 @@ app.controller("joblist", function($scope, $timeout) {
             });
             $scope.$apply();
           }
+        });
       });
     }
 

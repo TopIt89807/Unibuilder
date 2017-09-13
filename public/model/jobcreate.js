@@ -46,6 +46,10 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
     access:access
   };
 
+  var createData = {
+    creatorID : uid
+  };
+
   // Get a key for a new Post.
   var newPostKey = firebase.database().ref().child('jobs').push().key;
 
@@ -53,10 +57,11 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
   var updates = {};
   updates['/jobs/' + newPostKey + '/' + uid] = postData;
   updates['/user-jobs/' + uid + '/' + newPostKey] = postData;
+  updates['/joblist/' + newPostKey] = createData;
 
   //if(hasOwner) {
     var ownerData = {
-      access:"",
+      access:"----",
       email: ownerEmail,
       name: ownerName,
       address: owneraddress,
@@ -94,7 +99,7 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
 
   for(var i=0; i<internalusers.length; i++) {
     var internalData = {
-      access:"",
+      access:"----",
       viewing:internalusers[i].viewing,
       notification:internalusers[i].notification
     }
@@ -105,7 +110,7 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
 
   for(var i=0; i<subs.length; i++) {
     var subData = {
-      access:"",
+      access:"----",
       viewing:subs[i].viewing
     }
 
