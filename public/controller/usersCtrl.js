@@ -27,6 +27,17 @@ app.controller("users", function($scope, $timeout) {
   var onChange = function(args) {
     var model = this.dataItem(this.select());
     var key = model.UserKey;
+    var ref =  firebase.database().ref('/users/' + key);
+    ref.once('value').then(function(snapshot) {
+      $scope.user_key = snapshot.key;
+      $scope.user_email = snapshot.val().email != undefined? snapshot.val().email : null;
+      $scope.user_fname = snapshot.val().firstname!= undefined? snapshot.val().firstname : null;
+      $scope.user_lname = snapshot.val().lastname!= undefined? snapshot.val().lastname : null;
+      $scope.user_type = snapshot.val().type!= undefined? snapshot.val().type : null;
+      $scope.caccess = snapshot.val().createaccess;
+      $scope.$apply();
+    });
+
     $("#useraccess").modal('show');
     $scope.viewAccessMode(key);
   }
@@ -40,7 +51,6 @@ app.controller("users", function($scope, $timeout) {
         {field:"Firstname", title:"First Name", encoded: false},
         {field:"Lastname", title:"Last Name"},
         {field:"Type"},
-        {field:"CreateAccess", title: "Job Create Access", encoded: false},
         {field:"Other", title:" ", encoded: false}
     ],
     pageable: {
@@ -50,6 +60,24 @@ app.controller("users", function($scope, $timeout) {
     },
     sortable: true,
     resizable: true
+  }
+  $scope.selectAllViewAccess = function() {
+    for(var i=1; i<$scope.vaccess.length; i++) {
+      $scope.vaccess[i] = $scope.vaccess[0];
+//      $scope.selChangedView(i);
+    }
+  }
+  $scope.selectAllEditAccess = function() {
+    for(var i=1; i<$scope.eaccess.length; i++) {
+      $scope.eaccess[i] = $scope.eaccess[0];
+//      $scope.selChangedView(i);
+    }
+  }
+  $scope.selectAllDeleteAccess = function() {
+    for(var i=1; i<$scope.daccess.length; i++) {
+      $scope.daccess[i] = $scope.daccess[0];
+//      $scope.selChangedView(i);
+    }
   }
 
   $scope.viewAccessMode = function(key) {
@@ -68,37 +96,52 @@ app.controller("users", function($scope, $timeout) {
         keys.push(k);
       }
       var cnt = 0;
+
+      var col = {
+          UserKey: "",
+          JobKey: "",
+          JobName: "",
+          Type: "type",
+          ViewAccess: "<input type='checkbox' ng-change='selectAllViewAccess()' ng-model='vaccess[" + cnt + "]'/>",
+          EditAccess: "<input type='checkbox' ng-change='selectAllEditAccess()' ng-model='eaccess[" + cnt + "]'/>",
+          DeleteAccess: "<input type='checkbox' ng-change='selectAllDeleteAccess()' ng-model='daccess[" + cnt + "]'/>",
+      }
+      $scope.vaccess.push(false);
+      $scope.eaccess.push(false);
+      $scope.daccess.push(false);
+
+      cnt ++;
+      $scope.gridAccessData.push(col);
       for(var i=0; i<keys.length; i++) {  //loop total jobs
         var ref =  firebase.database().ref('/joblist/' + keys[i]);
         ref.once('value').then(function(snapshot) {
           var jobID = snapshot.key;
           var creatorID = snapshot.val().creatorID;
           firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
-
             var col = {
                 UserKey: key,
                 JobKey: jobID,
                 JobName: snapshot.val().jobname,
                 Type: "type",
-                ViewAccess: "<input type='checkbox' ng-model='vaccess[" + cnt + "]' ng-change='onCheckViewAccess(" + cnt + ", \"" + key + "\",\"" + jobID + "\")'/>",
-                EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' ng-change='onCheckEditAccess(" + cnt + ", \"" + key + "\",\"" + jobID + "\")'/>",
-                DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' ng-change='onCheckRemoveAccess(" + cnt + ", \"" + key + "\",\"" + jobID + "\")'/>",
+                ViewAccess: "<input type='checkbox' ng-model='vaccess[" + cnt + "]' />",
+                EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' />",
+                DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' />",
             }
             firebase.database().ref('/jobs/' + jobID + '/' + key).once('value').then(function(snapshot) {
               var acc;
               if(snapshot.val() == undefined) acc = "----";
               else acc = snapshot.val().access != undefined ? snapshot.val().access : "----";
-              if(acc.charAt(2) == 'e')
+              if(acc.charAt(1) == 'e')
                 $scope.eaccess.push(true);
-              else if(acc.charAt(2) == '-')
+              else if(acc.charAt(1) == '-')
                 $scope.eaccess.push(false);
               if(acc.charAt(2) == 'v')
                 $scope.vaccess.push(true);
               else if(acc.charAt(2) == '-')
                 $scope.vaccess.push(false);
-              if(acc.charAt(2) == 'd')
+              if(acc.charAt(3) == 'd')
                 $scope.daccess.push(true);
-              else if(acc.charAt(2) == '-')
+              else if(acc.charAt(3) == '-')
                 $scope.daccess.push(false);
 
               $scope.gridAccessData.push(col);
@@ -108,8 +151,8 @@ app.controller("users", function($scope, $timeout) {
               });
 
               $scope.$apply();
-              cnt ++;
             });
+            cnt ++;
 
           });
 
@@ -157,7 +200,6 @@ app.controller("users", function($scope, $timeout) {
       if($scope.vaccess[$index])
         access = replaceAt(access, 2, 'v');
       else access = replaceAt(access, 2, '-');
-
       ref.update({access : access});
       firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).update({access : access});
     });
@@ -175,6 +217,33 @@ app.controller("users", function($scope, $timeout) {
         access = snapshot.val().access != undefined ? snapshot.val().access : "----";
       }
 
+      if($scope.daccess[$index])
+        access = replaceAt(access, 3, 'd');
+      else access = replaceAt(access, 3, '-');
+
+      ref.update({access : access});
+      firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).update({access : access});
+    });
+  }
+
+  $scope.onCheckAccess = function($index, UserKey, JobKey) {
+    var ref =  firebase.database().ref('/jobs/' + JobKey + '/' + UserKey);
+    ref.once('value').then(function(snapshot) {
+      var access ;
+      if(snapshot.val() == undefined) {
+        access = "----";
+        ref.set({access: access});
+        firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).set({access : access});
+      }else {
+        access = snapshot.val().access != undefined ? snapshot.val().access : "----";
+      }
+
+      if($scope.vaccess[$index])
+        access = replaceAt(access, 2, 'v');
+      else access = replaceAt(access, 2, '-');
+      if($scope.eaccess[$index])
+        access = replaceAt(access, 1, 'e');
+      else access = replaceAt(access, 1, '-');
       if($scope.daccess[$index])
         access = replaceAt(access, 3, 'd');
       else access = replaceAt(access, 3, '-');
@@ -204,11 +273,9 @@ app.controller("users", function($scope, $timeout) {
   $scope.userc_type = "admin";
 
   var usersRef = firebase.database().ref('/users/');
-  $scope.caccess = [];
 
   usersRef.on('value', function(data) {
     $scope.gridData = [];
-    $scope.caccess = [];
     var keys = [];
     for(var k in data.val()) {
       keys.push(k);
@@ -222,7 +289,6 @@ app.controller("users", function($scope, $timeout) {
         var fname = snapshot.val().firstname;
         var lname = snapshot.val().lastname;
         var type;
-        var cacc = snapshot.val().createaccess;
         switch(snapshot.val().type) {
           case "admin":
             type = "Admin";
@@ -238,16 +304,13 @@ app.controller("users", function($scope, $timeout) {
             break;
         }
 
-        $scope.caccess.push(cacc);
         var col = {
             UserKey: key,
             Email: email,
             Firstname: fname,
             Lastname: lname,
             Type: type,
-            CreateAccess: "<input type='checkbox' ng-model='caccess[" + cnt + "]' ng-change='onCheckCreateAccess(" + cnt + ", \"" + key + "\")'/>",
-            Other: "<a type='button' data-toggle='modal' href='users#medium' class='btn btn-sm btn-circle purple btn-outline' ng-click='edit(\"" + key + "\");'>Edit</a>" + "&nbsp" +
-                  "<a type='button' class='btn btn-sm btn-circle red btn-outline' ng-click='delete(\"" + key + "\");'>Delete</a>"
+            Other: "<a type='button' class='btn btn-sm btn-circle red btn-outline' ng-click='delete(\"" + key + "\");'>Delete</a>"
         }
 
         $scope.gridData.push(col);
@@ -261,11 +324,6 @@ app.controller("users", function($scope, $timeout) {
       });
     }
   });
-
-  $scope.onCheckCreateAccess = function($index, key) {
-    var ref =  firebase.database().ref('/users/' + key);
-    ref.update({createaccess : $scope.caccess[$index]});
-  }
 
   $scope.onCreate = function() {
     var email = $scope.userc_email;
@@ -345,8 +403,16 @@ app.controller("users", function($scope, $timeout) {
     var fname = $scope.user_fname;
     var lname = $scope.user_lname;
     var type = $scope.user_type;
+    var caccess = $scope.caccess;
     var ref =  firebase.database().ref('/users/' + key);
-    ref.update({firstname : fname, lastname : lname, type: type});
+    ref.update({firstname : fname, lastname : lname, type: type, createaccess: caccess});
+
+    for(var i=1; i<$scope.gridAccessData.length; i++) {
+/*      $scope.onCheckViewAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+      $scope.onCheckEditAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+      $scope.onCheckDeleteAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+*/      $scope.onCheckAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+    }
   }
 
   $scope.delete = function(key) {
