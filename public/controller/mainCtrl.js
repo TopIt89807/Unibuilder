@@ -21,6 +21,10 @@ app.config(function($routeProvider) {
     .when("/users", {
       templateUrl : "users.html",
       controller : "users"
+    })
+    .when("/documents", {
+      templateUrl : "documents.html",
+      controller : "documents"
     });
 });
 

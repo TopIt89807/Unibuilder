@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="portlet form">
+      <div class="portlet-body form">
+        <form action="#" class="horizontal-form">
+          <div class="form-body">
+              <div class="portlet-body">
+                <div kendo-grid k-options="gridOptions" k-data-source="ds">
+                </div>
+              </div>
+          </div>
+        </form>
+      <!-- END FORM-->
+      </div>
+  </div>
+</div>
+
+<div class="modal fade bs-modal-lg" id="detail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                  <div class="portlet light ">
+                      <div class="portlet-body form">
+                          <div class="form-body">
+                            <input type="text" ng-model="job_key" hidden>
+                            <input type="text" ng-model="currentPath" hidden>
+                            <a type="button" data-toggle='modal' class="btn green" ng-click="makeNewFolder()">New Folder</a>
+
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_2">
+                                <thead>
+                                    <tr>
+                                        <th class="table-checkbox">
+                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                <input type="checkbox" class="group-checkable" data-set="#sample_2 .checkboxes" />
+                                                <span></span>
+                                            </label>
+                                        </th>
+                                        <th> Name </th>
+                                        <th>  </th>
+                                        <th>  </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="xx in assetsData" class="odd gradeX">
+                                        <td>
+                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                <input type="checkbox" class="checkboxes" value="1" />
+                                                <span></span>
+                                            </label>
+                                        </td>
+                                        <td> <a ng-click="openPath(xx.name)">{{xx.name}} </a> </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                          </div>
+                      </div>
+                  </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn green"  data-dismiss="modal" ng-click="onSave();">Save</button>-->
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

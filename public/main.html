@@ -564,6 +564,20 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item" ng-class="fff>=8 && fff<= 9 ? ' active open' : ''">
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="icon-docs"></i>
+                                <span class="title">Files</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                              <li class="nav-item " ng-class="fff === 8 ? 'active open' : ''" ng-click="myFunc(8)">
+                                    <a href="#!documents" class="nav-link ">
+                                        <span class="title">Documents</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                     <!-- END SIDEBAR MENU -->
                 </div>
@@ -680,6 +694,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <script src="assets/scripts/form-wizard.js" type="text/javascript"></script>
             <script src="assets/scripts/profile.js" type="text/javascript"></script>
             <script src="assets/scripts/components-bootstrap-switch.js" type="text/javascript"></script>
+            <script src="assets/scripts/table-datatables-managed.js" type="text/javascript"></script>
             <!-- END PAGE LEVEL SCRIPTS -->
             <!-- BEGIN THEME LAYOUT SCRIPTS -->
             <script src="assets/layouts/layout2/scripts/layout.min.js" type="text/javascript"></script>
@@ -714,6 +729,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <script src="controller/jobsCtrl.js"></script>
             <script src="controller/joblistCtrl.js"></script>
             <script src="controller/usersCtrl.js"></script>
+            <script src="controller/documentsCtrl.js"></script>
 
             <script src="model/jobcreate.js"></script>
             <script src="model/joblist.js"></script>
