@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="portlet form">
+      <div class="portlet-body form">
+        <form action="#" class="horizontal-form">
+          <div class="form-body">
+              <div class="portlet-body">
+                <select ng-model="jobname" ng-change="changeJob()" class="bs-select form-control" data-style="btn-outline blue">
+                      <option ng-repeat="xx in jobs" on-finish-render="ngRepeatFinished" value="{{xx.value}}">{{xx.name}}</option>
+                </select>
+                <p/>
+                <input type="button" ng-click="aaa()" value="aaa"/>
+                <div id="scheduler"></div>
+              </div>
+          </div>
+        </form>
+      <!-- END FORM-->
+      </div>
+  </div>
+</div>
+
+<div class="modal fade bs-modal-lg" id="detail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                  <div class="portlet light ">
+                      <div class="portlet-body form">
+                          <div class="form-body">
+
+                          </div>
+                      </div>
+                  </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn green"  data-dismiss="modal" ng-click="onSave();">Save</button>-->
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

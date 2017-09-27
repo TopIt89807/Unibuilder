@@ -25,6 +25,10 @@ app.config(function($routeProvider) {
     .when("/documents", {
       templateUrl : "documents.html",
       controller : "documents"
+    })
+    .when("/scheduler", {
+      templateUrl : "scheduler.html",
+      controller : "scheduler"
     });
 });
 
