@@ -4,24 +4,21 @@ app.controller("scheduler", function($scope, $timeout) {
   }
 
   var jobsRef = firebase.database().ref('/joblist/');
-  $scope.changeJob = function() {
-    console.log($scope.jobname);
-  }
   jobsRef.on('value', function(data) {
     var keys = [];
     for(var k in data.val()) {
       keys.push(k);
     }
     $scope.gridData = [];
-    $scope.jobs = [
-      {name:"All", value:"All"}
-    ];
-     $scope.jobname = $scope.jobs[0].value;
+    $scope.jobs = [];
+    $scope.jobs.push({
+      name:"All",
+      value:"All"
+    });
+    $scope.jobname = $scope.jobs[0].value;
     for(var i=0; i<keys.length; i++) {
       var ref =  firebase.database().ref('/joblist/' + keys[i]);
       ref.once('value').then(function(snapshot) {
-//        + "/" + $scope.getCurrentUID());
-//      ref.once('value').then(function(snapshot) {
         var jobID = snapshot.key;
         var creatorID = snapshot.val().creatorID;
         firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
@@ -45,20 +42,37 @@ app.controller("scheduler", function($scope, $timeout) {
         });
       });
     }
+
   });
-  var aa = [{"TaskID":4,"OwnerID":1,"Title":"Bowling tournament","Description":"","StartTimezone":null,"Start":"\/Date(1370811600000)\/","End":"\/Date(1370822400000)\/","EndTimezone":null,"RecurrenceRule":null,"RecurrenceID":null,"RecurrenceException":null,"IsAllDay":false},
-          {"TaskID":5,"OwnerID":2,"Title":"Take the dog to the vet","Description":"","StartTimezone":null,"Start":"\/Date(1370939400000)\/","End":"\/Date(1370943000000)\/","EndTimezone":null,"RecurrenceRule":null,"RecurrenceID":null,"RecurrenceException":null,"IsAllDay":false},
-          {"TaskID":6,"OwnerID":3,"Title":"Call Charlie about the project","Description":"","StartTimezone":null,"Start":"\/Date(1370950200000)\/","End":"\/Date(1370955600000)\/","EndTimezone":null,"RecurrenceRule":null,"RecurrenceID":null,"RecurrenceException":null,"IsAllDay":false}
+  var scheduleData = [
+  //  {"taskId":4,"ownerId":1,"title":"Bowling tournament","description":"","startTimezone":null,"start":"\/Date(1370811600000)\/","end":"\/Date(1370822400000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false},
+  //  {"taskId":5,"ownerId":2,"title":"Take the dog to the vet","description":"","startTimezone":null,"start":"\/Date(1370939400000)\/","end":"\/Date(1370943000000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false},
+  //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
 
-  $scope.aaa = function() {
-    var scheduler = $("#scheduler").data("kendoScheduler");
-    console.log(scheduler.dataSource.data());
-    // scheduler.dataSource.add( {
-    //   start: new Date("2013/6/6 08:00 AM"),
-    //   end: new Date("2013/6/6 09:00 AM"),
-    //   title: "Interview"
-    // });
+
+  $scope.changeJob = function() {
+    var ref = firebase.database().ref('/schedule/' + $scope.jobname);
+    ref.on('value', function(data) {
+      scheduleData = [];
+      var scheduler = $("#scheduler").data("kendoScheduler");
+      scheduler.dataSource.data(scheduleData);
+
+      var keys = [];
+      for(var k in data.val()) {
+        keys.push(k);
+      }
+      for(var i=0; i<keys.length; i++) {
+        var ref =  firebase.database().ref('/schedule/' + $scope.jobname + '/' + keys[i]);
+        ref.once('value').then(function(snapshot) {
+          var jsonobj = JSON.parse(JSON.stringify(snapshot.val()));
+          jsonobj.start = new Date(jsonobj.start);
+          jsonobj.end = new Date(jsonobj.end);
+          scheduleData.push(jsonobj);
+          scheduler.dataSource.data(scheduleData);
+        });
+      }
+    });
   }
 
   $("#scheduler").kendoScheduler({
@@ -80,32 +94,27 @@ app.controller("scheduler", function($scope, $timeout) {
         }
       },
       dataSource: {
-          data:aa,
+          data:scheduleData,
           schema: {
               model: {
                   id: "taskId",
                   fields: {
-                      taskId: { from: "TaskID", type: "number" },
-                      title: { from: "Title", defaultValue: "No title", validation: { required: true } },
-                      start: { type: "date", from: "Start" },
-                      end: { type: "date", from: "End" },
-                      startTimezone: { from: "StartTimezone" },
-                      endTimezone: { from: "EndTimezone" },
-                      description: { from: "Description" },
-                      recurrenceId: { from: "RecurrenceID" },
-                      recurrenceRule: { from: "RecurrenceRule" },
-                      recurrenceException: { from: "RecurrenceException" },
-                      ownerId: { from: "OwnerID", defaultValue: 1 },
-                      isAllDay: { type: "boolean", from: "IsAllDay" }
+                      taskId: { from: "taskId", type: "String" },
+                      title: { from: "title", defaultValue: "No title", validation: { required: true } },
+                      start: { type: "date", from: "start" },
+                      end: { type: "date", from: "end" },
+                      startTimezone: { from: "startTimezone" },
+                      endTimezone: { from: "endTimezone" },
+                      description: { from: "description"},
+                      recurrenceId: { from: "recurrenceId" },
+                      recurrenceRule: { from: "recurrenceRule" },
+                      recurrenceException: { from: "recurrenceException" },
+                      ownerId: { from: "ownerId", defaultValue: 1 },
+                      isAllDay: { type: "boolean", from: "isAllDay" },
+                      cloneid: { from: "cloneid",type: "String"},
                   }
               }
           }
-      },
-      save: function(e) {
-        var start = e.start;
-        var end = e.end;
-        //alert('a');
-        console.log(kendo.format("Selection between {0:g} and {1:g}", start, end));
       },
       resources: [
           {
@@ -128,10 +137,67 @@ app.controller("scheduler", function($scope, $timeout) {
           }
       ]
   });
+  var scheduler = $("#scheduler").data("kendoScheduler");
+  scheduler.bind("save", scheduler_save);
+  scheduler.bind("add", scheduler_add);
+  scheduler.bind("moveEnd", scheduler_move);
+  scheduler.bind("resizeEnd", scheduler_resize);
+  scheduler.bind("remove", scheduler_remove);
+
+  var isAdding = false;
+  function scheduler_add(e) {
+    var scheduler = $("#scheduler").data("kendoScheduler");
+    console.log(scheduler.dataSource.data());
+    isAdding = true;
+  }
+  function scheduler_save(e) {
+    var scheduler = $("#scheduler").data("kendoScheduler");
+    if(isAdding) {
+      //var scheduler = $("#scheduler").data("kendoScheduler");
+      //scheduleData = scheduler.dataSource.data();
+
+      var JobKey = $scope.jobname;
+      //var newKey = firebase.database().ref().child('schedule').push().key;
+      e.event.cloneid = e.event.uid;
+      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.uid);
+      ref.update(JSON.parse(JSON.stringify(e.event)));
+    }
+    isAdding = false;
+  }
+  function scheduler_move(e) {
+    var JobKey = $scope.jobname;
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
+    var json = JSON.parse(JSON.stringify(e.event));
+    json.start = e.start;
+    json.end = e.end;
+    console.log(json);
+    ref.once('value').then(function(snapshot) {
+      ref.update(json);
+    });
+  }
+  function scheduler_resize(e) {
+    var JobKey = $scope.jobname;
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
+    var json = JSON.parse(JSON.stringify(e.event));
+    json.start = e.start;
+    json.end = e.end;
+    console.log(json);
+    ref.once('value').then(function(snapshot) {
+      ref.update(json);
+    });
+  }
+  function scheduler_remove(e) {
+    var JobKey = $scope.jobname;
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
+    ref.once('value').then(function(snapshot) {
+      ref.remove();
+    });
+  }
+
 
 
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 //    TableDatatablesManaged.init();
-    ComponentsBootstrapSelect.init();
+//    ComponentsBootstrapSelect.init();
   });
 });

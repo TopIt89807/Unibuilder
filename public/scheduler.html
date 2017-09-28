@@ -5,10 +5,9 @@
           <div class="form-body">
               <div class="portlet-body">
                 <select ng-model="jobname" ng-change="changeJob()" class="bs-select form-control" data-style="btn-outline blue">
-                      <option ng-repeat="xx in jobs" on-finish-render="ngRepeatFinished" value="{{xx.value}}">{{xx.name}}</option>
+                  <option ng-repeat="xx in jobs" on-finish-render="ngRepeatFinished" value="{{xx.value}}">{{xx.name}}</option>
                 </select>
                 <p/>
-                <input type="button" ng-click="aaa()" value="aaa"/>
                 <div id="scheduler"></div>
               </div>
           </div>
