@@ -1,4 +1,4 @@
-app.controller("scheduler", function($scope, $timeout) {
+app.controller("gantt", function($scope, $timeout) {
   $scope.getCurrentUID = function() {
     return firebase.auth().currentUser.uid;
   }
@@ -49,7 +49,7 @@ app.controller("scheduler", function($scope, $timeout) {
   //  {"taskId":5,"ownerId":2,"title":"Take the dog to the vet","description":"","startTimezone":null,"start":"\/Date(1370939400000)\/","end":"\/Date(1370943000000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false},
   //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
-
+  var ganttData = [];
 
   $scope.changeJob = function() {
     if($scope.jobname == "All") {
@@ -57,9 +57,9 @@ app.controller("scheduler", function($scope, $timeout) {
       var ref = firebase.database().ref('/schedule/');
       ref.on('value', function(data) {
         if($scope.jobname == "All") {
-          scheduleData = [];
-          var scheduler = $("#scheduler").data("kendoScheduler");
-          scheduler.dataSource.data(scheduleData);
+          ganttData = [];
+          var gantt = $("#gantt").data("kendoGantt");
+          gantt.dataSource.data(ganttData);
 
           var keys = [];
           for(var k in data.val()) {
@@ -80,9 +80,17 @@ app.controller("scheduler", function($scope, $timeout) {
                 ref.once('value').then(function(snapshot) {
                   var jsonobj = JSON.parse(JSON.stringify(snapshot.val()));
                   jsonobj.start = new Date(jsonobj.start);
-                  jsonobj.end = new Date(jsonobj.end);
-                  scheduleData.push(jsonobj);
-                  scheduler.dataSource.data(scheduleData);
+                  var enddate = new Date(jsonobj.end);
+                  if(jsonobj.isAllDay) {
+                    jsonobj.end = new Date(enddate.getTime() + 24 * 60 * 60 * 1000);
+                  }else
+                    jsonobj.end = enddate;
+                  jsonobj.percentComplete = 0.0;
+
+                  ganttData.push(jsonobj);
+                  gantt.dataSource.data(ganttData);
+                  if(gantt.range.start > jsonobj.start) gantt.range.start = jsonobj.start;
+                  if(gantt.range.end < jsonobj.end) gantt.range.end = jsonobj.end;
                 });
               }
 
@@ -95,9 +103,9 @@ app.controller("scheduler", function($scope, $timeout) {
 
       var ref = firebase.database().ref('/schedule/' + $scope.jobname);
       ref.once('value', function(data) {
-        scheduleData = [];
-        var scheduler = $("#scheduler").data("kendoScheduler");
-        scheduler.dataSource.data(scheduleData);
+        ganttData = [];
+        var gantt = $("#gantt").data("kendoGantt");
+        gantt.dataSource.data(ganttData);
 
         var keys = [];
         for(var k in data.val()) {
@@ -108,9 +116,15 @@ app.controller("scheduler", function($scope, $timeout) {
           ref.once('value').then(function(snapshot) {
             var jsonobj = JSON.parse(JSON.stringify(snapshot.val()));
             jsonobj.start = new Date(jsonobj.start);
-            jsonobj.end = new Date(jsonobj.end);
-            scheduleData.push(jsonobj);
-            scheduler.dataSource.data(scheduleData);
+            var enddate = new Date(jsonobj.end);
+            if(jsonobj.isAllDay) {
+              jsonobj.end = new Date(enddate.getTime() + 24 * 60 * 60 * 1000);
+            }else
+              jsonobj.end = enddate;
+            ganttData.push(jsonobj);
+            gantt.dataSource.data(ganttData);
+            if(gantt.range.start > jsonobj.start) gantt.range.start = jsonobj.start;
+            if(gantt.range.end < jsonobj.end) gantt.range.end = jsonobj.end;
           });
         }
       });
@@ -118,7 +132,101 @@ app.controller("scheduler", function($scope, $timeout) {
     }
   }
 
-  $("#scheduler").kendoScheduler({
+  $("#gantt").kendoGantt({
+//    date: new Date(),
+    dataSource: {
+      data:[
+        {
+          title:"Bowling tournament",
+          start:new Date("2017/8/18 9:00"),
+          end:new Date("2017/8/20 11:00")
+        },
+        {
+          title: "Task1",
+          start: new Date("2017/8/17 9:00"),
+          end: new Date("2017/9/01 11:00")
+        },
+        {
+          title: "Task2",
+          start: new Date("2017/8/20 12:00"),
+          end: new Date("2017/90/02 14:00")
+        }
+      ],
+      schema: {
+        model: {
+          id: "taskId",
+          fields: {
+            taskId: { from: "taskId", type: "String" },
+            title: { from: "title", defaultValue: "No title", validation: { required: true } },
+            start: { type: "date", from: "start" },
+            end: { type: "date", from: "end" },
+            startTimezone: { from: "startTimezone" },
+            endTimezone: { from: "endTimezone" },
+            description: { from: "description"},
+            recurrenceId: { from: "recurrenceId" },
+            recurrenceRule: { from: "recurrenceRule" },
+            recurrenceException: { from: "recurrenceException" },
+            colorId: { from: "colorId", defaultValue: 1 },
+            isAllDay: { type: "boolean", from: "isAllDay" },
+            cloneid: { from: "cloneid",type: "String"},
+
+            //id: { from: "id", type: "number" },
+            //orderId: { from: "orderId", type: "number", validation: { required: true } },
+            //parentId: { from: "parentId", type: "number", validation: { required: true } },
+            //start: { from: "start", type: "date" },
+            //end: { from: "end", type: "date" },
+            //title: { from: "title", defaultValue: "", type: "string" },
+            //percentComplete: { from: "percentComplete", type: "number" },
+            //summary: { from: "summary" },
+            //expanded: { from: "expanded" }
+          }
+        }
+      }
+    },
+    /*resources: {
+      dataSource: [
+        { id: 0, name: "Resource 1", color: "green", format: "p0" },
+        { id: 1, name: "Resource 2", color: "#32cd32", format: "p0" }
+      ]
+    },
+    assignments: {
+      dataSource: [
+        { taskId: 0, resourceId: 0, value: 1 },
+        { taskId: 0, resourceId: 1, value: 1 },
+        { taskId: 1, resourceId: 1, value: 1 }
+      ]
+    },*/
+    views: ["week", "day"],
+    columns: [
+      // { field: "id", title: "ID" },
+      { field: "title", title: "Title" },
+      //{ field: "dur", title: "Dur." },
+      { field: "start", title: "Start", format: "{0:yyyy/MM/dd hh:mm tt}"},
+      { field: "end", title: "Finish", format: "{0:yyyy/MM/dd hh:mm tt}"},
+      // { field: "title", title: "Assigned To" },
+      // { field: "title", title: "Pred" },
+      // { field: "title", title: "Status" },
+      // { field: "resources", title: "Task Resources" }
+    ],
+    dataBound: onDataBound
+  });
+
+  function onDataBound() {
+    var gantt = this;
+
+    gantt.element.find(".k-task").each(function(e) {
+      var dataItem = gantt.dataSource.getByUid($(this).attr("data-uid"));
+
+      // colorize task per business requirements
+      if (dataItem.percentComplete < .5) {
+        this.style.backgroundColor = dataItem.colorId;
+      } else {
+        this.style.backgroundColor = dataItem.colorId;
+      }
+    });
+  }
+
+  /*$("#scheduler").kendoScheduler({
       date: new Date(),
 //      startTime: new Date("2013/6/13 07:00 AM"),
       height: 600,
@@ -220,7 +328,6 @@ app.controller("scheduler", function($scope, $timeout) {
   });
   var scheduler = $("#scheduler").data("kendoScheduler");
 
-
   var usersRef = firebase.database().ref('/users/');
   var assignee = [];
 
@@ -274,75 +381,95 @@ app.controller("scheduler", function($scope, $timeout) {
   });
 
   for(i=0; i<assignee.length; i++)
-    scheduler.resources[1].dataSource.add(assignee[i]);
+    scheduler.resources[1].dataSource.add(assignee[i]);*/
+  var gantt = $("#gantt").data("kendoGantt");
 
-  scheduler.bind("save", scheduler_save);
-  scheduler.bind("add", scheduler_add);
-  scheduler.bind("moveEnd", scheduler_move);
-  scheduler.bind("resizeEnd", scheduler_resize);
-  scheduler.bind("edit", scheduler_edit);
-  scheduler.bind("remove", scheduler_remove);
+  gantt.bind("save", gantt_save);
+  gantt.bind("add", gantt_add);
+  gantt.bind("moveEnd", gantt_move);
+  gantt.bind("resizeEnd", gantt_resize);
+  gantt.bind("edit", gantt_edit);
+  gantt.bind("remove", gantt_remove);
 
   var isAdding = false;
   var isEditing = false;
-  function scheduler_add(e) {
-    var scheduler = $("#scheduler").data("kendoScheduler");
-    console.log(scheduler.dataSource.data());
+  function gantt_add(e) {
+    var gantt = $("#gantt").data("kendoGantt");
+    console.log(gantt.dataSource.data());
     isAdding = true;
   }
-  function scheduler_edit(e) {
+  function gantt_edit(e) {
     isEditing = true;
   }
-  function scheduler_save(e) {
-    var scheduler = $("#scheduler").data("kendoScheduler");
+  function gantt_save(e) {
+    var gantt = $("#gantt").data("kendoGantt");
     if(isAdding) {
-      //var scheduler = $("#scheduler").data("kendoScheduler");
-      //scheduleData = scheduler.dataSource.data();
+      //var gantt = $("#gantt").data("kendoGantt");
+      //scheduleData = gantt.dataSource.data();
 
       var JobKey = $scope.jobname;
       //var newKey = firebase.database().ref().child('schedule').push().key;
-      e.event.cloneid = e.event.uid;
-      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.uid);
-      ref.update(JSON.parse(JSON.stringify(e.event)));
+      e.task.cloneid = e.task.uid;
+      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.uid);
+      ref.update(JSON.parse(JSON.stringify(e.task)));
       isAdding = false;
+
     }
     if(isEditing) {
       var JobKey = $scope.jobname;
-      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
-      var json = JSON.parse(JSON.stringify(e.event));
+      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.cloneid);
+      var json = JSON.parse(JSON.stringify(e.task));
       console.log(json);
+
+      var enddate = new Date(json.end);
+      if(json.isAllDay) {
+        json.end = new Date(enddate.getTime() - 24 * 60 * 60 * 1000);
+      }else
+        json.end = enddate;
+
       ref.once('value').then(function(snapshot) {
         ref.update(json);
       });
       isEditing = false;
     }
   }
-  function scheduler_move(e) {
+  function gantt_move(e) {
     var JobKey = $scope.jobname;
-    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
-    var json = JSON.parse(JSON.stringify(e.event));
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.cloneid);
+    var json = JSON.parse(JSON.stringify(e.task));
     json.start = e.start;
     json.end = e.end;
     console.log(json);
+    var enddate = new Date(json.end);
+    if(json.isAllDay) {
+      json.end = new Date(enddate.getTime() - 24 * 60 * 60 * 1000);
+    }else
+      json.end = enddate;
+
     ref.once('value').then(function(snapshot) {
       ref.update(json);
     });
   }
-  function scheduler_resize(e) {
-    alert('');
+  function gantt_resize(e) {
     var JobKey = $scope.jobname;
-    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
-    var json = JSON.parse(JSON.stringify(e.event));
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.cloneid);
+    var json = JSON.parse(JSON.stringify(e.task));
     json.start = e.start;
     json.end = e.end;
     console.log(json);
+    var enddate = new Date(json.end);
+    if(json.isAllDay) {
+      json.end = new Date(enddate.getTime() - 24 * 60 * 60 * 1000);
+    }else
+      json.end = enddate;
+
     ref.once('value').then(function(snapshot) {
       ref.update(json);
     });
   }
-  function scheduler_remove(e) {
+  function gantt_remove(e) {
     var JobKey = $scope.jobname;
-    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
+    var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.cloneid);
     ref.once('value').then(function(snapshot) {
       ref.remove();
     });

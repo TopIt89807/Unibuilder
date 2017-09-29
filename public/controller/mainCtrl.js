@@ -29,6 +29,10 @@ app.config(function($routeProvider) {
     .when("/scheduler", {
       templateUrl : "scheduler.html",
       controller : "scheduler"
+    })
+    .when("/gantt", {
+      templateUrl : "gantt.html",
+      controller : "gantt"
     });
 });
 

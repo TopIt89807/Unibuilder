@@ -586,11 +586,16 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="arrow"></span>
                             </a>
                             <ul class="sub-menu">
-                              <li class="nav-item " ng-class="fff === 10 ? 'active open' : ''" ng-click="myFunc(10)">
+                                <li class="nav-item " ng-class="fff === 10 ? 'active open' : ''" ng-click="myFunc(10)">
                                     <a href="#!scheduler" class="nav-link ">
                                         <span class="title">Scheduler</span>
                                     </a>
                                 </li>
+                                <li class="nav-item " ng-class="fff === 11 ? 'active open' : ''" ng-click="myFunc(11)">
+                                      <a href="#!gantt" class="nav-link ">
+                                          <span class="title">Gantt Chart</span>
+                                      </a>
+                                  </li>
                             </ul>
                         </li>
                     </ul>
@@ -748,6 +753,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <script src="controller/usersCtrl.js"></script>
             <script src="controller/documentsCtrl.js"></script>
             <script src="controller/schedulerCtrl.js"></script>
+            <script src="controller/ganttCtrl.js"></script>
 
             <script src="model/jobcreate.js"></script>
             <script src="model/joblist.js"></script>
