@@ -2,6 +2,9 @@
 /*.k-task-draghandle {
     display: none !important;
 }*/
+.k-gantt-actions .k-button {
+    visibility: hidden;
+}
 </style>
 <div class="row">
   <div class="portlet form">
@@ -10,7 +13,7 @@
           <div class="form-body">
               <div class="portlet-body">
 
-                <div class="row">
+                <!--<div class="row">
                   <div class="col-md-6 form-group">
                       Select Job:
                       <select ng-model="jobname" ng-change="changeJob()" class="bs-select form-control" data-style="btn-outline blue">
@@ -18,8 +21,7 @@
                       </select>
                   </div>
                 </div>
-                <p/>
-                <div id="scheduler"></div>
+                <p/>-->
                 <div id="gantt"></div>
 
               </div>

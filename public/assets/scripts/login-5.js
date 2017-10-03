@@ -156,7 +156,7 @@ var Login = function() {
         // [START signout]
         firebase.auth().signOut();
         // [END signout]
-      } else {
+      }  {
         var email = $('#email').val();
         var password = $('#password').val();
 

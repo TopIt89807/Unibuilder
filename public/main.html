@@ -84,9 +84,9 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END RESPONSIVE MENU TOGGLER -->
                 <!-- BEGIN PAGE ACTIONS -->
                 <!-- DOC: Remove "hide" class to enable the page header actions -->
-                <div class="page-actions">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
+                <div class="page-actions col-md-6">
+                    <div class="btn-group col-md-12">
+                        <!--<button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-plus"></i>&nbsp;
                             <span class="hidden-sm hidden-xs">New&nbsp;</span>&nbsp;
                             <i class="fa fa-angle-down"></i>
@@ -96,14 +96,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <a href="javascript:;">
                                     <i class="icon-docs"></i> New Post </a>
                             </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-tag"></i> New Comment </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-share"></i> Share </a>
-                            </li>
                             <li class="divider"> </li>
                             <li>
                                 <a href="javascript:;">
@@ -111,13 +103,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <span class="badge badge-success">4</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-users"></i> Feedbacks
-                                    <span class="badge badge-danger">2</span>
-                                </a>
-                            </li>
-                        </ul>
+                        </ul>-->
+
+                        <div class="row">
+                          <div class="col-md-6 form-group">
+
+                            <!--class="bs-select form-control"-->
+                            <select ng-model="jobname" ng-change="changeJob()" class="form-control" data-style="btn-outline blue">
+                              <option ng-repeat="xx in jobs" on-finish-render="ngRepeatFinished" value="{{xx.value}}">{{xx.name}}</option>
+                            </select>
+                          </div>
+                        </div>
                     </div>
                 </div>
                 <!-- END PAGE ACTIONS -->
@@ -764,6 +760,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.rtl.min.css">
             <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.default.min.css">
             <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.mobile.all.min.css">
+            <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.1.223/styles/kendo.bootstrap.min.css">
             <script src="https://kendo.cdn.telerik.com/2017.1.223/js/jszip.min.js"></script>
     </body>
 

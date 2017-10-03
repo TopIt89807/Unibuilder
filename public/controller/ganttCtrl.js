@@ -1,4 +1,4 @@
-app.controller("gantt", function($scope, $timeout) {
+app.controller("gantt", function($scope, dataService) {
   $scope.getCurrentUID = function() {
     return firebase.auth().currentUser.uid;
   }
@@ -51,7 +51,8 @@ app.controller("gantt", function($scope, $timeout) {
   ];
   var ganttData = [];
 
-  $scope.changeJob = function() {
+//  $scope.changeJob = function() {
+  dataService.changeJob = function() {
     if($scope.jobname == "All") {
 
       var ref = firebase.database().ref('/schedule/');
@@ -133,6 +134,7 @@ app.controller("gantt", function($scope, $timeout) {
   }
 
   $("#gantt").kendoGantt({
+    theme: "bootstrap",
 //    date: new Date(),
     dataSource: {
       data:[
@@ -169,6 +171,7 @@ app.controller("gantt", function($scope, $timeout) {
             colorId: { from: "colorId", defaultValue: 1 },
             isAllDay: { type: "boolean", from: "isAllDay" },
             cloneid: { from: "cloneid",type: "String"},
+            percentComplete: { from: "percentComplete", type: "number" },
 
             //id: { from: "id", type: "number" },
             //orderId: { from: "orderId", type: "number", validation: { required: true } },
@@ -385,36 +388,17 @@ app.controller("gantt", function($scope, $timeout) {
   var gantt = $("#gantt").data("kendoGantt");
 
   gantt.bind("save", gantt_save);
-  gantt.bind("add", gantt_add);
   gantt.bind("moveEnd", gantt_move);
   gantt.bind("resizeEnd", gantt_resize);
   gantt.bind("edit", gantt_edit);
   gantt.bind("remove", gantt_remove);
 
-  var isAdding = false;
   var isEditing = false;
-  function gantt_add(e) {
-    var gantt = $("#gantt").data("kendoGantt");
-    console.log(gantt.dataSource.data());
-    isAdding = true;
-  }
   function gantt_edit(e) {
     isEditing = true;
   }
   function gantt_save(e) {
     var gantt = $("#gantt").data("kendoGantt");
-    if(isAdding) {
-      //var gantt = $("#gantt").data("kendoGantt");
-      //scheduleData = gantt.dataSource.data();
-
-      var JobKey = $scope.jobname;
-      //var newKey = firebase.database().ref().child('schedule').push().key;
-      e.task.cloneid = e.task.uid;
-      var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.uid);
-      ref.update(JSON.parse(JSON.stringify(e.task)));
-      isAdding = false;
-
-    }
     if(isEditing) {
       var JobKey = $scope.jobname;
       var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.task.cloneid);

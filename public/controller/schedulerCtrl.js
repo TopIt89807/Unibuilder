@@ -1,4 +1,4 @@
-app.controller("scheduler", function($scope, $timeout) {
+app.controller("scheduler", function($scope, dataService) {
   $scope.getCurrentUID = function() {
     return firebase.auth().currentUser.uid;
   }
@@ -50,9 +50,13 @@ app.controller("scheduler", function($scope, $timeout) {
   //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
 
-
-  $scope.changeJob = function() {
+  //$scope.changeJob = function() {
+  dataService.changeJob = function() {
     if($scope.jobname == "All") {
+      var scheduler = $("#scheduler").data("kendoScheduler");
+      scheduler.options.editable = false;
+      scheduler.view(scheduler.viewName());
+
 
       var ref = firebase.database().ref('/schedule/');
       ref.on('value', function(data) {
@@ -92,6 +96,9 @@ app.controller("scheduler", function($scope, $timeout) {
       });
 
     } else {
+      var scheduler = $("#scheduler").data("kendoScheduler");
+      scheduler.options.editable = true;
+      scheduler.view(scheduler.viewName());
 
       var ref = firebase.database().ref('/schedule/' + $scope.jobname);
       ref.once('value', function(data) {
@@ -119,6 +126,7 @@ app.controller("scheduler", function($scope, $timeout) {
   }
 
   $("#scheduler").kendoScheduler({
+      theme: "bootstrap",
       date: new Date(),
 //      startTime: new Date("2013/6/13 07:00 AM"),
       height: 600,
@@ -136,6 +144,7 @@ app.controller("scheduler", function($scope, $timeout) {
             allDayEvent: "Full day"
         }
       },
+      editable:false,
       dataSource: {
           data:scheduleData,
           schema: {
