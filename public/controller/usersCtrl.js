@@ -11,6 +11,7 @@ app.controller("users", function($scope, $timeout) {
 
   $scope.gridData = [];
   $scope.gridAccessData = [];
+  $scope.gridScheduleAccessData = [];
 
   $scope.ds = new kendo.data.DataSource({
     data:$scope.gridData,
@@ -18,6 +19,10 @@ app.controller("users", function($scope, $timeout) {
   });
   $scope.dsAccess = new kendo.data.DataSource({
     data:$scope.gridAccessData,
+    pageSize:50
+  });
+  $scope.dsScheduleAccess = new kendo.data.DataSource({
+    data:$scope.gridScheduleAccessData,
     pageSize:50
   });
 
@@ -61,36 +66,27 @@ app.controller("users", function($scope, $timeout) {
     sortable: true,
     resizable: true
   }
-  $scope.selectAllViewAccess = function() {
-    for(var i=1; i<$scope.vaccess.length; i++) {
-      $scope.vaccess[i] = $scope.vaccess[0];
-//      $scope.selChangedView(i);
-    }
-  }
-  $scope.selectAllEditAccess = function() {
-    for(var i=1; i<$scope.eaccess.length; i++) {
-      $scope.eaccess[i] = $scope.eaccess[0];
-//      $scope.selChangedView(i);
-    }
-  }
-  $scope.selectAllDeleteAccess = function() {
-    for(var i=1; i<$scope.daccess.length; i++) {
-      $scope.daccess[i] = $scope.daccess[0];
-//      $scope.selChangedView(i);
-    }
-  }
 
   $scope.viewAccessMode = function(key) {
     var jobsRef = firebase.database().ref('/joblist/');
     $scope.vaccess = [];
     $scope.eaccess = [];
     $scope.daccess = [];
+    $scope.cscheaccess = [];
+    $scope.vscheaccess = [];
+    $scope.escheaccess = [];
+    $scope.dscheaccess = [];
 
     jobsRef.on('value', function(data) {
       $scope.gridAccessData = [];
+      $scope.gridScheduleAccessData = [];
       $scope.vaccess = [];
       $scope.eaccess = [];
       $scope.daccess = [];
+      $scope.cscheaccess = [];
+      $scope.vscheaccess = [];
+      $scope.escheaccess = [];
+      $scope.dscheaccess = [];
       var keys = [];
       for(var k in data.val()) {
         keys.push(k);
@@ -110,8 +106,24 @@ app.controller("users", function($scope, $timeout) {
       $scope.eaccess.push(false);
       $scope.daccess.push(false);
 
+      var schecol = {
+          UserKey: "",
+          JobKey: "",
+          JobName: "",
+          Type: "type",
+          CreateAccess: "<input type='checkbox' ng-change='selectAllCreateScheduleAccess()' ng-model='cscheaccess[" + cnt + "]'/>",
+          ViewAccess: "<input type='checkbox' ng-change='selectAllViewScheduleAccess()' ng-model='vscheaccess[" + cnt + "]'/>",
+          EditAccess: "<input type='checkbox' ng-change='selectAllEditScheduleAccess()' ng-model='escheaccess[" + cnt + "]'/>",
+          DeleteAccess: "<input type='checkbox' ng-change='selectAllDeleteScheduleAccess()' ng-model='dscheaccess[" + cnt + "]'/>",
+      }
+      $scope.cscheaccess.push(false);
+      $scope.vscheaccess.push(false);
+      $scope.escheaccess.push(false);
+      $scope.dscheaccess.push(false);
+
       cnt ++;
       $scope.gridAccessData.push(col);
+      $scope.gridScheduleAccessData.push(schecol);
       for(var i=0; i<keys.length; i++) {  //loop total jobs
         var ref =  firebase.database().ref('/joblist/' + keys[i]);
         ref.once('value').then(function(snapshot) {
@@ -126,6 +138,16 @@ app.controller("users", function($scope, $timeout) {
                 ViewAccess: "<input type='checkbox' ng-model='vaccess[" + cnt + "]' />",
                 EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' />",
                 DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' />",
+            }
+            var schecol = {
+                UserKey: key,
+                JobKey: jobID,
+                JobName: snapshot.val().jobname,
+                Type: "type",
+                CreateAccess: "<input type='checkbox' ng-model='cscheaccess[" + cnt + "]' />",
+                ViewAccess: "<input type='checkbox' ng-model='vscheaccess[" + cnt + "]' />",
+                EditAccess: "<input type='checkbox' ng-model='escheaccess[" + cnt + "]' />",
+                DeleteAccess: "<input type='checkbox' ng-model='dscheaccess[" + cnt + "]' />",
             }
             firebase.database().ref('/jobs/' + jobID + '/' + key).once('value').then(function(snapshot) {
               var acc;
@@ -150,6 +172,31 @@ app.controller("users", function($scope, $timeout) {
                 pageSize:50
               });
 
+              if(snapshot.val() == undefined) acc = "----";
+              else acc = snapshot.val().scheaccess != undefined ? snapshot.val().scheaccess : "----";
+              if(acc.charAt(0) == 'c')
+                $scope.cscheaccess.push(true);
+              else if(acc.charAt(0) == '-')
+                $scope.cscheaccess.push(false);
+              if(acc.charAt(1) == 'v')
+                $scope.vscheaccess.push(true);
+              else if(acc.charAt(1) == '-')
+                $scope.vscheaccess.push(false);
+              if(acc.charAt(2) == 'e')
+                $scope.escheaccess.push(true);
+              else if(acc.charAt(2) == '-')
+                $scope.escheaccess.push(false);
+              if(acc.charAt(3) == 'd')
+                $scope.dscheaccess.push(true);
+              else if(acc.charAt(3) == '-')
+                $scope.dscheaccess.push(false);
+
+              $scope.gridScheduleAccessData.push(schecol);
+              $scope.dsScheduleAccess = new kendo.data.DataSource({
+                data:$scope.gridScheduleAccessData,
+                pageSize:50
+              });
+
               $scope.$apply();
             });
             cnt ++;
@@ -159,6 +206,43 @@ app.controller("users", function($scope, $timeout) {
         });
       }
     });
+  }
+
+  $scope.selectAllViewAccess = function() {
+    for(var i=1; i<$scope.vaccess.length; i++) {
+      $scope.vaccess[i] = $scope.vaccess[0];
+    }
+  }
+  $scope.selectAllEditAccess = function() {
+    for(var i=1; i<$scope.eaccess.length; i++) {
+      $scope.eaccess[i] = $scope.eaccess[0];
+    }
+  }
+  $scope.selectAllDeleteAccess = function() {
+    for(var i=1; i<$scope.daccess.length; i++) {
+      $scope.daccess[i] = $scope.daccess[0];
+    }
+  }
+
+  $scope.selectAllCreateScheduleAccess = function() {
+    for(var i=1; i<$scope.cscheaccess.length; i++) {
+      $scope.cscheaccess[i] = $scope.cscheaccess[0];
+    }
+  }
+  $scope.selectAllViewScheduleAccess = function() {
+    for(var i=1; i<$scope.vscheaccess.length; i++) {
+      $scope.vscheaccess[i] = $scope.vscheaccess[0];
+    }
+  }
+  $scope.selectAllEditScheduleAccess = function() {
+    for(var i=1; i<$scope.escheaccess.length; i++) {
+      $scope.escheaccess[i] = $scope.escheaccess[0];
+    }
+  }
+  $scope.selectAllDeleteScheduleAccess = function() {
+    for(var i=1; i<$scope.dscheaccess.length; i++) {
+      $scope.dscheaccess[i] = $scope.dscheaccess[0];
+    }
   }
 
   var replaceAt = function(str, index, replacement) {
@@ -253,11 +337,59 @@ app.controller("users", function($scope, $timeout) {
     });
   }
 
+  $scope.onCheckScheduleAccess = function($index, UserKey, JobKey) {
+    var ref =  firebase.database().ref('/jobs/' + JobKey + '/' + UserKey);
+    ref.once('value').then(function(snapshot) {
+      var access ;
+      if(snapshot.val() == undefined) {
+        access = "----";
+        ref.set({scheaccess: access});
+        firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).set({scheaccess : access});
+      }else {
+        access = snapshot.val().scheaccess != undefined ? snapshot.val().scheaccess : "----";
+      }
+
+      if($scope.cscheaccess[$index])
+        access = replaceAt(access, 0, 'c');
+      else access = replaceAt(access, 0, '-');
+      if($scope.vscheaccess[$index])
+        access = replaceAt(access, 1, 'v');
+      else access = replaceAt(access, 1, '-');
+      if($scope.escheaccess[$index])
+        access = replaceAt(access, 2, 'e');
+      else access = replaceAt(access, 2, '-');
+      if($scope.dscheaccess[$index])
+        access = replaceAt(access, 3, 'd');
+      else access = replaceAt(access, 3, '-');
+
+      ref.update({scheaccess : access});
+      firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).update({scheaccess : access});
+    });
+  }
+
   $scope.gridAccessOptions = {
     columns: [
       {field:"UserKey", hidden:true},
       {field:"JobKey", hidden:true},
       {field:"JobName", title:"Job Name"},
+      {field:"ViewAccess", title:"View Access", encoded: false},
+      {field:"EditAccess", title:"Edit Access", encoded: false},
+      {field:"DeleteAccess", title:"Delete Access", encoded: false}
+    ],
+    pageable: {
+        pageSizes: [20, 50, 75, 100, 250],
+        refresh: true,
+        buttonCount: 5
+    },
+    sortable: true,
+    resizable: true
+  }
+  $scope.gridScheduleAccessOptions = {
+    columns: [
+      {field:"UserKey", hidden:true},
+      {field:"JobKey", hidden:true},
+      {field:"JobName", title:"Job Name"},
+      {field:"CreateAccess", title:"Create Access", encoded: false},
       {field:"ViewAccess", title:"View Access", encoded: false},
       {field:"EditAccess", title:"Edit Access", encoded: false},
       {field:"DeleteAccess", title:"Delete Access", encoded: false}
@@ -411,7 +543,11 @@ app.controller("users", function($scope, $timeout) {
 /*      $scope.onCheckViewAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
       $scope.onCheckEditAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
       $scope.onCheckDeleteAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
-*/      $scope.onCheckAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+*/
+      $scope.onCheckAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+    }
+    for(var i=1; i<$scope.gridScheduleAccessData.length; i++) {
+      $scope.onCheckScheduleAccess(i, $scope.gridScheduleAccessData[i].UserKey, $scope.gridScheduleAccessData[i].JobKey);
     }
   }
 
