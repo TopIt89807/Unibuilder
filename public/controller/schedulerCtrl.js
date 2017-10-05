@@ -23,8 +23,8 @@ app.controller("scheduler", function($scope, dataService) {
         var creatorID = snapshot.val().creatorID;
         firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
 
-          var access = snapshot.val().access;
-          if(access.charAt(2) == 'v') {
+          var access = snapshot.val().scheaccess;
+          if(access.charAt(1) == 'v') {
 
             editable = access.charAt(1) != 'e'? 0 : 1;
 /*          if(access.charAt(1) != 'e') {
@@ -37,8 +37,8 @@ app.controller("scheduler", function($scope, dataService) {
               name:snapshot.val().jobname,
               value:snapshot.ref.parent.key
             });
-            $scope.$apply();
           }
+          $scope.$apply();
         });
       });
     }
@@ -97,30 +97,70 @@ app.controller("scheduler", function($scope, dataService) {
 
     } else {
       var scheduler = $("#scheduler").data("kendoScheduler");
-      scheduler.options.editable = true;
-      scheduler.view(scheduler.viewName());
+      var userid = $scope.getCurrentUID();
+      var jobid = $scope.jobname;
+      var scheref = firebase.database().ref('/jobs/' + jobid + '/' + userid);
+      scheref.once('value').then(function(snapshot) {
+        var access = snapshot.val().scheaccess != undefined? snapshot.val().scheaccess : "----";
+        var cc,vv,ee,dd;
+        if(access.charAt(0) == 'c')
+          cc = true;
+        else if(access.charAt(0) == '-')
+          cc = false;
+        if(access.charAt(1) == 'v')
+          vv = true;
+        else if(access.charAt(1) == '-')
+          vv = false;
+        if(access.charAt(2) == 'e')
+          ee = true;
+        else if(access.charAt(2) == '-')
+          ee = false;
+        if(access.charAt(3) == 'd')
+          dd = true;
+        else if(access.charAt(3) == '-')
+          dd = false;
 
-      var ref = firebase.database().ref('/schedule/' + $scope.jobname);
-      ref.once('value', function(data) {
-        scheduleData = [];
-        var scheduler = $("#scheduler").data("kendoScheduler");
-        scheduler.dataSource.data(scheduleData);
-
-        var keys = [];
-        for(var k in data.val()) {
-          keys.push(k);
+        scheduler.options.editable = {
+          create:cc,
+          move:ee,
+          resize:ee,
+          update:ee,
+          destroy:dd
         }
-        for(var i=0; i<keys.length; i++) {
-          var ref =  firebase.database().ref('/schedule/' + $scope.jobname + '/' + keys[i]);
-          ref.once('value').then(function(snapshot) {
-            var jsonobj = JSON.parse(JSON.stringify(snapshot.val()));
-            jsonobj.start = new Date(jsonobj.start);
-            jsonobj.end = new Date(jsonobj.end);
-            scheduleData.push(jsonobj);
+        scheduler.view(scheduler.viewName());
+        if(vv) {
+          var ref = firebase.database().ref('/schedule/' + $scope.jobname);
+          ref.once('value', function(data) {
+            scheduleData = [];
+            var scheduler = $("#scheduler").data("kendoScheduler");
             scheduler.dataSource.data(scheduleData);
+
+            var keys = [];
+            for(var k in data.val()) {
+              keys.push(k);
+            }
+            for(var i=0; i<keys.length; i++) {
+              var ref =  firebase.database().ref('/schedule/' + $scope.jobname + '/' + keys[i]);
+              ref.once('value').then(function(snapshot) {
+                var jsonobj = JSON.parse(JSON.stringify(snapshot.val()));
+                jsonobj.start = new Date(jsonobj.start);
+                jsonobj.end = new Date(jsonobj.end);
+                scheduleData.push(jsonobj);
+                scheduler.dataSource.data(scheduleData);
+              });
+            }
           });
+        } else {
+          alert("You have no access for this job!");
+          scheduleData = [];
+          scheduler.dataSource.data(scheduleData);
+          scheduler.options.editable = false;
+          scheduler.view(scheduler.viewName());
         }
+
       });
+
+
 
     }
   }

@@ -389,7 +389,7 @@ app.controller("users", function($scope, $timeout) {
       {field:"UserKey", hidden:true},
       {field:"JobKey", hidden:true},
       {field:"JobName", title:"Job Name"},
-      {field:"CreateAccess", title:"Create Access", encoded: false},
+      {field:"CreateAccess", title:"Create Access", encoded: false/*, headerTemplate: "Create Access<input type='checkbox' id='schec'/>"*/},
       {field:"ViewAccess", title:"View Access", encoded: false},
       {field:"EditAccess", title:"Edit Access", encoded: false},
       {field:"DeleteAccess", title:"Delete Access", encoded: false}
@@ -399,9 +399,13 @@ app.controller("users", function($scope, $timeout) {
         refresh: true,
         buttonCount: 5
     },
-    sortable: true,
+    //sortable: true,
     resizable: true
   }
+  $('#schec').change(function(ev) {
+    var checked = ev.target.checked;
+    alert(checked);
+  });
   $scope.userc_type = "admin";
 
   var usersRef = firebase.database().ref('/users/');
