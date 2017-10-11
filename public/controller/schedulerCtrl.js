@@ -45,8 +45,6 @@ app.controller("scheduler", function($scope, dataService) {
 
   });
   var scheduleData = [
-  //  {"taskId":4,"ownerId":1,"title":"Bowling tournament","description":"","startTimezone":null,"start":"\/Date(1370811600000)\/","end":"\/Date(1370822400000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false},
-  //  {"taskId":5,"ownerId":2,"title":"Take the dog to the vet","description":"","startTimezone":null,"start":"\/Date(1370939400000)\/","end":"\/Date(1370943000000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false},
   //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
 
@@ -378,7 +376,6 @@ app.controller("scheduler", function($scope, dataService) {
     });
   }
   function scheduler_resize(e) {
-    alert('');
     var JobKey = $scope.jobname;
     var ref =  firebase.database().ref('/schedule/' + JobKey + '/' + e.event.cloneid);
     var json = JSON.parse(JSON.stringify(e.event));
