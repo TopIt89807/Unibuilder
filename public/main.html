@@ -72,7 +72,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="index.html">
+                    <a>
                         <img src="assets/layouts/layout2/img/logo-default.png" alt="logo" class="logo-default" /> </a>
                     <div class="menu-toggler sidebar-toggler">
                         <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -84,36 +84,13 @@ License: You must have a valid license purchased only from themeforest(the above
                 <!-- END RESPONSIVE MENU TOGGLER -->
                 <!-- BEGIN PAGE ACTIONS -->
                 <!-- DOC: Remove "hide" class to enable the page header actions -->
-                <div class="page-actions col-md-6">
-                    <div class="btn-group col-md-12">
-                        <!--<button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-plus"></i>&nbsp;
-                            <span class="hidden-sm hidden-xs">New&nbsp;</span>&nbsp;
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-docs"></i> New Post </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-flag"></i> Comments
-                                    <span class="badge badge-success">4</span>
-                                </a>
-                            </li>
-                        </ul>-->
-
-                        <div class="row">
-                          <div class="col-md-6 form-group">
-
+                <div class="page-actions">
+                    Selected Job:
+                    <div class="btn-group">
                             <!--class="bs-select form-control"-->
                             <select ng-model="jobname" ng-change="changeJob()" class="form-control" data-style="btn-outline blue">
                               <option ng-repeat="xx in jobs" on-finish-render="ngRepeatFinished" value="{{xx.value}}">{{xx.name}}</option>
                             </select>
-                          </div>
-                        </div>
                     </div>
                 </div>
                 <!-- END PAGE ACTIONS -->
@@ -125,7 +102,7 @@ License: You must have a valid license purchased only from themeforest(the above
                         <ul class="nav navbar-nav pull-right">
                             <!-- BEGIN INBOX DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                            <!--<li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <i class="icon-envelope-open"></i>
                                     <span class="badge badge-default"> 4 </span>
@@ -200,7 +177,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <!-- END INBOX DROPDOWN -->
                             <!-- BEGIN USER LOGIN DROPDOWN -->
                             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                            <li class="dropdown dropdown-user">
+                            <!--<li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <img alt="" class="img-circle" src="assets/layouts/layout2/img/avatar3_small.jpg" />
                                     <span class="username username-hide-on-mobile"> Nick </span>
@@ -358,7 +335,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <ul class="sub-menu">
                                 <li class="nav-item " ng-class="fff === 10 ? 'active open' : ''" ng-click="myFunc(10)">
                                     <a href="#!scheduler" class="nav-link ">
-                                        <span class="title">Scheduler</span>
+                                        <span class="title">Calendar</span>
                                     </a>
                                 </li>
                                 <li class="nav-item " ng-class="fff === 11 ? 'active open' : ''" ng-click="myFunc(11)">

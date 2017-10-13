@@ -45,7 +45,7 @@ app.controller("scheduler", function($scope, dataService) {
 
   });
   var scheduleData = [
-  //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
+  //  {"taskIdsdss e project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
 
   //$scope.changeJob = function() {
@@ -54,7 +54,6 @@ app.controller("scheduler", function($scope, dataService) {
       var scheduler = $("#scheduler").data("kendoScheduler");
       scheduler.options.editable = false;
       scheduler.view(scheduler.viewName());
-
 
       var ref = firebase.database().ref('/schedule/');
       ref.on('value', function(data) {
@@ -125,6 +124,7 @@ app.controller("scheduler", function($scope, dataService) {
           update:ee,
           destroy:dd
         }
+        //scheduler.refresh();
         scheduler.view(scheduler.viewName());
         if(vv) {
           var ref = firebase.database().ref('/schedule/' + $scope.jobname);
@@ -182,7 +182,7 @@ app.controller("scheduler", function($scope, dataService) {
             allDayEvent: "Full day"
         }
       },
-      editable:false,
+      editable:true,
       dataSource: {
           data:scheduleData,
           schema: {
@@ -265,8 +265,17 @@ app.controller("scheduler", function($scope, dataService) {
           }
       ]
   });
+  $("#addSchedule").click(function() {
+    var scheduler = $("#scheduler").data("kendoScheduler");
+    if(scheduler.options.editable.create)
+      scheduler.addEvent({ title: "(No title)" });
+    else alert("You don't have create access for this job.");
+  });
   var scheduler = $("#scheduler").data("kendoScheduler");
+  scheduler.options.editable = false;
+  scheduler.view(scheduler.viewName());
 
+  dataService.changeJob();
 
   var usersRef = firebase.database().ref('/users/');
   var assignee = [];

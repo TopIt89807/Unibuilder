@@ -1,5 +1,5 @@
 app.controller('mainCtrl', function($scope, dataService) {
-    $scope.fff = 0;
+    $scope.fff = 4;
     $scope.myFunc = function(num) {
       $scope.fff = num;
     }

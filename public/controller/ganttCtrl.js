@@ -23,8 +23,8 @@ app.controller("gantt", function($scope, dataService) {
         var creatorID = snapshot.val().creatorID;
         firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
 
-          var access = snapshot.val().access;
-          if(access.charAt(2) == 'v') {
+          var access = snapshot.val().scheaccess;
+          if(access.charAt(1) == 'v') {
 
             editable = access.charAt(1) != 'e'? 0 : 1;
 /*          if(access.charAt(1) != 'e') {
@@ -37,8 +37,8 @@ app.controller("gantt", function($scope, dataService) {
               name:snapshot.val().jobname,
               value:snapshot.ref.parent.key
             });
-            $scope.$apply();
           }
+          $scope.$apply();
         });
       });
     }
@@ -50,10 +50,20 @@ app.controller("gantt", function($scope, dataService) {
   //  {"taskId":6,"ownerId":3,"title":"Call Charlie about the project","description":"","startTimezone":null,"start":"\/Date(1370950200000)\/","end":"\/Date(1370955600000)\/","endTimezone":null,"recurrenceRule":null,"recurrenceID":null,"recurrenceException":null,"isAllDay":false}
   ];
   var ganttData = [];
-
 //  $scope.changeJob = function() {
   dataService.changeJob = function() {
+
     if($scope.jobname == "All") {
+      var gantt = $("#gantt").data("kendoGantt");
+      gantt.options.editable = {
+        create:true,
+        move:true,
+        resize:true,
+        update:true,
+        destroy:true
+      }
+      gantt.view();
+
 
       var ref = firebase.database().ref('/schedule/');
       ref.on('value', function(data) {
@@ -200,6 +210,8 @@ app.controller("gantt", function($scope, dataService) {
       ]
     },*/
     views: ["week", "day"],
+    editable: false,
+
     columns: [
       // { field: "id", title: "ID" },
       { field: "title", title: "Title" },
@@ -213,6 +225,9 @@ app.controller("gantt", function($scope, dataService) {
     ],
     dataBound: onDataBound
   });
+  var gantt = $("#gantt").data("kendoGantt");
+
+  dataService.changeJob();
 
   function onDataBound() {
     var gantt = this;

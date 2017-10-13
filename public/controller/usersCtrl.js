@@ -93,7 +93,7 @@ app.controller("users", function($scope, $timeout) {
       }
       var cnt = 0;
 
-      var col = {
+      /*var col = {
           UserKey: "",
           JobKey: "",
           JobName: "",
@@ -123,7 +123,7 @@ app.controller("users", function($scope, $timeout) {
 
       cnt ++;
       $scope.gridAccessData.push(col);
-      $scope.gridScheduleAccessData.push(schecol);
+      $scope.gridScheduleAccessData.push(schecol);*/
       for(var i=0; i<keys.length; i++) {  //loop total jobs
         var ref =  firebase.database().ref('/joblist/' + keys[i]);
         ref.once('value').then(function(snapshot) {
@@ -209,39 +209,46 @@ app.controller("users", function($scope, $timeout) {
   }
 
   $scope.selectAllViewAccess = function() {
-    for(var i=1; i<$scope.vaccess.length; i++) {
-      $scope.vaccess[i] = $scope.vaccess[0];
+    var val = $("#job-v").is(':checked');
+    for(var i=0; i<$scope.vaccess.length; i++) {
+      $scope.vaccess[i] = val;
     }
   }
   $scope.selectAllEditAccess = function() {
-    for(var i=1; i<$scope.eaccess.length; i++) {
-      $scope.eaccess[i] = $scope.eaccess[0];
+    var val = $("#job-e").is(':checked');
+    for(var i=0; i<$scope.eaccess.length; i++) {
+      $scope.eaccess[i] = val;
     }
   }
   $scope.selectAllDeleteAccess = function() {
-    for(var i=1; i<$scope.daccess.length; i++) {
-      $scope.daccess[i] = $scope.daccess[0];
+    var val = $("#job-d").is(':checked');
+    for(var i=0; i<$scope.daccess.length; i++) {
+      $scope.daccess[i] = val;
     }
   }
 
   $scope.selectAllCreateScheduleAccess = function() {
-    for(var i=1; i<$scope.cscheaccess.length; i++) {
-      $scope.cscheaccess[i] = $scope.cscheaccess[0];
+    var val = $("#sche-c").is(':checked');
+    for(var i=0; i<$scope.cscheaccess.length; i++) {
+      $scope.cscheaccess[i] = val;
     }
   }
   $scope.selectAllViewScheduleAccess = function() {
-    for(var i=1; i<$scope.vscheaccess.length; i++) {
-      $scope.vscheaccess[i] = $scope.vscheaccess[0];
+    var val = $("#sche-v").is(':checked');
+    for(var i=0; i<$scope.vscheaccess.length; i++) {
+      $scope.vscheaccess[i] = val;
     }
   }
   $scope.selectAllEditScheduleAccess = function() {
-    for(var i=1; i<$scope.escheaccess.length; i++) {
-      $scope.escheaccess[i] = $scope.escheaccess[0];
+    var val = $("#sche-e").is(':checked');
+    for(var i=0; i<$scope.escheaccess.length; i++) {
+      $scope.escheaccess[i] = val;
     }
   }
   $scope.selectAllDeleteScheduleAccess = function() {
-    for(var i=1; i<$scope.dscheaccess.length; i++) {
-      $scope.dscheaccess[i] = $scope.dscheaccess[0];
+    var val = $("#sche-d").is(':checked');
+    for(var i=0; i<$scope.dscheaccess.length; i++) {
+      $scope.dscheaccess[i] = val;
     }
   }
 
@@ -371,29 +378,22 @@ app.controller("users", function($scope, $timeout) {
     columns: [
       {field:"UserKey", hidden:true},
       {field:"JobKey", hidden:true},
-      {field:"JobName", title:"Job Name"},
-      {field:"ViewAccess", title:"View Access", encoded: false},
-      {field:"EditAccess", title:"Edit Access", encoded: false},
-      {field:"DeleteAccess", title:"Delete Access", encoded: false}
+      {field:"JobName", title:"Job Name", filterable: {
+          cell: {
+            showOperators: false,operator: "contains"
+          }
+        }
+      },
+      {field:"ViewAccess", title:"View Access", encoded: false, filterable:false,
+        headerTemplate: "View Access<input type='checkbox' id='job-v' class='k-checkbox header-checkbox' ng-click='selectAllViewAccess();'><label class='k-checkbox-label' for='job-v'></label>"},
+      {field:"EditAccess", title:"Edit Access", encoded: false, filterable:false,
+        headerTemplate: "Edit Access<input type='checkbox' id='job-e' class='k-checkbox header-checkbox' ng-click='selectAllEditAccess();'><label class='k-checkbox-label' for='job-e'></label>"},
+      {field:"DeleteAccess", title:"Delete Access", encoded: false, filterable:false,
+        headerTemplate: "Delete Access<input type='checkbox' id='job-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteAccess();'><label class='k-checkbox-label' for='job-d'></label>"},
     ],
-    pageable: {
-        pageSizes: [20, 50, 75, 100, 250],
-        refresh: true,
-        buttonCount: 5
+    filterable: {
+      mode: "row"
     },
-    sortable: true,
-    resizable: true
-  }
-  $scope.gridScheduleAccessOptions = {
-    columns: [
-      {field:"UserKey", hidden:true},
-      {field:"JobKey", hidden:true},
-      {field:"JobName", title:"Job Name"},
-      {field:"CreateAccess", title:"Create Access", encoded: false/*, headerTemplate: "Create Access<input type='checkbox' id='schec'/>"*/},
-      {field:"ViewAccess", title:"View Access", encoded: false},
-      {field:"EditAccess", title:"Edit Access", encoded: false},
-      {field:"DeleteAccess", title:"Delete Access", encoded: false}
-    ],
     pageable: {
         pageSizes: [20, 50, 75, 100, 250],
         refresh: true,
@@ -402,10 +402,38 @@ app.controller("users", function($scope, $timeout) {
     //sortable: true,
     resizable: true
   }
-  $('#schec').change(function(ev) {
-    var checked = ev.target.checked;
-    alert(checked);
-  });
+
+  $scope.gridScheduleAccessOptions = {
+    columns: [
+      {field:"UserKey", hidden:true},
+      {field:"JobKey", hidden:true},
+      {field:"JobName", title:"Job Name", filterable: {
+          cell: {
+            showOperators: false,operator: "contains"
+          }
+        }
+      },
+      {field:"CreateAccess", title:"Create Access", encoded: false, filterable:false,
+        headerTemplate: "Create Access<input type='checkbox' id='sche-c' class='k-checkbox header-checkbox' ng-click='selectAllCreateScheduleAccess();'><label class='k-checkbox-label' for='sche-c'></label>"},
+      {field:"ViewAccess", title:"View Access", encoded: false, filterable: false,
+        headerTemplate: "View Access<input type='checkbox' id='sche-v' class='k-checkbox header-checkbox' ng-click='selectAllViewScheduleAccess();'><label class='k-checkbox-label' for='sche-v'></label>"},
+      {field:"EditAccess", title:"Edit Access", encoded: false, filterable: false,
+        headerTemplate: "Edit Access<input type='checkbox' id='sche-e' class='k-checkbox header-checkbox' ng-click='selectAllEditScheduleAccess();'><label class='k-checkbox-label' for='sche-e'></label>"},
+      {field:"DeleteAccess", title:"Delete Access", encoded: false, filterable: false,
+        headerTemplate: "Delete Access<input type='checkbox' id='sche-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteScheduleAccess();'><label class='k-checkbox-label' for='sche-d'></label>"},
+    ],
+    filterable: {
+      mode: "row"
+    },
+    pageable: {
+        pageSizes: [20, 50, 75, 100, 250],
+        refresh: true,
+        buttonCount: 5
+    },
+    //sortable: true,
+    resizable: true
+  }
+
   $scope.userc_type = "admin";
 
   var usersRef = firebase.database().ref('/users/');
@@ -543,14 +571,14 @@ app.controller("users", function($scope, $timeout) {
     var ref =  firebase.database().ref('/users/' + key);
     ref.update({firstname : fname, lastname : lname, type: type, createaccess: caccess});
 
-    for(var i=1; i<$scope.gridAccessData.length; i++) {
+    for(var i=0; i<$scope.gridAccessData.length; i++) {
 /*      $scope.onCheckViewAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
       $scope.onCheckEditAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
       $scope.onCheckDeleteAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
 */
       $scope.onCheckAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
     }
-    for(var i=1; i<$scope.gridScheduleAccessData.length; i++) {
+    for(var i=0; i<$scope.gridScheduleAccessData.length; i++) {
       $scope.onCheckScheduleAccess(i, $scope.gridScheduleAccessData[i].UserKey, $scope.gridScheduleAccessData[i].JobKey);
     }
   }
