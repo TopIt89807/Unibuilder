@@ -59,11 +59,11 @@ app.controller("documents", function($scope, dataService) {
 		];
   webix.ui({
     view:"filemanager",
+    data: emptydat,
     container:"filemgr",
     id:"fmanager"
   });
   var fmgr = $$("fmanager"); //popup
-  fmgr.parse(emptydat);
 
   dataService.changeJob = function() {
     if($scope.jobname == undefined) {};
@@ -71,12 +71,123 @@ app.controller("documents", function($scope, dataService) {
     }else {
       var ref = firebase.database().ref('/documents/' + $scope.jobname);
       ref.once('value' , function(data) {
-        fmgr.clearAll();
-        if(data.val() == null) {
-          fmgr.parse(emptydat);
-        } else {
-          fmgr.parse(data.val());
+        $$("fmanager").clearAll();
+        $$("fmanager").destructor();
+        var dat = emptydat;
+        if(data.val() != null)
+          dat = data.val();
+
+        webix.ui({
+          view:"filemanager",
+          data: data.val(),
+          container:"filemgr",
+          id:"fmanager"
+        });
+
+        var updateDB = function() {
+          $$("fmanager").download("salesEurope");
+          var ref = firebase.database().ref('/documents/' + $scope.jobname);
+          var ary = $$("fmanager").serialize();
+          console.log(ary);
+          var str = JSON.stringify(ary);
+          var res = str.replaceAll(/\u0024count/gi, "count");
+          res = res.replaceAll(/\u0024parent/gi, "parent");
+          res = res.replaceAll(/\u0024level/gi, "level");
+          res = res.replaceAll(/\u0024template/gi, "template");
+          res = JSON.parse(res);
+          ref.set(res);
         }
+        $$("fmanager").getMenu().add({
+                id: "download",
+                icon: "webix_icon fa-download",
+                value: "Download",
+                batch: "file"
+        }, 0);
+        $$("fmanager").getMenu().add({
+      							$template:"Separator",
+      							batch:"file"
+      						}, 1);
+
+        $$("fmanager").attachEvent("onAfterAdd", function(id, index){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onAfterCreateFolder",function(){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onAfterDeleteFile", function(){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onAfterPasteFile", function(){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onAfterDrop",function(context,ev){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onAfterEditStop",function(id,state,editor,view){
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onBeforeFileUpload", function(response){
+          console.log(response);
+          var file = response.file;
+          var metadata = {
+              'contentType': file.type
+          };
+
+          var context = $$("fmanager").getMenu().getContext();
+          //dataId - id of the clicked data item
+          var pathary = $$("fmanager").getPath();
+          var fburl = "";
+          for(var i=0; i<pathary.length; i++)
+            fburl += pathary[i] + "/";
+          fburl += response.id;
+
+          var storageRef = firebase.storage().ref();
+          storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
+            alert("Succeed");
+          });
+
+          updateDB();
+        });
+        $$("fmanager").attachEvent("onItemClick", function(id){
+          if(id == "download"){
+            var context = $$("fmanager").getMenu().getContext();
+            //dataId - id of the clicked data item
+            var dataId = context.id;
+            console.log(context.id);
+
+            var pathary = $$("fmanager").getPath();
+            var fburl = "";
+            for(var i=0; i<pathary.length; i++)
+              fburl += pathary[i] + "/";
+            fburl += context.id.row;
+
+            var storageRef = firebase.storage().ref();
+            storageRef.child(fburl).getDownloadURL().then(function(url) {
+              console.log(url);
+              var a = document.createElement('a');
+              a.href = url; // xhr.response is a blob
+              a.download = "download"; // Set the file name.
+              a.style.display = 'none';
+              a.click();
+              delete a;
+            }).catch(function(error) {
+              switch (error.code) {
+                  case 'storage/object_not_found':
+                    break;
+                  case 'storage/unauthorized':
+                    break;
+                  case 'storage/canceled':
+                    break;
+                  case 'storage/unknown':
+                    break;
+                }
+            });
+          }
+        });
+
+
+
+
 
       });
     }
@@ -88,108 +199,7 @@ app.controller("documents", function($scope, dataService) {
       return target.replace(new RegExp(search, 'g'), replacement);
   };
 
-  var updateDB = function() {
-    fmgr.download("salesEurope");
-    var ref = firebase.database().ref('/documents/' + $scope.jobname);
-    var ary = fmgr.serialize();
-    console.log(ary);
-    var str = JSON.stringify(ary);
-    var res = str.replaceAll(/\u0024count/gi, "count");
-    res = res.replaceAll(/\u0024parent/gi, "parent");
-    res = res.replaceAll(/\u0024level/gi, "level");
-    res = res.replaceAll(/\u0024template/gi, "template");
-    res = JSON.parse(res);
-    ref.set(res);
-  }
-  fmgr.getMenu().add({
-          id: "download",
-          icon: "webix_icon fa-download",
-          value: "Download",
-          batch: "file"
-  }, 0);
-  fmgr.getMenu().add({
-							$template:"Separator",
-							batch:"file"
-						}, 1);
 
-
-  fmgr.attachEvent("onAfterAdd", function(id, index){
-    updateDB();
-  });
-  fmgr.attachEvent("onAfterCreateFolder",function(){
-    updateDB();
-  });
-  fmgr.attachEvent("onAfterDeleteFile", function(){
-    updateDB();
-  });
-  fmgr.attachEvent("onAfterPasteFile", function(){
-    updateDB();
-  });
-  fmgr.attachEvent("onAfterDrop",function(context,ev){
-    updateDB();
-  });
-  fmgr.attachEvent("onAfterEditStop",function(id,state,editor,view){
-    updateDB();
-  });
-  fmgr.attachEvent("onBeforeFileUpload", function(response){
-    console.log(response);
-    var file = response.file;
-    var metadata = {
-        'contentType': file.type
-    };
-
-    var context = $$("fmanager").getMenu().getContext();
-    //dataId - id of the clicked data item
-    var pathary = fmgr.getPath();
-    var fburl = "";
-    for(var i=0; i<pathary.length; i++)
-      fburl += pathary[i] + "/";
-    fburl += response.id;
-
-    var storageRef = firebase.storage().ref();
-    storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
-      alert("Succeed");
-    });
-
-    updateDB();
-  });
-  fmgr.attachEvent("onItemClick", function(id){
-    if(id == "download"){
-      var context = $$("fmanager").getMenu().getContext();
-      //dataId - id of the clicked data item
-      var dataId = context.id;
-      console.log(context.id);
-
-      var pathary = fmgr.getPath();
-      var fburl = "";
-      for(var i=0; i<pathary.length; i++)
-        fburl += pathary[i] + "/";
-      fburl += context.id.row;
-
-      var storageRef = firebase.storage().ref();
-      storageRef.child(fburl).getDownloadURL().then(function(url) {
-        console.log(url);
-        var a = document.createElement('a');
-        a.href = url; // xhr.response is a blob
-        a.setAttribute("download");
-        a.download = "download"; // Set the file name.
-        a.style.display = 'none';
-        a.click();
-        delete a;
-      }).catch(function(error) {
-        switch (error.code) {
-            case 'storage/object_not_found':
-              break;
-            case 'storage/unauthorized':
-              break;
-            case 'storage/canceled':
-              break;
-            case 'storage/unknown':
-              break;
-          }
-      });
-    }
-  });
 
 //  $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 //    TableDatatablesManaged.init();
