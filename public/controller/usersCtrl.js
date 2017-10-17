@@ -44,7 +44,8 @@ app.controller("users", function($scope, $timeout) {
       $scope.user_fname = snapshot.val().firstname!= undefined? snapshot.val().firstname : null;
       $scope.user_lname = snapshot.val().lastname!= undefined? snapshot.val().lastname : null;
       $scope.user_type = snapshot.val().type!= undefined? snapshot.val().type : null;
-      $scope.caccess = snapshot.val().createaccess;
+      $scope.caccess = snapshot.val().createaccess!= undefined? snapshot.val().type : false;
+
       $scope.$apply();
     });
 
@@ -533,16 +534,16 @@ app.controller("users", function($scope, $timeout) {
           }
         }
       },
-      {field:"CreateAccess", title:"Create Access", encoded: false, filterable:false,
-        headerTemplate: "Create Access<input type='checkbox' id='file-c' class='k-checkbox header-checkbox' ng-click='selectAllCreateFileAccess();'><label class='k-checkbox-label' for='file-c'></label>"},
-      {field:"UploadAccess", title:"Upload Access", encoded: false, filterable:false,
-        headerTemplate: "Upload Access<input type='checkbox' id='file-u' class='k-checkbox header-checkbox' ng-click='selectAllUploadFileAccess();'><label class='k-checkbox-label' for='file-u'></label>"},
-      {field:"DownloadAccess", title:"Download Access", encoded: false, filterable: false,
-        headerTemplate: "Download Access<input type='checkbox' id='file-v' class='k-checkbox header-checkbox' ng-click='selectAllDownloadFileAccess();'><label class='k-checkbox-label' for='file-v'></label>"},
-      {field:"EditAccess", title:"Edit Access", encoded: false, filterable: false,
-        headerTemplate: "Edit Access<input type='checkbox' id='file-e' class='k-checkbox header-checkbox' ng-click='selectAllEditFileAccess();'><label class='k-checkbox-label' for='file-e'></label>"},
-      {field:"DeleteAccess", title:"Delete Access", encoded: false, filterable: false,
-        headerTemplate: "Delete Access<input type='checkbox' id='file-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteFileAccess();'><label class='k-checkbox-label' for='file-d'></label>"},
+      {field:"CreateAccess", title:"Create", encoded: false, filterable:false,
+        headerTemplate: "Create<input type='checkbox' id='file-c' class='k-checkbox header-checkbox' ng-click='selectAllCreateFileAccess();'><label class='k-checkbox-label' for='file-c'></label>"},
+      {field:"UploadAccess", title:"Upload", encoded: false, filterable:false,
+        headerTemplate: "Upload<input type='checkbox' id='file-u' class='k-checkbox header-checkbox' ng-click='selectAllUploadFileAccess();'><label class='k-checkbox-label' for='file-u'></label>"},
+      {field:"DownloadAccess", title:"Download", encoded: false, filterable: false,
+        headerTemplate: "Download<input type='checkbox' id='file-v' class='k-checkbox header-checkbox' ng-click='selectAllDownloadFileAccess();'><label class='k-checkbox-label' for='file-v'></label>"},
+      {field:"EditAccess", title:"Edit", encoded: false, filterable: false,
+        headerTemplate: "Edit<input type='checkbox' id='file-e' class='k-checkbox header-checkbox' ng-click='selectAllEditFileAccess();'><label class='k-checkbox-label' for='file-e'></label>"},
+      {field:"DeleteAccess", title:"Delete", encoded: false, filterable: false,
+        headerTemplate: "Delete<input type='checkbox' id='file-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteFileAccess();'><label class='k-checkbox-label' for='file-d'></label>"},
     ],
     filterable: {
       mode: "row"

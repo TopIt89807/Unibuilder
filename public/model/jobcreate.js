@@ -59,7 +59,28 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
   updates['/user-jobs/' + uid + '/' + newPostKey] = postData;
   updates['/joblist/' + newPostKey] = createData;
 
-  //if(hasOwner) {
+  for(var i=0; i<internalusers.length; i++) {
+    var internalData = {
+      access:"----",
+      viewing:internalusers[i].viewing,
+      notification:internalusers[i].notification
+    }
+
+    updates['/jobs/' + newPostKey + '/' + internalusers[i].key] = internalData;
+    updates['/user-jobs/' + internalusers[i].key + '/' + newPostKey] = internalData;
+  }
+
+  for(var i=0; i<subs.length; i++) {
+    var subData = {
+      access:"----",
+      viewing:subs[i].viewing
+    }
+
+    updates['/jobs/' + newPostKey + '/' + subs[i].key] = subData;
+    updates['/user-jobs/' + subs[i].key + '/' + newPostKey] = subData;
+  }
+
+  if(ownerEmail != undefined) {
     var ownerData = {
       access:"----",
       email: ownerEmail,
@@ -83,6 +104,11 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
 
 //        updates['/jobs/' + newPostKey + '/' + ownerid] = ownerData;
 //        updates['/user-jobs/' + ownerid + '/' + newPostKey] = ownerData;
+        console.log(updates);
+
+        firebase.database().ref().update(updates);
+        alert("Succeed!");
+        return;
     }).catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -94,30 +120,15 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
         alert('The password is too weak.');
       }
       console.log(error);
+      return;
     });
-  //}
-  console.log(updates);
-
-  for(var i=0; i<internalusers.length; i++) {
-    var internalData = {
-      access:"----",
-      viewing:internalusers[i].viewing,
-      notification:internalusers[i].notification
-    }
-
-    updates['/jobs/' + newPostKey + '/' + internalusers[i].key] = internalData;
-    updates['/user-jobs/' + internalusers[i].key + '/' + newPostKey] = internalData;
+  }else {
+    console.log(updates);
+    firebase.database().ref().update(updates);
+    alert("Succeed!");
+    return;
   }
 
-  for(var i=0; i<subs.length; i++) {
-    var subData = {
-      access:"----",
-      viewing:subs[i].viewing
-    }
 
-    updates['/jobs/' + newPostKey + '/' + subs[i].key] = subData;
-    updates['/user-jobs/' + subs[i].key + '/' + newPostKey] = subData;
-  }
 
-  return firebase.database().ref().update(updates);
 }
