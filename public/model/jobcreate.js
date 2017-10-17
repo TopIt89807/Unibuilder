@@ -96,6 +96,7 @@ function writeNewJob(uid, firstname, lastname, email, jobname, status, jtype, pm
       console.log(error);
     });
   //}
+  console.log(updates);
 
   for(var i=0; i<internalusers.length; i++) {
     var internalData = {

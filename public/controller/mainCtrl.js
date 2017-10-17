@@ -22,7 +22,7 @@ app.controller('mainCtrl', function($scope, dataService) {
         name:"All",
         value:"All"
       });
-      // $scope.jobname = $scope.jobs[0].value;
+      $scope.jobname = $scope.jobs[0].value;
       for(var i=0; i<keys.length; i++) {
         var ref =  firebase.database().ref('/joblist/' + keys[i]);
         ref.once('value').then(function(snapshot) {
@@ -86,7 +86,8 @@ app.config(function($routeProvider) {
     .when("/gantt", {
       templateUrl : "gantt.html",
       controller : "gantt"
-    });
+    })
+    .otherwise({ redirectTo: '/documents' });
 });
 
 app.service('dataService', function() {

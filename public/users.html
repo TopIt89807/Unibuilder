@@ -222,7 +222,10 @@
                                               <a href="users#tab1" data-toggle="tab"> Jobs </a>
                                           </li>
                                           <li>
-                                              <a href="users#tab2" data-toggle="tab"> Schedule </a>
+                                              <a href="users#tab2" data-toggle="tab"> Files </a>
+                                          </li>
+                                          <li>
+                                              <a href="users#tab3" data-toggle="tab"> Schedule </a>
                                           </li>
                                       </ul>
                                   </div>
@@ -232,6 +235,9 @@
                                             <div kendo-grid k-options="gridAccessOptions" k-data-source="dsAccess"></div>
                                           </div>
                                           <div class="tab-pane fade" id="tab2">
+                                            <div kendo-grid k-options="gridFilesAccessOptions" k-data-source="dsFilesAccess"></div>
+                                          </div>
+                                          <div class="tab-pane fade" id="tab3">
                                             <div kendo-grid k-options="gridScheduleAccessOptions" k-data-source="dsScheduleAccess"></div>
                                           </div>
                                       </div>

@@ -1,163 +1,197 @@
-app.controller("documents", function($scope, $timeout) {
-  $scope.gridData = [];
-  $scope.ds = new kendo.data.DataSource({
-    data:$scope.gridData,
-    pageSize:50
+app.controller("documents", function($scope, dataService) {
+  var emptydat = [
+    {id: "files", value: "Files", open: true,  type: "folder", date:  new Date}
+  ];
+
+  var dat = [
+			{id: "files", value: "Files", open: true,  type: "folder", date:  new Date(2014,2,10,16,10), data:[
+				{ id: "documents", value: "Documents", date:  new Date(2014,2,10,16,10),  type: "folder", open: true, data:[
+					{id: "presentations", value: "Presentations", type: "folder", date:  new Date(2014,2,10,16,10), data:[
+						{id: "pres1", value: "October 2014.ppt", type:"pp", date: new Date(2014,2,10,16,10), size: "12830"},
+						{id: "pres2", value: "June 2014.ppt",  type:"pp", date:  new Date(2014,2,10,16,10), size: "20100"},
+						{id: "pres3", value: "April 2014.ppt", type:"pp", date:  new Date(2014,2,10,16,10), size: "15750"}
+					]},
+					{id: "reports", value: "Reports",  type: "folder", date: new Date(2014,2,10,16,10), open: true, data:[
+						{id: "usa", value: "USA",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
+							{id: "salesUS", value: "Sales USA.ppt",  type:"excel", date: new Date(2014,2,10,16,10), size: "12830"},
+							{id: "overviewUS", value: "Overview USA.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
+							{id: "pricesUS", value: "Prices USA.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
+							{id: "productsUS", value: "Products USA.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
+						]},
+						{id: "europe", value: "Europe",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
+							{id: "salesEurope", value: "Sales Europe.ppt",  type:"archive", date:  new Date(2014,2,10,16,10), size: "12830"},
+							{id: "pricesEurope", value: "Prices Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
+							{id: "productsEurope", value: "Products Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "20830"},
+							{id: "overviewEurope", value: "Overview Europe.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"}
+						]},
+						{id: "asia", value: "Asia",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
+							{id: "salesAsia", value: "Sales Asia.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "12083"},
+							{id: "pricesAsia", value: "Prices Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "15830"},
+							{id: "overviewAsia", value: "Overview Asia.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
+							{id: "productsAsia", value: "Products Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
+						]}
+					]}
+				]},
+				{ id: "images", value: "Images", type: "folder", date:  new Date(2014,2,10,16,12), open: true, data:[
+					{id: "thumbnails", value: "Thumbnails", type: "folder", date:  new Date(2014,2,10,16,12), data:[
+						{id: "thumbnails1", value: "Product 1-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.83 KB"},
+						{id: "thumbnails2", value: "Product 2-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "40.10 KB"},
+						{id: "thumbnails3", value: "Product 3-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "33.75 KB"},
+						{id: "thumbnails4", value: "Product 4-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "35.13 KB"},
+						{id: "thumbnails5", value: "Product 5-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.72  KB"},
+						{id: "thumbnails6", value: "Product 6-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "37.06  KB"}
+					]},
+					{id: "base", value: "Base images", type: "folder", date:  new Date(2014,2,10,16,12), data:[
+						{id: "base1", value: "Product 1.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.83 KB"},
+						{id: "base2", value: "Product 2.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "80.10 KB"},
+						{id: "base3", value: "Product 3.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "73.75 KB"},
+						{id: "base4", value: "Product 4.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "75.13 KB"},
+						{id: "base5", value: "Product 5.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.72 KB" },
+						{id: "base6", value: "Product 6.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "77.06 KB"}
+					]}
+				]},
+				{ id: "video", value: "Video", type: "folder", date:  new Date(2014,2,10,16,12), data:[
+					{id: "video1", value: "New Year 2013.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "25030000", pId: "video" },
+					{id: "video2", value: "Presentation.avi", icon: "file-video-o",type:"video", date:  new Date(2014,2,10,16,12), size: "11072000" , pId: "video"},
+					{id: "video3", value: "Conference.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "31256000", pId: "video" }
+				]}
+			]}
+		];
+  webix.ui({
+    view:"filemanager",
+    container:"filemgr",
+    id:"fmanager"
   });
-  $scope.getCurrentUID = function() {
-    return firebase.auth().currentUser.uid;
-  }
+  var fmgr = $$("fmanager"); //popup
+  fmgr.parse(emptydat);
 
-  $scope.assetsData = [];
-  var onChange = function(args) {
-    var model = this.dataItem(this.select());
-    var key = model.JobKey;
-    $("#detail").modal('show');
-    $scope.viewDetail(key);
-  }
-  $scope.viewDetail = function(key) {
-    $scope.job_key = key;
-    $scope.openPath("");
-  }
-  $scope.currentPath = "";
-  $scope.makeNewFolder = function() {
-    bootbox.prompt("Enter New Folder Name.", function(result) {
-        if (result === null) {
-            //alert("Prompt dismissed");
+  dataService.changeJob = function() {
+    if($scope.jobname == undefined) {};
+    if($scope.jobname == "All") {
+    }else {
+      var ref = firebase.database().ref('/documents/' + $scope.jobname);
+      ref.once('value' , function(data) {
+        fmgr.clearAll();
+        if(data.val() == null) {
+          fmgr.parse(emptydat);
         } else {
-            $scope.$apply(function() {
-//              var nod = {name: result, type: true};
-//              $scope.assetsData.push(nod);
-              var newKey = firebase.database().ref().child('documents').push().key;
-              var ref = firebase.database().ref('/documents/' + $scope.job_key + '/' + $scope.currentPath + result + "/" + newKey);
-              ref.set({name: "..", isDirectory: true});
-            });
-        }
-    });
-  }
-  var strip = function(path) { return path.substring(0, path.substring(0,path.length-1).lastIndexOf('/')+1); }
-  $scope.openPath = function(path) {
-    if(path != "..")
-      $scope.currentPath = $scope.currentPath + path + "/";
-    else $scope.currentPath = strip($scope.currentPath);
-    var ref = firebase.database().ref('/documents/' + $scope.job_key + '/' + $scope.currentPath);
-    $scope.assetsData = [];
-    ref.on('value', function(data) {
-      $scope.assetsData = [];
-      var keys = [];
-      for(var k in data.val()) {
-        keys.push(k);
-      }
-
-      for(var i=0; i<keys.length; i++) {
-        var subref = ref.child(keys[i]);
-        //var subref =  firebase.database().ref('/documents/' + $scope.job_key + '/' + $scope.currentPath + keys[i]);
-        subref.once('value').then(function(snapshot) {
-          var nod = {
-            name: snapshot.val().name != undefined? snapshot.val().name : snapshot.key,
-            isDirectory: snapshot.val().isDirectory
-          }
-          console.log(snapshot.val());
-          $scope.assetsData.push(nod);
-          $scope.$apply();
-        });
-      }
-    });
-  }
-
-  $scope.gridOptions = {
-/*    dataSource: {
-      data:$scope.gridData,
-      pageSize:3
-    },*/
-    selectable: true,
-    change: onChange,
-    dataBound: function(e) {
-        // get the index of the UnitsInStock cell
-        var columns = e.sender.columns;
-        var columnIndex = this.wrapper.find(".k-grid-header [data-field=" + "JobColor" + "]").index();
-
-        // iterate the data items and apply row styles where necessary
-        var dataItems = e.sender.dataSource.view();
-        for (var j = 0; j < dataItems.length; j++) {
-          var units = dataItems[j].get("JobColor");
-
-          var row = e.sender.tbody.find("[data-uid='" + dataItems[j].uid + "']");
-          var cell = row.children().eq(columnIndex);
-          cell.css("background-color", units);
-          cell.css("color", units);
+          fmgr.parse(data.val());
         }
 
-        $("table.k-focusable tbody tr").hover(
-          function() {
-           $(this).toggleClass("k-state-hover");
-          }
-
-        );
-    },
-    columns: [
-        {field:"JobKey", hidden:true},
-        {field:"JobColor", title:" ", width:"30px", encoded: false},
-        {field:"JobName", title:"Job Name", encoded: false},
-    ],
-/*    toolbar: ["excel"],
-    excel: {
-        fileName: "Products.xlsx"
-    },*/
-    pageable: {
-        pageSizes: [20, 50, 75, 100, 250],
-        refresh: true,
-        buttonCount: 5
-    },
-    sortable: true,
-    resizable: true
-  }
-  var jobsRef = firebase.database().ref('/joblist/');
-  jobsRef.on('value', function(data) {
-    var keys = [];
-    for(var k in data.val()) {
-      keys.push(k);
-    }
-    $scope.gridData = [];
-    for(var i=0; i<keys.length; i++) {
-      var ref =  firebase.database().ref('/joblist/' + keys[i]);
-      ref.once('value').then(function(snapshot) {
-//        + "/" + $scope.getCurrentUID());
-//      ref.once('value').then(function(snapshot) {
-        var jobID = snapshot.key;
-        var creatorID = snapshot.val().creatorID;
-        firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
-
-          var access = snapshot.val().access;
-          if(access.charAt(2) == 'v') {
-
-            editable = access.charAt(1) != 'e'? 0 : 1;
-/*          if(access.charAt(1) != 'e') {
-              $("#large").find('*').attr("disabled", true);
-            }else {
-              $("#large").find('*').attr("disabled", false);
-            }
-*/            var col = {
-                JobKey: snapshot.ref.parent.key,
-                JobColor: snapshot.val().jobcolor,
-                JobName: snapshot.val().jobname,
-            }
-
-            $scope.gridData.push(col);
-            $scope.ds = new kendo.data.DataSource({
-              data:$scope.gridData,
-              pageSize:50
-            });
-            $scope.$apply();
-          }
-        });
       });
     }
+  }
+  dataService.changeJob();
+
+  String.prototype.replaceAll = function(search, replacement) {
+      var target = this;
+      return target.replace(new RegExp(search, 'g'), replacement);
+  };
+
+  var updateDB = function() {
+    fmgr.download("salesEurope");
+    var ref = firebase.database().ref('/documents/' + $scope.jobname);
+    var ary = fmgr.serialize();
+    console.log(ary);
+    var str = JSON.stringify(ary);
+    var res = str.replaceAll(/\u0024count/gi, "count");
+    res = res.replaceAll(/\u0024parent/gi, "parent");
+    res = res.replaceAll(/\u0024level/gi, "level");
+    res = res.replaceAll(/\u0024template/gi, "template");
+    res = JSON.parse(res);
+    ref.set(res);
+  }
+  fmgr.getMenu().add({
+          id: "download",
+          icon: "webix_icon fa-download",
+          value: "Download",
+          batch: "file"
+  }, 0);
+  fmgr.getMenu().add({
+							$template:"Separator",
+							batch:"file"
+						}, 1);
 
 
+  fmgr.attachEvent("onAfterAdd", function(id, index){
+    updateDB();
+  });
+  fmgr.attachEvent("onAfterCreateFolder",function(){
+    updateDB();
+  });
+  fmgr.attachEvent("onAfterDeleteFile", function(){
+    updateDB();
+  });
+  fmgr.attachEvent("onAfterPasteFile", function(){
+    updateDB();
+  });
+  fmgr.attachEvent("onAfterDrop",function(context,ev){
+    updateDB();
+  });
+  fmgr.attachEvent("onAfterEditStop",function(id,state,editor,view){
+    updateDB();
+  });
+  fmgr.attachEvent("onBeforeFileUpload", function(response){
+    console.log(response);
+    var file = response.file;
+    var metadata = {
+        'contentType': file.type
+    };
+
+    var context = $$("fmanager").getMenu().getContext();
+    //dataId - id of the clicked data item
+    var pathary = fmgr.getPath();
+    var fburl = "";
+    for(var i=0; i<pathary.length; i++)
+      fburl += pathary[i] + "/";
+    fburl += response.id;
+
+    var storageRef = firebase.storage().ref();
+    storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
+      alert("Succeed");
+    });
+
+    updateDB();
+  });
+  fmgr.attachEvent("onItemClick", function(id){
+    if(id == "download"){
+      var context = $$("fmanager").getMenu().getContext();
+      //dataId - id of the clicked data item
+      var dataId = context.id;
+      console.log(context.id);
+
+      var pathary = fmgr.getPath();
+      var fburl = "";
+      for(var i=0; i<pathary.length; i++)
+        fburl += pathary[i] + "/";
+      fburl += context.id.row;
+
+      var storageRef = firebase.storage().ref();
+      storageRef.child(fburl).getDownloadURL().then(function(url) {
+        console.log(url);
+        var a = document.createElement('a');
+        a.href = url; // xhr.response is a blob
+        a.setAttribute("download");
+        a.download = "download"; // Set the file name.
+        a.style.display = 'none';
+        a.click();
+        delete a;
+      }).catch(function(error) {
+        switch (error.code) {
+            case 'storage/object_not_found':
+              break;
+            case 'storage/unauthorized':
+              break;
+            case 'storage/canceled':
+              break;
+            case 'storage/unknown':
+              break;
+          }
+      });
+    }
   });
 
-  $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-    TableDatatablesManaged.init();
-  });
+//  $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+//    TableDatatablesManaged.init();
+//  });
 });
