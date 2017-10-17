@@ -11,6 +11,7 @@ app.controller("users", function($scope, $timeout) {
 
   $scope.gridData = [];
   $scope.gridAccessData = [];
+  $scope.gridFilesAccessData = [];
   $scope.gridScheduleAccessData = [];
 
   $scope.ds = new kendo.data.DataSource({
@@ -19,6 +20,10 @@ app.controller("users", function($scope, $timeout) {
   });
   $scope.dsAccess = new kendo.data.DataSource({
     data:$scope.gridAccessData,
+    pageSize:50
+  });
+  $scope.dsFilesAccess = new kendo.data.DataSource({
+    data:$scope.gridFilesAccessData,
     pageSize:50
   });
   $scope.dsScheduleAccess = new kendo.data.DataSource({
@@ -72,6 +77,11 @@ app.controller("users", function($scope, $timeout) {
     $scope.vaccess = [];
     $scope.eaccess = [];
     $scope.daccess = [];
+    $scope.cfileaccess = [];  //Create
+    $scope.ufileaccess = [];  //Upload
+    $scope.efileaccess = [];  //Edit
+    $scope.vfileaccess = [];  //download
+    $scope.dfileaccess = [];  //Delete
     $scope.cscheaccess = [];
     $scope.vscheaccess = [];
     $scope.escheaccess = [];
@@ -79,10 +89,16 @@ app.controller("users", function($scope, $timeout) {
 
     jobsRef.on('value', function(data) {
       $scope.gridAccessData = [];
+      $scope.gridFilesAccessData = [];
       $scope.gridScheduleAccessData = [];
       $scope.vaccess = [];
       $scope.eaccess = [];
       $scope.daccess = [];
+      $scope.cfileaccess = [];  //Create
+      $scope.ufileaccess = [];  //Upload
+      $scope.efileaccess = [];  //Edit
+      $scope.vfileaccess = [];  //download
+      $scope.dfileaccess = [];  //Delete
       $scope.cscheaccess = [];
       $scope.vscheaccess = [];
       $scope.escheaccess = [];
@@ -139,6 +155,17 @@ app.controller("users", function($scope, $timeout) {
                 EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' />",
                 DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' />",
             }
+            var filecol = {
+                UserKey: key,
+                JobKey: jobID,
+                JobName: snapshot.val().jobname,
+                Type: "type",
+                CreateAccess: "<input type='checkbox' ng-model='cfileaccess[" + cnt + "]' />",
+                UploadAccess: "<input type='checkbox' ng-model='ufileaccess[" + cnt + "]' />",
+                DownloadAccess: "<input type='checkbox' ng-model='vfileaccess[" + cnt + "]' />",
+                EditAccess: "<input type='checkbox' ng-model='efileaccess[" + cnt + "]' />",
+                DeleteAccess: "<input type='checkbox' ng-model='dfileaccess[" + cnt + "]' />",
+            }
             var schecol = {
                 UserKey: key,
                 JobKey: jobID,
@@ -169,6 +196,35 @@ app.controller("users", function($scope, $timeout) {
               $scope.gridAccessData.push(col);
               $scope.dsAccess = new kendo.data.DataSource({
                 data:$scope.gridAccessData,
+                pageSize:50
+              });
+
+              if(snapshot.val() == undefined) acc = "-----";
+              else acc = snapshot.val().fileaccess != undefined ? snapshot.val().fileaccess : "-----";
+              if(acc.charAt(0) == 'c')
+                $scope.cfileaccess.push(true);
+              else if(acc.charAt(0) == '-')
+                $scope.cfileaccess.push(false);
+              if(acc.charAt(1) == 'u')
+                $scope.ufileaccess.push(true);
+              else if(acc.charAt(1) == '-')
+                $scope.ufileaccess.push(false);
+              if(acc.charAt(2) == 'v')
+                $scope.vfileaccess.push(true);
+              else if(acc.charAt(2) == '-')
+                $scope.vfileaccess.push(false);
+              if(acc.charAt(3) == 'e')
+                $scope.efileaccess.push(true);
+              else if(acc.charAt(3) == '-')
+                $scope.efileaccess.push(false);
+              if(acc.charAt(4) == 'd')
+                $scope.dfileaccess.push(true);
+              else if(acc.charAt(4) == '-')
+                $scope.dfileaccess.push(false);
+
+              $scope.gridFilesAccessData.push(filecol);
+              $scope.dsFilesAccess = new kendo.data.DataSource({
+                data:$scope.gridFilesAccessData,
                 pageSize:50
               });
 
@@ -224,6 +280,37 @@ app.controller("users", function($scope, $timeout) {
     var val = $("#job-d").is(':checked');
     for(var i=0; i<$scope.daccess.length; i++) {
       $scope.daccess[i] = val;
+    }
+  }
+
+  $scope.selectAllCreateFileAccess = function() {
+    var val = $("#file-c").is(':checked');
+    for(var i=0; i<$scope.cfileaccess.length; i++) {
+      $scope.cfileaccess[i] = val;
+    }
+  }
+  $scope.selectAllUploadFileAccess = function() {
+    var val = $("#file-u").is(':checked');
+    for(var i=0; i<$scope.ufileaccess.length; i++) {
+      $scope.ufileaccess[i] = val;
+    }
+  }
+  $scope.selectAllDownloadFileAccess = function() {
+    var val = $("#file-v").is(':checked');
+    for(var i=0; i<$scope.vfileaccess.length; i++) {
+      $scope.vfileaccess[i] = val;
+    }
+  }
+  $scope.selectAllEditFileAccess = function() {
+    var val = $("#file-e").is(':checked');
+    for(var i=0; i<$scope.efileaccess.length; i++) {
+      $scope.efileaccess[i] = val;
+    }
+  }
+  $scope.selectAllDeleteFileAccess = function() {
+    var val = $("#file-d").is(':checked');
+    for(var i=0; i<$scope.dfileaccess.length; i++) {
+      $scope.dfileaccess[i] = val;
     }
   }
 
@@ -344,6 +431,39 @@ app.controller("users", function($scope, $timeout) {
     });
   }
 
+  $scope.onCheckFileAccess = function($index, UserKey, JobKey) {
+    var ref =  firebase.database().ref('/jobs/' + JobKey + '/' + UserKey);
+    ref.once('value').then(function(snapshot) {
+      var access ;
+      if(snapshot.val() == undefined) {
+        access = "-----";
+        ref.set({fileaccess: access});
+        firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).set({fileaccess : access});
+      }else {
+        access = snapshot.val().fileaccess != undefined ? snapshot.val().fileaccess : "-----";
+      }
+
+      if($scope.cfileaccess[$index])
+        access = replaceAt(access, 0, 'c');
+      else access = replaceAt(access, 0, '-');
+      if($scope.ufileaccess[$index])
+        access = replaceAt(access, 1, 'u');
+      else access = replaceAt(access, 1, '-');
+      if($scope.vfileaccess[$index])
+        access = replaceAt(access, 2, 'v');
+      else access = replaceAt(access, 2, '-');
+      if($scope.efileaccess[$index])
+        access = replaceAt(access, 3, 'e');
+      else access = replaceAt(access, 3, '-');
+      if($scope.dfileaccess[$index])
+        access = replaceAt(access, 4, 'd');
+      else access = replaceAt(access, 4, '-');
+
+      ref.update({fileaccess : access});
+      firebase.database().ref('/user-jobs/' + UserKey + '/' + JobKey).update({fileaccess : access});
+    });
+  }
+
   $scope.onCheckScheduleAccess = function($index, UserKey, JobKey) {
     var ref =  firebase.database().ref('/jobs/' + JobKey + '/' + UserKey);
     ref.once('value').then(function(snapshot) {
@@ -390,6 +510,39 @@ app.controller("users", function($scope, $timeout) {
         headerTemplate: "Edit Access<input type='checkbox' id='job-e' class='k-checkbox header-checkbox' ng-click='selectAllEditAccess();'><label class='k-checkbox-label' for='job-e'></label>"},
       {field:"DeleteAccess", title:"Delete Access", encoded: false, filterable:false,
         headerTemplate: "Delete Access<input type='checkbox' id='job-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteAccess();'><label class='k-checkbox-label' for='job-d'></label>"},
+    ],
+    filterable: {
+      mode: "row"
+    },
+    pageable: {
+        pageSizes: [20, 50, 75, 100, 250],
+        refresh: true,
+        buttonCount: 5
+    },
+    //sortable: true,
+    resizable: true
+  }
+
+  $scope.gridFilesAccessOptions = {
+    columns: [
+      {field:"UserKey", hidden:true},
+      {field:"JobKey", hidden:true},
+      {field:"JobName", title:"Job Name", filterable: {
+          cell: {
+            showOperators: false,operator: "contains"
+          }
+        }
+      },
+      {field:"CreateAccess", title:"Create Access", encoded: false, filterable:false,
+        headerTemplate: "Create Access<input type='checkbox' id='file-c' class='k-checkbox header-checkbox' ng-click='selectAllCreateFileAccess();'><label class='k-checkbox-label' for='file-c'></label>"},
+      {field:"UploadAccess", title:"Upload Access", encoded: false, filterable:false,
+        headerTemplate: "Upload Access<input type='checkbox' id='file-u' class='k-checkbox header-checkbox' ng-click='selectAllUploadFileAccess();'><label class='k-checkbox-label' for='file-u'></label>"},
+      {field:"DownloadAccess", title:"Download Access", encoded: false, filterable: false,
+        headerTemplate: "Download Access<input type='checkbox' id='file-v' class='k-checkbox header-checkbox' ng-click='selectAllDownloadFileAccess();'><label class='k-checkbox-label' for='file-v'></label>"},
+      {field:"EditAccess", title:"Edit Access", encoded: false, filterable: false,
+        headerTemplate: "Edit Access<input type='checkbox' id='file-e' class='k-checkbox header-checkbox' ng-click='selectAllEditFileAccess();'><label class='k-checkbox-label' for='file-e'></label>"},
+      {field:"DeleteAccess", title:"Delete Access", encoded: false, filterable: false,
+        headerTemplate: "Delete Access<input type='checkbox' id='file-d' class='k-checkbox header-checkbox' ng-click='selectAllDeleteFileAccess();'><label class='k-checkbox-label' for='file-d'></label>"},
     ],
     filterable: {
       mode: "row"
@@ -577,6 +730,9 @@ app.controller("users", function($scope, $timeout) {
       $scope.onCheckDeleteAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
 */
       $scope.onCheckAccess(i, $scope.gridAccessData[i].UserKey, $scope.gridAccessData[i].JobKey);
+    }
+    for(var i=0; i<$scope.gridFilesAccessData.length; i++) {
+      $scope.onCheckFileAccess(i, $scope.gridFilesAccessData[i].UserKey, $scope.gridFilesAccessData[i].JobKey);
     }
     for(var i=0; i<$scope.gridScheduleAccessData.length; i++) {
       $scope.onCheckScheduleAccess(i, $scope.gridScheduleAccessData[i].UserKey, $scope.gridScheduleAccessData[i].JobKey);
