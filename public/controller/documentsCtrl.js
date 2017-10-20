@@ -7,60 +7,6 @@ app.controller("documents", function($scope, dataService) {
     {id: "files", value: "Files", open: true,  type: "folder", date:  new Date}
   ];
 
-  var dat = [
-			{id: "files", value: "Files", open: true,  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-				{ id: "documents", value: "Documents", date:  new Date(2014,2,10,16,10),  type: "folder", open: true, data:[
-					{id: "presentations", value: "Presentations", type: "folder", date:  new Date(2014,2,10,16,10), data:[
-						{id: "pres1", value: "October 2014.ppt", type:"pp", date: new Date(2014,2,10,16,10), size: "12830"},
-						{id: "pres2", value: "June 2014.ppt",  type:"pp", date:  new Date(2014,2,10,16,10), size: "20100"},
-						{id: "pres3", value: "April 2014.ppt", type:"pp", date:  new Date(2014,2,10,16,10), size: "15750"}
-					]},
-					{id: "reports", value: "Reports",  type: "folder", date: new Date(2014,2,10,16,10), open: true, data:[
-						{id: "usa", value: "USA",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-							{id: "salesUS", value: "Sales USA.ppt",  type:"excel", date: new Date(2014,2,10,16,10), size: "12830"},
-							{id: "overviewUS", value: "Overview USA.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
-							{id: "pricesUS", value: "Prices USA.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
-							{id: "productsUS", value: "Products USA.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
-						]},
-						{id: "europe", value: "Europe",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-							{id: "salesEurope", value: "Sales Europe.ppt",  type:"archive", date:  new Date(2014,2,10,16,10), size: "12830"},
-							{id: "pricesEurope", value: "Prices Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
-							{id: "productsEurope", value: "Products Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "20830"},
-							{id: "overviewEurope", value: "Overview Europe.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"}
-						]},
-						{id: "asia", value: "Asia",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-							{id: "salesAsia", value: "Sales Asia.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "12083"},
-							{id: "pricesAsia", value: "Prices Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "15830"},
-							{id: "overviewAsia", value: "Overview Asia.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
-							{id: "productsAsia", value: "Products Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
-						]}
-					]}
-				]},
-				{ id: "images", value: "Images", type: "folder", date:  new Date(2014,2,10,16,12), open: true, data:[
-					{id: "thumbnails", value: "Thumbnails", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-						{id: "thumbnails1", value: "Product 1-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.83 KB"},
-						{id: "thumbnails2", value: "Product 2-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "40.10 KB"},
-						{id: "thumbnails3", value: "Product 3-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "33.75 KB"},
-						{id: "thumbnails4", value: "Product 4-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "35.13 KB"},
-						{id: "thumbnails5", value: "Product 5-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.72  KB"},
-						{id: "thumbnails6", value: "Product 6-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "37.06  KB"}
-					]},
-					{id: "base", value: "Base images", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-						{id: "base1", value: "Product 1.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.83 KB"},
-						{id: "base2", value: "Product 2.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "80.10 KB"},
-						{id: "base3", value: "Product 3.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "73.75 KB"},
-						{id: "base4", value: "Product 4.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "75.13 KB"},
-						{id: "base5", value: "Product 5.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.72 KB" },
-						{id: "base6", value: "Product 6.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "77.06 KB"}
-					]}
-				]},
-				{ id: "video", value: "Video", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-					{id: "video1", value: "New Year 2013.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "25030000", pId: "video" },
-					{id: "video2", value: "Presentation.avi", icon: "file-video-o",type:"video", date:  new Date(2014,2,10,16,12), size: "11072000" , pId: "video"},
-					{id: "video3", value: "Conference.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "31256000", pId: "video" }
-				]}
-			]}
-		];
   webix.ui({
     view:"filemanager",
     data: emptydat,
@@ -72,6 +18,27 @@ app.controller("documents", function($scope, dataService) {
   dataService.changeJob = function() {
     if($scope.jobname == undefined) {return;}
     if($scope.jobname == "All") {
+      $$("fmanager").attachEvent("onBeforeCreateFolder",function(id){
+          return false;
+      });
+      $$("fmanager").attachEvent("onBeforeUploadDialog",function(file_config){
+        return false;
+      });
+      $$("fmanager").attachEvent("onBeforeDrag",function(context,ev){
+        return false;
+      });
+      $$("fmanager").attachEvent("onBeforeEditFile",function(id,state,editor,view){
+        return false;
+      });
+      $$("fmanager").attachEvent("onBeforeMarkCut", function(ids){
+        return false;
+      });
+      $$("fmanager").attachEvent("onBeforeMarkCopy", function(ids){
+        return false;
+      });
+      $$("fmanager").attachEvent("onBeforeDeleteFile", function(id){
+        return false;
+      });
       alert("Select one job only");
     }else {
       var ref = firebase.database().ref('/documents/' + $scope.jobname);
@@ -112,7 +79,7 @@ app.controller("documents", function($scope, dataService) {
 
             webix.ui({
               view:"filemanager",
-              data: data.val(),
+              data: dat,
               container:"filemgr",
               id:"fmanager"
             });
@@ -178,7 +145,7 @@ app.controller("documents", function($scope, dataService) {
 
               var storageRef = firebase.storage().ref();
               storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
-                alert("Succeed");
+                alert("Upload Succeed");
               });
 
               updateDB();
