@@ -39,7 +39,6 @@ app.controller("documents", function($scope, dataService) {
       $$("fmanager").attachEvent("onBeforeDeleteFile", function(id){
         return false;
       });
-      alert("Select one job only");
     }else {
       var ref = firebase.database().ref('/documents/' + $scope.jobname);
       ref.once('value' , function(data) {
@@ -76,6 +75,8 @@ app.controller("documents", function($scope, dataService) {
             var dat = emptydat;
             if(data.val() != null)
               dat = data.val();
+            dat[0].open = true;
+            console.log(dat);
 
             webix.ui({
               view:"filemanager",
@@ -129,6 +130,7 @@ app.controller("documents", function($scope, dataService) {
               updateDB();
             });
             $$("fmanager").attachEvent("onBeforeFileUpload", function(response){
+              if(!uu) return false;
               console.log(response);
               var file = response.file;
               var metadata = {
@@ -145,7 +147,7 @@ app.controller("documents", function($scope, dataService) {
 
               var storageRef = firebase.storage().ref();
               storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
-                alert("Upload Succeed");
+                //alert("Upload Succeed");
               });
 
               updateDB();
@@ -217,6 +219,8 @@ app.controller("documents", function($scope, dataService) {
   }
   dataService.changeJob();
 
+
+
   String.prototype.replaceAll = function(search, replacement) {
       var target = this;
       return target.replace(new RegExp(search, 'g'), replacement);
@@ -228,3 +232,8 @@ app.controller("documents", function($scope, dataService) {
 //    TableDatatablesManaged.init();
 //  });
 });
+
+var doUpload = function() {
+  var pathary = $$("fmanager").getPath();
+  $$("fmanager").uploadFile(pathary[pathary.length-1]);
+}
