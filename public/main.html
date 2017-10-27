@@ -21,7 +21,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <head>
         <meta charset="utf-8" />
-        <title>Unibuilder Main Page</title>
+        <title>Unibuilder</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="Preview page of Metronic Admin Theme #2 for statistics, charts, recent events and reports" name="description" />
@@ -281,6 +281,20 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                             </ul>
                         </li>-->
+                        <li class="nav-item" ng-class="fff == 3 ? ' active open' : ''">
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="icon-home"></i>
+                                <span class="title">Dashboard</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu">
+                              <li class="nav-item" ng-class="fff === 3 ? 'active open' : ''" ng-click="myFunc(3)">
+                                    <a href="#!dashboard" class="nav-link ">
+                                        <span class="title">Dashboard</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item" ng-class="fff>=4 && fff<= 5 ? ' active open' : ''">
                             <a href="javascript:;" class="nav-link nav-toggle">
                                 <i class="icon-diamond"></i>
@@ -461,11 +475,16 @@ License: You must have a valid license purchased only from themeforest(the above
             <script>
                 $(document).ready(function()
                 {
+                    // abcd();
                     $('#clickmewow').click(function()
                     {
                         $('#radio1003').attr('checked', 'checked');
                     });
                 })
+                function abcd() {
+                  if(!firebase.auth().currentUser)
+                    window.location.href = "./";
+                }
             </script>
 
             <script src="/__/firebase/4.2.0/firebase-app.js"></script>
@@ -489,6 +508,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
             <script src="module/mainApp.js"></script>
             <script src="controller/mainCtrl.js"></script>
+            <script src="controller/dashboardCtrl.js"></script>
             <script src="controller/jobsCtrl.js"></script>
             <script src="controller/joblistCtrl.js"></script>
             <script src="controller/usersCtrl.js"></script>

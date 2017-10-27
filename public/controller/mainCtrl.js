@@ -1,5 +1,12 @@
 app.controller('mainCtrl', function($scope, dataService) {
-    $scope.fff = 4;
+    if (firebase.auth().currentUser) {
+      //firebase.auth().signOut();
+    }else {
+//      alert("AAA");
+    }
+    // alert(firebase.auth().currentUser);
+
+    $scope.fff = 3;
     $scope.myFunc = function(num) {
       $scope.fff = num;
     }
@@ -60,8 +67,8 @@ app.controller('mainCtrl', function($scope, dataService) {
 
 app.config(function($routeProvider) {
   $routeProvider
-    .when("/sample", {
-      templateUrl : "sample.html"
+    .when("/dashboard", {
+      templateUrl : "dashboard.html"
     })
     .when("/jobs", {
       templateUrl : "jobs.html",

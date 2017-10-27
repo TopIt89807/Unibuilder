@@ -182,7 +182,7 @@ var Login = function() {
 
             Pace.restart();
             Pace.on('hide', function(){
-              window.location.href = "../../main.html#!/jobs";
+              window.location.href = "../../main.html#!/dashboard";
               console.log('done');
             });
         }).catch(function(error) {
