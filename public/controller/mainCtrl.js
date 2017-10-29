@@ -68,7 +68,8 @@ app.controller('mainCtrl', function($scope, dataService) {
 app.config(function($routeProvider) {
   $routeProvider
     .when("/dashboard", {
-      templateUrl : "dashboard.html"
+      templateUrl : "dashboard.html",
+      controller: "dashboard"
     })
     .when("/jobs", {
       templateUrl : "jobs.html",

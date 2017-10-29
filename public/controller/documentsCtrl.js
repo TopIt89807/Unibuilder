@@ -148,6 +148,9 @@ app.controller("documents", function($scope, dataService) {
               var storageRef = firebase.storage().ref();
               storageRef.child(fburl).put(file, metadata).then(function(snapshot) {
                 //alert("Upload Succeed");
+                var userid = $scope.getCurrentUID();
+                firebase.database().ref('/jobs/' + $scope.jobname + '/' + userid).update({lastfileid : response.id});
+                firebase.database().ref('/user-jobs/' + userid + '/' + $scope.jobname).update({lastfileid : response.id});
               });
 
               updateDB();

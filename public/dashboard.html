@@ -11,7 +11,7 @@
                   <div class="display">
                       <div class="number">
                           <h3 class="font-green-sharp">
-                              <span data-counter="counterup" data-value="7800">0</span>
+                              <span ng-bind="d_jobcountall">0</span>
                           </h3>
                           <small>TOTAL JOBS</small>
                       </div>
@@ -25,10 +25,10 @@
                               <span class="sr-only">76% progress</span>
                           </span>
                       </div>
-                      <div class="status">
+                      <!--<div class="status">
                           <div class="status-title"> progress </div>
                           <div class="status-number"> 76% </div>
-                      </div>
+                      </div>-->
                   </div>
               </div>
           </div>
@@ -37,9 +37,9 @@
                   <div class="display">
                       <div class="number">
                           <h3 class="font-red-haze">
-                              <span data-counter="counterup" data-value="1349">0</span>
+                              <span ng-bind="d_jobcount">0</span>
                           </h3>
-                          <small>TOTAL USERS</small>
+                          <small>TOTAL JOBS YOU HAVE ACCESS</small>
                       </div>
                       <div class="icon">
                           <i class="icon-like"></i>
@@ -47,18 +47,14 @@
                   </div>
                   <div class="progress-info">
                       <div class="progress">
-                          <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
+                          <span style="width: 100%;" class="progress-bar progress-bar-success red-haze">
                               <span class="sr-only">85% change</span>
                           </span>
-                      </div>
-                      <div class="status">
-                          <div class="status-title"> change </div>
-                          <div class="status-number"> 85% </div>
                       </div>
                   </div>
               </div>
           </div>
-          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <!--<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
               <div class="dashboard-stat2 ">
                   <div class="display">
                       <div class="number">
@@ -76,10 +72,6 @@
                           <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
                               <span class="sr-only">45% grow</span>
                           </span>
-                      </div>
-                      <div class="status">
-                          <div class="status-title"> grow </div>
-                          <div class="status-number"> 45% </div>
                       </div>
                   </div>
               </div>
@@ -103,37 +95,24 @@
                               <span class="sr-only">56% change</span>
                           </span>
                       </div>
-                      <div class="status">
-                          <div class="status-title"> change </div>
-                          <div class="status-number"> 57% </div>
-                      </div>
                   </div>
               </div>
-          </div>
+          </div>-->
       </div>
       <div class="row">
           <div class="col-lg-6 col-xs-12 col-sm-12">
               <div class="portlet light ">
                   <div class="portlet-title">
                       <div class="caption">
-                          <span class="caption-subject bold uppercase font-dark">Revenue</span>
-                          <span class="caption-helper">distance stats...</span>
-                      </div>
-                      <div class="actions">
-                          <a class="btn btn-circle btn-icon-only btn-default" href="#">
-                              <i class="icon-cloud-upload"></i>
-                          </a>
-                          <a class="btn btn-circle btn-icon-only btn-default" href="#">
-                              <i class="icon-wrench"></i>
-                          </a>
-                          <a class="btn btn-circle btn-icon-only btn-default" href="#">
-                              <i class="icon-trash"></i>
-                          </a>
-                          <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#"> </a>
+                          <span class="caption-subject bold uppercase font-dark">JOB INFORMATION</span>
+                          <span class="caption-helper"></span>
                       </div>
                   </div>
                   <div class="portlet-body">
-                      <div id="dashboard_amchart_1" class="CSSAnimationChart"></div>
+                    Job Name : <span ng-bind="d_jobname">0</span><br/>
+                    Job Status : <span ng-bind="d_jobstatus">0</span><br/>
+                    Last Upload : <span ng-bind="d_lastupload">0</span><br/>
+                    <div id="filemgrtmp" hidden></div>
                   </div>
               </div>
           </div>
@@ -141,18 +120,14 @@
               <div class="portlet light ">
                   <div class="portlet-title">
                       <div class="caption ">
-                          <span class="caption-subject font-dark bold uppercase">Finance</span>
-                          <span class="caption-helper">distance stats...</span>
-                      </div>
-                      <div class="actions">
-                          <a href="#" class="btn btn-circle green btn-outline btn-sm">
-                              <i class="fa fa-pencil"></i> Export </a>
-                          <a href="#" class="btn btn-circle green btn-outline btn-sm">
-                              <i class="fa fa-print"></i> Print </a>
+                          <span class="caption-subject font-dark bold uppercase">ACCESSES</span>
+                          <span class="caption-helper">to seleted job</span>
                       </div>
                   </div>
                   <div class="portlet-body">
-                      <div id="dashboard_amchart_3" class="CSSAnimationChart"></div>
+                    Job Access : <span ng-bind="d_jobaccess">0</span><br/>
+                    Document Access : <span ng-bind="d_docaccess">0</span><br/>
+                    Schedule Access : <span ng-bind="d_scheaccess">0</span><br/>
                   </div>
               </div>
           </div>
