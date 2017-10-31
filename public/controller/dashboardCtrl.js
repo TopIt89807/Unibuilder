@@ -1,5 +1,4 @@
 app.controller("dashboard", function($scope, dataService) {
-
   $scope.getCurrentUID = function() {
     return firebase.auth().currentUser.uid;
   }
@@ -31,6 +30,29 @@ app.controller("dashboard", function($scope, dataService) {
 
   });
 
+  console.log($scope.getCurrentUID());
+
+  var userRef = firebase.database().ref('/users/' + $scope.getCurrentUID());
+  userRef.once('value').then(function(data) {
+    var type = data.val().type;
+    var typeStr = "";
+    switch(type) {
+      case "admin":
+        typeStr = "Admin";
+        break;
+      case "owner":
+        typeStr = "Owner";
+        break;
+      case "internal":
+        typeStr = "Internal User";
+        break;
+      case "subs":
+        typeStr = "Subs/Vendors";
+        break;
+    }
+    $scope.d_usertype = typeStr;
+  });
+
   dataService.changeJob = function() {
     if($scope.jobname == undefined) {return;}
     if($scope.jobname == "All") {
@@ -43,6 +65,9 @@ app.controller("dashboard", function($scope, dataService) {
       $scope.d_docaccess = "-";
       $scope.d_scheaccess = "-";
       // $scope.$apply();
+      var map = new GMaps({
+          div: '#dash_map'
+      });
 
     }else {
       var ref = firebase.database().ref('/joblist/' + $scope.jobname);
@@ -81,6 +106,25 @@ app.controller("dashboard", function($scope, dataService) {
 
             });
 
+            $("#dash_map").css("width", "100%");
+            $("#dash_map").css("height", "500px");
+            if(snapshot.val().mapped == "mapped") {
+              var map = new GMaps({
+                  div: '#dash_map',
+                  lat: snapshot.val().lat,
+                  lng: snapshot.val().lng,
+              });
+              map.addMarker({
+                  lat: snapshot.val().lat,
+                  lng: snapshot.val().lng
+              });
+              map.setZoom(11);
+            }else {
+              var map = new GMaps({
+                  div: '#dash_map'
+              });
+            }
+
 
 
             var jobaccess = "";
@@ -89,17 +133,21 @@ app.controller("dashboard", function($scope, dataService) {
             if(access.charAt(3) == 'd') jobaccess += "Delete ";
 
             var fileaccesses = "";
-            if(fileaccess.charAt(0) == 'c') fileaccesses += "Create ";
-            if(fileaccess.charAt(1) == 'u') fileaccesses += "Upload ";
-            if(fileaccess.charAt(2) == 'v') fileaccesses += "Download ";
-            if(fileaccess.charAt(3) == 'e') fileaccesses += "Edit ";
-            if(fileaccess.charAt(4) == 'd') fileaccesses += "Delete ";
+            if(fileaccess != undefined) {
+              if(fileaccess.charAt(0) == 'c') fileaccesses += "Create ";
+              if(fileaccess.charAt(1) == 'u') fileaccesses += "Upload ";
+              if(fileaccess.charAt(2) == 'v') fileaccesses += "Download ";
+              if(fileaccess.charAt(3) == 'e') fileaccesses += "Edit ";
+              if(fileaccess.charAt(4) == 'd') fileaccesses += "Delete ";
+            }else fileaccesses = "-";
 
             var scheaccesses = "";
-            if(scheaccess.charAt(0) == 'c') scheaccesses += "Create ";
-            if(scheaccess.charAt(1) == 'v') scheaccesses += "View ";
-            if(scheaccess.charAt(2) == 'e') scheaccesses += "Edit ";
-            if(scheaccess.charAt(3) == 'd') scheaccesses += "Delete ";
+            if(scheaccess != undefined) {
+              if(scheaccess.charAt(0) == 'c') scheaccesses += "Create ";
+              if(scheaccess.charAt(1) == 'v') scheaccesses += "View ";
+              if(scheaccess.charAt(2) == 'e') scheaccesses += "Edit ";
+              if(scheaccess.charAt(3) == 'd') scheaccesses += "Delete ";
+            }else scheaccesses = "-";
 
             $scope.d_jobaccess = jobaccess;
             $scope.d_docaccess = fileaccesses;
