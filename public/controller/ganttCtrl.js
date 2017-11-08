@@ -17,29 +17,28 @@ app.controller("gantt", function($scope, dataService) {
     });
     // $scope.jobname = $scope.jobs[0].value;
     for(var i=0; i<keys.length; i++) {
-      var ref =  firebase.database().ref('/joblist/' + keys[i]);
+      var ref = firebase.database().ref('/joblist/' + keys[i]);
       ref.once('value').then(function(snapshot) {
         var jobID = snapshot.key;
         var creatorID = snapshot.val().creatorID;
-        firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+        var deleted = snapshot.val().deleted != undefined? snapshot.val().deleted : false;
+        if(!deleted) {
 
-          var access = snapshot.val().scheaccess;
-          if(access.charAt(1) == 'v') {
-
-            editable = access.charAt(1) != 'e'? 0 : 1;
-/*          if(access.charAt(1) != 'e') {
-              $("#large").find('*').attr("disabled", true);
-            }else {
-              $("#large").find('*').attr("disabled", false);
+          firebase.database().ref('/jobs/' + jobID + '/' + $scope.getCurrentUID()).once('value').then(function(snapshot) {
+            var access = snapshot.val().scheaccess;
+            if(access.charAt(1) == 'v') {
+              firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+                  editable = access.charAt(1) != 'e'? 0 : 1;
+                  $scope.jobs.push({
+                    name:snapshot.val().jobname,
+                    value:snapshot.ref.parent.key
+                  });
+                  $scope.$apply();
+              });
             }
-*/
-            $scope.jobs.push({
-              name:snapshot.val().jobname,
-              value:snapshot.ref.parent.key
-            });
-          }
-          $scope.$apply();
-        });
+          });
+        }
+
       });
     }
 

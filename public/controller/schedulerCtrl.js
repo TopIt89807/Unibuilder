@@ -21,25 +21,30 @@ app.controller("scheduler", function($scope, dataService) {
       ref.once('value').then(function(snapshot) {
         var jobID = snapshot.key;
         var creatorID = snapshot.val().creatorID;
-        firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+        var deleted = snapshot.val().deleted != undefined? snapshot.val().deleted : false;
+        if(!deleted) {
 
-          var access = snapshot.val().scheaccess;
-          if(access.charAt(1) == 'v') {
+          firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
 
-            editable = access.charAt(1) != 'e'? 0 : 1;
-/*          if(access.charAt(1) != 'e') {
-              $("#large").find('*').attr("disabled", true);
-            }else {
-              $("#large").find('*').attr("disabled", false);
+            var access = snapshot.val().scheaccess;
+            if(access.charAt(1) == 'v') {
+
+              editable = access.charAt(1) != 'e'? 0 : 1;
+  /*          if(access.charAt(1) != 'e') {
+                $("#large").find('*').attr("disabled", true);
+              }else {
+                $("#large").find('*').attr("disabled", false);
+              }
+  */
+              $scope.jobs.push({
+                name:snapshot.val().jobname,
+                value:snapshot.ref.parent.key
+              });
             }
-*/
-            $scope.jobs.push({
-              name:snapshot.val().jobname,
-              value:snapshot.ref.parent.key
-            });
-          }
-          $scope.$apply();
-        });
+            $scope.$apply();
+          });
+        }
+
       });
     }
 

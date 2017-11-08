@@ -43,3 +43,7 @@ function updateJob(uid, jobkey, firstname, lastname, email, jobname, status, jty
 
   return firebase.database().ref().update(updates);
 }
+
+function deleteJob(jobkey) {
+  firebase.database().ref('/joblist/' + jobkey).update({deleted : true});
+}

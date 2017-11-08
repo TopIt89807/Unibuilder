@@ -12,19 +12,25 @@ app.controller("dashboard", function($scope, dataService) {
     $scope.d_jobcountall = keys.length;
 
     var jobcnt = 0;
+    $scope.d_jobcount = jobcnt;
     for(var i=0; i<keys.length; i++) {
       var ref = firebase.database().ref('/joblist/' + keys[i]);
       ref.once('value').then(function(snapshot) {
-        var jobID = snapshot.key;
         var creatorID = snapshot.val().creatorID;
-        firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
-          var access = snapshot.val().access;
-          if(access.charAt(2) == 'v') {
-            jobcnt ++;
-            $scope.d_jobcount = jobcnt;
-            $scope.$apply();
-          }
-        });
+        var jobID = snapshot.key;
+        var deleted = snapshot.val().deleted != undefined? snapshot.val().deleted : false;
+        if(!deleted) {
+          firebase.database().ref('/jobs/' + jobID + '/' + $scope.getCurrentUID()).once('value').then(function(snapshot) {
+            var jobaccess = snapshot.val().access;
+            if(jobaccess.charAt(2) == 'v') {
+              firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+                  jobcnt ++;
+                  $scope.d_jobcount = jobcnt;
+                  $scope.$apply();
+              });
+            }
+          });
+        }
       });
     }
 

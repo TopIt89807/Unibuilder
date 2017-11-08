@@ -146,119 +146,125 @@ app.controller("users", function($scope, $timeout) {
         ref.once('value').then(function(snapshot) {
           var jobID = snapshot.key;
           var creatorID = snapshot.val().creatorID;
-          firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
-            var col = {
-                UserKey: key,
-                JobKey: jobID,
-                JobName: snapshot.val().jobname,
-                Type: "type",
-                ViewAccess: "<input type='checkbox' ng-model='vaccess[" + cnt + "]' />",
-                EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' />",
-                DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' />",
-            }
-            var filecol = {
-                UserKey: key,
-                JobKey: jobID,
-                JobName: snapshot.val().jobname,
-                Type: "type",
-                CreateAccess: "<input type='checkbox' ng-model='cfileaccess[" + cnt + "]' />",
-                UploadAccess: "<input type='checkbox' ng-model='ufileaccess[" + cnt + "]' />",
-                DownloadAccess: "<input type='checkbox' ng-model='vfileaccess[" + cnt + "]' />",
-                EditAccess: "<input type='checkbox' ng-model='efileaccess[" + cnt + "]' />",
-                DeleteAccess: "<input type='checkbox' ng-model='dfileaccess[" + cnt + "]' />",
-            }
-            var schecol = {
-                UserKey: key,
-                JobKey: jobID,
-                JobName: snapshot.val().jobname,
-                Type: "type",
-                CreateAccess: "<input type='checkbox' ng-model='cscheaccess[" + cnt + "]' />",
-                ViewAccess: "<input type='checkbox' ng-model='vscheaccess[" + cnt + "]' />",
-                EditAccess: "<input type='checkbox' ng-model='escheaccess[" + cnt + "]' />",
-                DeleteAccess: "<input type='checkbox' ng-model='dscheaccess[" + cnt + "]' />",
-            }
-            firebase.database().ref('/jobs/' + jobID + '/' + key).once('value').then(function(snapshot) {
-              var acc;
-              if(snapshot.val() == undefined) acc = "----";
-              else acc = snapshot.val().access != undefined ? snapshot.val().access : "----";
-              if(acc.charAt(1) == 'e')
-                $scope.eaccess.push(true);
-              else if(acc.charAt(1) == '-')
-                $scope.eaccess.push(false);
-              if(acc.charAt(2) == 'v')
-                $scope.vaccess.push(true);
-              else if(acc.charAt(2) == '-')
-                $scope.vaccess.push(false);
-              if(acc.charAt(3) == 'd')
-                $scope.daccess.push(true);
-              else if(acc.charAt(3) == '-')
-                $scope.daccess.push(false);
+          var deleted = snapshot.val().deleted != undefined? snapshot.val().deleted : false;
+          if(!deleted) {
 
-              $scope.gridAccessData.push(col);
-              $scope.dsAccess = new kendo.data.DataSource({
-                data:$scope.gridAccessData,
-                pageSize:50
+            firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+              var col = {
+                  UserKey: key,
+                  JobKey: jobID,
+                  JobName: snapshot.val().jobname,
+                  Type: "type",
+                  ViewAccess: "<input type='checkbox' ng-model='vaccess[" + cnt + "]' />",
+                  EditAccess: "<input type='checkbox' ng-model='eaccess[" + cnt + "]' />",
+                  DeleteAccess: "<input type='checkbox' ng-model='daccess[" + cnt + "]' />",
+              }
+              var filecol = {
+                  UserKey: key,
+                  JobKey: jobID,
+                  JobName: snapshot.val().jobname,
+                  Type: "type",
+                  CreateAccess: "<input type='checkbox' ng-model='cfileaccess[" + cnt + "]' />",
+                  UploadAccess: "<input type='checkbox' ng-model='ufileaccess[" + cnt + "]' />",
+                  DownloadAccess: "<input type='checkbox' ng-model='vfileaccess[" + cnt + "]' />",
+                  EditAccess: "<input type='checkbox' ng-model='efileaccess[" + cnt + "]' />",
+                  DeleteAccess: "<input type='checkbox' ng-model='dfileaccess[" + cnt + "]' />",
+              }
+              var schecol = {
+                  UserKey: key,
+                  JobKey: jobID,
+                  JobName: snapshot.val().jobname,
+                  Type: "type",
+                  CreateAccess: "<input type='checkbox' ng-model='cscheaccess[" + cnt + "]' />",
+                  ViewAccess: "<input type='checkbox' ng-model='vscheaccess[" + cnt + "]' />",
+                  EditAccess: "<input type='checkbox' ng-model='escheaccess[" + cnt + "]' />",
+                  DeleteAccess: "<input type='checkbox' ng-model='dscheaccess[" + cnt + "]' />",
+              }
+              firebase.database().ref('/jobs/' + jobID + '/' + key).once('value').then(function(snapshot) {
+                var acc;
+                if(snapshot.val() == undefined) acc = "----";
+                else acc = snapshot.val().access != undefined ? snapshot.val().access : "----";
+                if(acc.charAt(1) == 'e')
+                  $scope.eaccess.push(true);
+                else if(acc.charAt(1) == '-')
+                  $scope.eaccess.push(false);
+                if(acc.charAt(2) == 'v')
+                  $scope.vaccess.push(true);
+                else if(acc.charAt(2) == '-')
+                  $scope.vaccess.push(false);
+                if(acc.charAt(3) == 'd')
+                  $scope.daccess.push(true);
+                else if(acc.charAt(3) == '-')
+                  $scope.daccess.push(false);
+
+                $scope.gridAccessData.push(col);
+                $scope.dsAccess = new kendo.data.DataSource({
+                  data:$scope.gridAccessData,
+                  pageSize:50
+                });
+
+                if(snapshot.val() == undefined) acc = "-----";
+                else acc = snapshot.val().fileaccess != undefined ? snapshot.val().fileaccess : "-----";
+                if(acc.charAt(0) == 'c')
+                  $scope.cfileaccess.push(true);
+                else if(acc.charAt(0) == '-')
+                  $scope.cfileaccess.push(false);
+                if(acc.charAt(1) == 'u')
+                  $scope.ufileaccess.push(true);
+                else if(acc.charAt(1) == '-')
+                  $scope.ufileaccess.push(false);
+                if(acc.charAt(2) == 'v')
+                  $scope.vfileaccess.push(true);
+                else if(acc.charAt(2) == '-')
+                  $scope.vfileaccess.push(false);
+                if(acc.charAt(3) == 'e')
+                  $scope.efileaccess.push(true);
+                else if(acc.charAt(3) == '-')
+                  $scope.efileaccess.push(false);
+                if(acc.charAt(4) == 'd')
+                  $scope.dfileaccess.push(true);
+                else if(acc.charAt(4) == '-')
+                  $scope.dfileaccess.push(false);
+
+                $scope.gridFilesAccessData.push(filecol);
+                $scope.dsFilesAccess = new kendo.data.DataSource({
+                  data:$scope.gridFilesAccessData,
+                  pageSize:50
+                });
+
+                if(snapshot.val() == undefined) acc = "----";
+                else acc = snapshot.val().scheaccess != undefined ? snapshot.val().scheaccess : "----";
+                if(acc.charAt(0) == 'c')
+                  $scope.cscheaccess.push(true);
+                else if(acc.charAt(0) == '-')
+                  $scope.cscheaccess.push(false);
+                if(acc.charAt(1) == 'v')
+                  $scope.vscheaccess.push(true);
+                else if(acc.charAt(1) == '-')
+                  $scope.vscheaccess.push(false);
+                if(acc.charAt(2) == 'e')
+                  $scope.escheaccess.push(true);
+                else if(acc.charAt(2) == '-')
+                  $scope.escheaccess.push(false);
+                if(acc.charAt(3) == 'd')
+                  $scope.dscheaccess.push(true);
+                else if(acc.charAt(3) == '-')
+                  $scope.dscheaccess.push(false);
+
+                $scope.gridScheduleAccessData.push(schecol);
+                $scope.dsScheduleAccess = new kendo.data.DataSource({
+                  data:$scope.gridScheduleAccessData,
+                  pageSize:50
+                });
+
+                $scope.$apply();
               });
+              cnt ++;
 
-              if(snapshot.val() == undefined) acc = "-----";
-              else acc = snapshot.val().fileaccess != undefined ? snapshot.val().fileaccess : "-----";
-              if(acc.charAt(0) == 'c')
-                $scope.cfileaccess.push(true);
-              else if(acc.charAt(0) == '-')
-                $scope.cfileaccess.push(false);
-              if(acc.charAt(1) == 'u')
-                $scope.ufileaccess.push(true);
-              else if(acc.charAt(1) == '-')
-                $scope.ufileaccess.push(false);
-              if(acc.charAt(2) == 'v')
-                $scope.vfileaccess.push(true);
-              else if(acc.charAt(2) == '-')
-                $scope.vfileaccess.push(false);
-              if(acc.charAt(3) == 'e')
-                $scope.efileaccess.push(true);
-              else if(acc.charAt(3) == '-')
-                $scope.efileaccess.push(false);
-              if(acc.charAt(4) == 'd')
-                $scope.dfileaccess.push(true);
-              else if(acc.charAt(4) == '-')
-                $scope.dfileaccess.push(false);
-
-              $scope.gridFilesAccessData.push(filecol);
-              $scope.dsFilesAccess = new kendo.data.DataSource({
-                data:$scope.gridFilesAccessData,
-                pageSize:50
-              });
-
-              if(snapshot.val() == undefined) acc = "----";
-              else acc = snapshot.val().scheaccess != undefined ? snapshot.val().scheaccess : "----";
-              if(acc.charAt(0) == 'c')
-                $scope.cscheaccess.push(true);
-              else if(acc.charAt(0) == '-')
-                $scope.cscheaccess.push(false);
-              if(acc.charAt(1) == 'v')
-                $scope.vscheaccess.push(true);
-              else if(acc.charAt(1) == '-')
-                $scope.vscheaccess.push(false);
-              if(acc.charAt(2) == 'e')
-                $scope.escheaccess.push(true);
-              else if(acc.charAt(2) == '-')
-                $scope.escheaccess.push(false);
-              if(acc.charAt(3) == 'd')
-                $scope.dscheaccess.push(true);
-              else if(acc.charAt(3) == '-')
-                $scope.dscheaccess.push(false);
-
-              $scope.gridScheduleAccessData.push(schecol);
-              $scope.dsScheduleAccess = new kendo.data.DataSource({
-                data:$scope.gridScheduleAccessData,
-                pageSize:50
-              });
-
-              $scope.$apply();
             });
-            cnt ++;
 
-          });
+          }
+
 
         });
       }
