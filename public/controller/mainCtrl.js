@@ -63,10 +63,68 @@ app.controller('mainCtrl', function($scope, dataService) {
       }
 
     });
+    $scope.chk_open = true;
+    $scope.chk_closed = true;
 
     $scope.changeJob = function() {
       dataService.changeJob();
     }
+    $scope.changeJob1 = function(prop) {
+      $scope.jobname = prop.value;
+      dataService.changeJob();
+    }
+
+    $scope.changeStatus = function() {
+      $scope.jobs = [];
+      var jobsRef = firebase.database().ref('/joblist/');
+      jobsRef.once('value', function(data) {
+        var keys = [];
+        for(var k in data.val()) {
+          keys.push(k);
+        }
+        $scope.gridData = [];
+        $scope.jobs = [];
+        $scope.jobs.push({
+          name:"All",
+          value:"All"
+        });
+        $scope.jobname = $scope.jobs[0].value;
+        for(var i=0; i<keys.length; i++) {
+          var ref =  firebase.database().ref('/joblist/' + keys[i]);
+          ref.once('value').then(function(snapshot) {
+            var jobID = snapshot.key;
+            var creatorID = snapshot.val().creatorID;
+            var deleted = snapshot.val().deleted != undefined? snapshot.val().deleted : false;
+            if(!deleted) {
+
+              firebase.database().ref('/jobs/' + jobID + '/' + creatorID).once('value').then(function(snapshot) {
+
+                var access = snapshot.val().access;
+                if(access.charAt(2) == 'v') {
+                  var status = snapshot.val().status;
+                  var s_open = $scope.chk_open;
+                  var s_closed = $scope.chk_closed;
+                  if( (s_open && s_closed) || (s_open && status=="Open") || (s_closed && status=="Closed") ) {
+                    $scope.jobs.push({
+                      name:snapshot.val().jobname,
+                      value:snapshot.ref.parent.key
+                    });
+                  }
+
+                  $scope.$apply();
+                }
+              });
+            }
+
+          });
+        }
+
+      });
+    }
+
+    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+      var dd = new DropDown( $('#dd') );
+    });
 
 });
 
