@@ -83,7 +83,7 @@ app.controller("budget", function($scope, $timeout) {
   }
 
   var data = [
-    {JobName:"asd", ba:23, er:23, budget:23, tvc:98, ohih:2332, ep:12, btctd:283, btbtc:29832, pbctd:298, upcb:3732, ibstd:8293, apts:2352, btbibs:95, tbots:25, ts:23895, ptd:25, op:235, profit:235},
+    {JobName:"<b>asd</b>", ba:23, er:23, budget:23, tvc:98, ohih:2332, ep:12, btctd:283, btbtc:29832, pbctd:298, upcb:3732, ibstd:8293, apts:2352, btbibs:95, tbots:25, ts:23895, ptd:25, op:235, profit:235},
     {JobName:"sdkdslj", ba:23, er:23, budget:23, tvc:98, ohih:2332, ep:12, btctd:283, btbtc:29832, pbctd:298, upcb:3732, ibstd:8293, apts:2352, btbibs:95, tbots:25, ts:23895, ptd:25, op:235, profit:235},
     {JobName:"sdkdslj", ba:23, er:23, budget:23, tvc:98, ohih:2332, ep:12, btctd:283, btbtc:29832, pbctd:298, upcb:3732, ibstd:8293, apts:2352, btbibs:95, tbots:25, ts:23895, ptd:25, op:235, profit:235},
     {JobName:"sdkdslj", ba:23, er:23, budget:23, tvc:98, ohih:2332, ep:12, btctd:283, btbtc:29832, pbctd:298, upcb:3732, ibstd:8293, apts:2352, btbibs:95, tbots:25, ts:23895, ptd:25, op:235, profit:235},
@@ -93,7 +93,7 @@ app.controller("budget", function($scope, $timeout) {
 
     var col = {
         JobKey: "aaa",
-        JobColor: "#232323",
+        JobColor: "#ff0000",
         JobName: data[i].JobName,
         BudgetedAmount: data[i].ba,
         EstimatedRevenue: data[i].er,
