@@ -122,10 +122,6 @@ app.controller('mainCtrl', function($scope, dataService) {
       });
     }
 
-    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-      var dd = new DropDown( $('#dd') );
-    });
-
 });
 
 app.config(function($routeProvider) {
@@ -157,6 +153,10 @@ app.config(function($routeProvider) {
     .when("/gantt", {
       templateUrl : "gantt.html",
       controller : "gantt"
+    })
+    .when("/budget", {
+      templateUrl : "budget.html",
+      controller : "budget"
     })
     .otherwise({ redirectTo: '/documents' });
 });

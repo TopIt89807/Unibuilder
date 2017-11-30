@@ -301,8 +301,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </li>
                             </ul>
                         </li>-->
-                        <li class="nav-item" ng-class="fff == 3 ? ' active open' : ''">
-                            <a href="javascript:;" class="nav-link nav-toggle">
+                        <li class="nav-item" ng-class="fff == 3 ? ' active open' : ''" ng-click="myFunc(3)">
+                            <a href="#!dashboard" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
                                 <span class="title">Dashboard</span>
                                 <span class="arrow"></span>
@@ -380,6 +380,13 @@ License: You must have a valid license purchased only from themeforest(the above
                                       </a>
                                   </li>
                             </ul>
+                        </li>
+                        <li class="nav-item" ng-class="fff==12 ? ' active open' : ''" ng-click="myFunc(12)">
+                            <a href="#!budget" class="nav-link nav-toggle">
+                                <i class="icon-basket"></i>
+                                <span class="title">Budget</span>
+                                <span class="arrow"></span>
+                            </a>
                         </li>
                     </ul>
                     <!-- END SIDEBAR MENU -->
@@ -536,6 +543,7 @@ License: You must have a valid license purchased only from themeforest(the above
             <script src="controller/documentsCtrl.js"></script>
             <script src="controller/schedulerCtrl.js"></script>
             <script src="controller/ganttCtrl.js"></script>
+            <script src="controller/budgetCtrl.js"></script>
 
             <script src="model/jobcreate.js"></script>
             <script src="model/joblist.js"></script>
